@@ -1,0 +1,41 @@
+cmake_minimum_required(VERSION 3.16)
+project(Countdown LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
+
+# ===== 关键：定义 KF6 版本 =====
+set(KF6_MIN_VERSION 6.12.0)
+# ===============================
+
+set(QML_IMPORT_PATH "/usr/lib/qt6/qml;/usr/lib/qml" CACHE STRING "QML Import Paths")
+
+find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
+
+# 查找 Qt6 和 Kirigami
+find_package(Qt6 REQUIRED COMPONENTS Core Quick)
+find_package(KF6 REQUIRED COMPONENTS Kirigami)
+
+qt_policy(SET QTP0001 NEW)
+
+# 添加可执行文件
+qt6_add_executable(Countdown
+    src/main.cpp
+    src/manager.cpp
+)
+
+# 链接库
+target_link_libraries(Countdown PRIVATE
+    Qt6::Core
+    Qt6::Quick
+    KF6::Kirigami
+)
+
+qt_add_qml_module(Countdown
+    URI com.countdown
+    VERSION 1.0
+    QML_FILES
+        src/qt/qml/com/countdown/Main.qml
+)
