@@ -1,52 +1,65 @@
-name: Build Windows EXE
+name: Build Windows EXE (MSYS2)
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:   # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: windows-2022   # 或 windows-latest
+    runs-on: windows-2022
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup vcpkg
-        uses: actions/setup-vcpkg@v1
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
         with:
-          vcpkgArguments: 'qt6-base qt6-quick qt6-qml kf6-coreaddons kf6-kirigami'
-          vcpkgTriplet: 'x64-windows'   # 或 x86-windows
+          msystem: MINGW64
+          update: true
+          install: |
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-qt6
+            mingw-w64-x86_64-qt6-quick
+            mingw-w64-x86_64-qt6-qml
+            mingw-w64-x86_64-kf6-coreaddons
+            mingw-w64-x86_64-kf6-kirigami
+            mingw-w64-x86_64-make
 
-      - name: Configure CMake
+      - name: Configure with CMake
+        shell: msys2 {0}
         run: |
-          cmake -B build-win -S . `
-            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
-            -DVCPKG_TARGET_TRIPLET=x64-windows `
-            -DCMAKE_BUILD_TYPE=Release
-        shell: pwsh
+          cmake -B build-win -S . \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX=/mingw64 \
+            -DCMAKE_PREFIX_PATH=/mingw64
 
       - name: Build
+        shell: msys2 {0}
         run: |
-          cmake --build build-win --config Release --parallel
+          cmake --build build-win --parallel
 
-      - name: Deploy Qt dependencies (windeployqt)
+      - name: Collect DLLs with windeployqt
+        shell: msys2 {0}
         run: |
-          # 找到 windeployqt.exe 路径（通常在 Qt 安装目录下，但 vcpkg 会把它放在 tools 目录）
-          $qtBinDir = "$env:VCPKG_ROOT/packages/qt6-base_x64-windows/tools/qt6/bin"
-          # 如果路径不对，可以通过查找
-          $windeploy = Get-ChildItem -Recurse -Filter windeployqt.exe -Path $env:VCPKG_ROOT | Select-Object -First 1
-          & $windeploy.FullName --qmldir ./src/qt/qml ./build-win/Release/Countdown.exe
-        shell: pwsh
-        continue-on-error: true   # 即使部署失败也不中断，可以手动处理
+          # windeployqt 在 MSYS2 的 bin 目录下
+          /mingw64/bin/windeployqt6.exe --qmldir ./src/qt/qml ./build-win/Countdown.exe
+          # 同时复制需要的一些 KF6 运行时 DLL（windeployqt 不会自动复制 KF6 的）
+          # 这里手动将必要的 KF6 DLL 复制过来
+          cp /mingw64/bin/libKF6CoreAddons*.dll ./build-win/
+          cp /mingw64/bin/libKF6Kirigami*.dll ./build-win/
+          cp /mingw64/bin/libKF6I18n*.dll ./build-win/   # Kirigami 可能依赖
+          # 如果需要其他，可以继续加
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Countdown-win64
+          name: Countdown-win64-msys2
           path: |
-            build-win/Release/Countdown.exe
-            build-win/Release/*.dll   # 包括 windeployqt 复制的所有依赖
+            build-win/Countdown.exe
+            build-win/*.dll
+            src/qt/qml/   # 如果你的 QML 文件需要单独部署，也一并打包
