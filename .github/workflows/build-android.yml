@@ -16,14 +16,23 @@ jobs:
           # 创建 Craft 工作目录
           mkdir -p craft-kde-android
 
-          # 初始化 Craft 环境（首次运行会交互式询问架构，自动输入 arm64）
-          echo "arm64" | docker run -i --rm -v $PWD/craft-kde-android:/home/user/CraftRoot kdeorg/android-sdk craft-bootstrap
+          # 初始化 Craft 环境，并自动输入 'arm64' 作为架构选择
+          echo "arm64" | docker run -i --rm \
+            -v $PWD/craft-kde-android:/home/user/CraftRoot \
+            kdeorg/android-sdk \
+            craft-bootstrap
 
           # 构建你的应用（将 your_app_name 替换为实际名称）
-          docker run --rm -v $PWD/craft-kde-android:/home/user/CraftRoot kdeorg/android-sdk craft com.Countdown
+          docker run --rm \
+            -v $PWD/craft-kde-android:/home/user/CraftRoot \
+            kdeorg/android-sdk \
+            craft your_app_name
 
           # 打包为 APK
-          docker run --rm -v $PWD/craft-kde-android:/home/user/CraftRoot kdeorg/android-sdk craft --package com.Countdown
+          docker run --rm \
+            -v $PWD/craft-kde-android:/home/user/CraftRoot \
+            kdeorg/android-sdk \
+            craft --package your_app_name
 
       - name: 上传 APK
         uses: actions/upload-artifact@v4
