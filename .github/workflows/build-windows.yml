@@ -1,0 +1,52 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:   # 允许手动触发
+
+jobs:
+  build:
+    runs-on: windows-2022   # 或 windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup vcpkg
+        uses: actions/setup-vcpkg@v1
+        with:
+          vcpkgArguments: 'qt6-base qt6-quick qt6-qml kf6-coreaddons kf6-kirigami'
+          vcpkgTriplet: 'x64-windows'   # 或 x86-windows
+
+      - name: Configure CMake
+        run: |
+          cmake -B build-win -S . `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows `
+            -DCMAKE_BUILD_TYPE=Release
+        shell: pwsh
+
+      - name: Build
+        run: |
+          cmake --build build-win --config Release --parallel
+
+      - name: Deploy Qt dependencies (windeployqt)
+        run: |
+          # 找到 windeployqt.exe 路径（通常在 Qt 安装目录下，但 vcpkg 会把它放在 tools 目录）
+          $qtBinDir = "$env:VCPKG_ROOT/packages/qt6-base_x64-windows/tools/qt6/bin"
+          # 如果路径不对，可以通过查找
+          $windeploy = Get-ChildItem -Recurse -Filter windeployqt.exe -Path $env:VCPKG_ROOT | Select-Object -First 1
+          & $windeploy.FullName --qmldir ./src/qt/qml ./build-win/Release/Countdown.exe
+        shell: pwsh
+        continue-on-error: true   # 即使部署失败也不中断，可以手动处理
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Countdown-win64
+          path: |
+            build-win/Release/Countdown.exe
+            build-win/Release/*.dll   # 包括 windeployqt 复制的所有依赖
