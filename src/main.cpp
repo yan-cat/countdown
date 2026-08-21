@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     CountdownManager manager;
-    // 现在可以正常调用 rootContext()
     engine.rootContext()->setContextProperty("manager", &manager);
 
     engine.loadFromModule("com.countdown", "Main");

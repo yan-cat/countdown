@@ -6,10 +6,10 @@ import org.kde.kirigamiaddons.dateandtime 1.0 as KA
 
 Kirigami.ApplicationWindow {
     id: root
-    width: 600
-    height: 400
+    width: 800
+    height: 600
     visible: true
-    title: "菜单测试"
+    title: "倒数日"
 
     globalDrawer: Kirigami.GlobalDrawer {
         title: "菜单"
@@ -19,22 +19,14 @@ Kirigami.ApplicationWindow {
                 text: "新建倒数日"
                 icon.name: "document-new"
                 onTriggered: {
-                    datePickerDialog.open()
+                    adddata.open()
                 }
             }
         ]
     }
-
-    pageStack.initialPage: Kirigami.Page {
-        title: "倒数日"
-        Label {
-            anchors.centerIn: parent
-            text: "滚木"
-        }
-    }
-
+//==========================================================================菜单
     Kirigami.Dialog {
-        id: datePickerDialog
+        id: adddata
         title: "选择倒数日"
         modal: true
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
@@ -44,23 +36,55 @@ Kirigami.ApplicationWindow {
             spacing: 10
 
             Label {
+                text: "名称："
+                Layout.alignment: Qt.AlignCenter
+            }
+            TextField {
+                id: nameField
+                placeholderText: "例如：生日、纪念日"
+                Layout.fillWidth: true
+            }
+
+            Label {
+                text: "重复："
+                Layout.alignment: Qt.AlignCenter
+            }
+            ComboBox {
+                id: repeatField
+                currentIndex: 0
+                model: ["无", "月重复", "年重复"]   // 三个选项
+            }
+
+            Label {
                 text: "请选择目标日期："
                 Layout.alignment: Qt.AlignCenter
             }
-
             KA.DatePicker {
-                id: datePicker
+                id: dateField
                 Layout.alignment: Qt.AlignCenter
-                selectedDate: new Date()
             }
         }
-
         onAccepted: {
-            var date = datePicker.selectedDate
+            var date = dateField.selectedDate
             var dateStr = date.getFullYear() + "-" +
                           String(date.getMonth() + 1).padStart(2, '0') + "-" +
                           String(date.getDate()).padStart(2, '0')
-            manager.addCountdown(dateStr)
+
+            var payload = {
+                name: nameField.text,
+                repeat: repeatField.currentText,
+                date: dateStr
+            }
+            manager.addCountdown(JSON.stringify(payload))
         }
     }
+//==========================================================================页面
+    pageStack.initialPage: Kirigami.Page {
+        title: "倒数日"
+        Label {
+            anchors.centerIn: parent
+            text: "滚木"
+        }
+    }
+
 }
