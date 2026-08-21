@@ -1,18 +1,18 @@
 name: Build with KDE Craft
 
-on: [push, workflow_dispatch]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
     runs-on: windows-2022
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
 
-      - name: Install Python and Git (required by Craft)
+      - name: Install Python and Git
         run: |
           choco install python3 git -y
-          # 确保 Python 在 PATH
           echo "C:\Python3" >> $env:GITHUB_PATH
           echo "C:\Python3\Scripts" >> $env:GITHUB_PATH
 
@@ -22,11 +22,23 @@ jobs:
           Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/KDE/craft/master/setup/install_craft.ps1'))
 
-      - name: Build your project with Craft
+      - name: Create Blueprint directory and copy our blueprint
         shell: cmd
         run: |
-          # 进入 Craft 环境并构建你的应用（你需要为项目编写一个蓝图 .craft 文件）
-          cd C:\CraftRoot
-          craft your-app-name   # 需先为你的项目定义蓝图
+          mkdir C:\CraftRoot\blueprints\countdown
+          copy blueprints\countdown.py C:\CraftRoot\blueprints\countdown\
 
-      # 后续上传 artifact 步骤...
+      - name: Build Countdown with Craft
+        shell: cmd
+        run: |
+          call C:\CraftRoot\craft\env.bat
+          # 现在 Craft 能识别 countdown 这个包了
+          craft countdown
+
+      - name: Collect artifacts
+        shell: cmd
+        run: |
+          # 构建后的 .exe 通常会放在 C:\CraftRoot\build\countdown\install\bin\ 或类似位置
+          # 我们复制到当前目录以方便上传
+          xcopy C:\CraftRoot\build\countdown\install\bin\Countdown.exe . /Y
+          # 还需要复制所有依赖的 .dll 吗？Craft 的 deploy 功能可以帮忙，但这里先简单复制
