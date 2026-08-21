@@ -17,8 +17,8 @@ Kirigami.AboutPage {
         "componentName": "countdown",
         "displayName": "倒数日",
         "shortDescription": "一个记录重要日子的倒计时小应用",
-        "homepage": "",
-        "bugAddress": "",
+        "homepage": "https://github.com/yan-cat/countdown",
+        "bugAddress": "https://github.com/yan-cat/countdown/issues",
         "version": "1.0",
         "copyrightStatement": "© 2026 yancat",
         "authors": [
