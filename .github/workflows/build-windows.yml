@@ -1,65 +1,32 @@
-name: Build Windows EXE (MSYS2)
+name: Build with KDE Craft
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:
+on: [push, workflow_dispatch]
 
 jobs:
   build:
     runs-on: windows-2022
 
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true
-          install: |
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-qt6
-            mingw-w64-x86_64-qt6-quick
-            mingw-w64-x86_64-qt6-qml
-            mingw-w64-x86_64-kf6-coreaddons
-            mingw-w64-x86_64-kf6-kirigami
-            mingw-w64-x86_64-make
-
-      - name: Configure with CMake
-        shell: msys2 {0}
+      - name: Install Python and Git (required by Craft)
         run: |
-          cmake -B build-win -S . \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=/mingw64 \
-            -DCMAKE_PREFIX_PATH=/mingw64
+          choco install python3 git -y
+          # 确保 Python 在 PATH
+          echo "C:\Python3" >> $env:GITHUB_PATH
+          echo "C:\Python3\Scripts" >> $env:GITHUB_PATH
 
-      - name: Build
-        shell: msys2 {0}
+      - name: Install KDE Craft
+        shell: powershell
         run: |
-          cmake --build build-win --parallel
+          Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+          iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/KDE/craft/master/setup/install_craft.ps1'))
 
-      - name: Collect DLLs with windeployqt
-        shell: msys2 {0}
+      - name: Build your project with Craft
+        shell: cmd
         run: |
-          # windeployqt 在 MSYS2 的 bin 目录下
-          /mingw64/bin/windeployqt6.exe --qmldir ./src/qt/qml ./build-win/Countdown.exe
-          # 同时复制需要的一些 KF6 运行时 DLL（windeployqt 不会自动复制 KF6 的）
-          # 这里手动将必要的 KF6 DLL 复制过来
-          cp /mingw64/bin/libKF6CoreAddons*.dll ./build-win/
-          cp /mingw64/bin/libKF6Kirigami*.dll ./build-win/
-          cp /mingw64/bin/libKF6I18n*.dll ./build-win/   # Kirigami 可能依赖
-          # 如果需要其他，可以继续加
+          # 进入 Craft 环境并构建你的应用（你需要为项目编写一个蓝图 .craft 文件）
+          cd C:\CraftRoot
+          craft your-app-name   # 需先为你的项目定义蓝图
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Countdown-win64-msys2
-          path: |
-            build-win/Countdown.exe
-            build-win/*.dll
-            src/qt/qml/   # 如果你的 QML 文件需要单独部署，也一并打包
+      # 后续上传 artifact 步骤...
