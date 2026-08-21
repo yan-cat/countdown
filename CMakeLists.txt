@@ -14,6 +14,8 @@ set(QML_IMPORT_PATH "/usr/lib/qt6/qml;/usr/lib/qml" CACHE STRING "QML Import Pat
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
+set(ANDROID_APK_DIR "${CMAKE_SOURCE_DIR}/android")
+
 # 查找 Qt6 和 Kirigami
 find_package(Qt6 REQUIRED COMPONENTS
     Core
