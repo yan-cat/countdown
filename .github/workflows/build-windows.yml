@@ -1,4 +1,4 @@
-name: Build Windows
+name: Build Windows with MSYS2 (Manual)
 
 on:
   workflow_dispatch:
@@ -6,34 +6,41 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    
+
     steps:
-    - name: 拉取代码
-      uses: actions/checkout@v4
+      - name: 拉取代码
+        uses: actions/checkout@v4
 
-    - name: 安装Qt
-      uses: jurplel/install-qt-action@v4  # 社区流行的Qt安装Action[reference:3]
-      with:
-        version: '6.6.3'  # 根据需要修改版本
-        host: 'windows'
-        target: 'desktop'
-        arch: 'win64_mingw'  # 指定使用MinGW [reference:6]
-        cache: true
+      # 安装 MSYS2 并更新
+      - name: 安装 MSYS2 包（Qt 6.11.2 + KDE 框架）
+        run: |
+          C:\msys64\usr\bin\bash.exe -lc "pacman -Syu --noconfirm"
+          C:\msys64\usr\bin\bash.exe -lc "pacman -S --noconfirm mingw-w64-x86_64-qt6-base mingw-w64-x86_64-qt6-declarative mingw-w64-x86_64-extra-cmake-modules mingw-w64-x86_64-qt6-kirigami2 mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc"
 
-    - name: 配置CMake
-      run: |
-        cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+      # 将 MinGW 和 CMake 加入 PATH
+      - name: 设置 PATH
+        run: |
+          echo "C:\msys64\mingw64\bin" >> $env:GITHUB_PATH
+          echo "C:\msys64\usr\bin" >> $env:GITHUB_PATH
 
-    - name: 编译
-      run: |
-        cmake --build build --config Release
+      # 配置和编译
+      - name: 编译
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="C:/msys64/mingw64"
+          mingw32-make -j4
 
-    - name: 部署Qt依赖 (windeployqt)
-      run: |
-        windeployqt --release --dir deploy build/你的程序名.exe
+      # 部署
+      - name: 部署依赖
+        run: |
+          mkdir deploy
+          # windeployqt6.exe 位于 C:/msys64/mingw64/bin/
+          windeployqt6 --release --dir deploy build/*.exe
+          # 如果需要 KDE 框架的 dll，可能需要手动复制，但 windeployqt6 不支持 KDE，可能需要额外复制
 
-    - name: 上传编译结果 (Artifact)
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-build
-        path: deploy/
+      - name: 上传编译结果
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: deploy/
