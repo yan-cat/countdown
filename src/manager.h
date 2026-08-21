@@ -3,16 +3,30 @@
 
 #include <QObject>
 #include <QString>
+#include <qjsonarray.h>
+#include <QVariant>
 
 class CountdownManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QVariantList countdowns READ countdowns NOTIFY countdownsChanged)
+
 public:
     explicit CountdownManager(QObject *parent = nullptr);
+    QVariantList countdowns() const;
+
+signals:
+    void countdownsChanged();
 
 public slots:
-    // 供 QML 调用的函数，参数是日期字符串（格式 yyyy-MM-dd）
     void addCountdown(const QString &dateString);
-};
+    void removeCountdown(int id);
 
-#endif // MANAGER_H
+private:
+    void saveCountdowns();
+    void loadCountdowns();
+
+    QJsonArray m_countdowns;
+    QString m_filePath;
+};
+#endif

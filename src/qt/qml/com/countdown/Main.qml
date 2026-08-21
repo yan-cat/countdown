@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.dateandtime 1.0 as KA
 
 Kirigami.ApplicationWindow {
@@ -15,7 +15,7 @@ Kirigami.ApplicationWindow {
         title: "菜单"
         isMenu: true
         actions: [
-                Kirigami.Action {
+            Kirigami.Action {
                 text: "新建倒数日"
                 icon.name: "document-new"
                 onTriggered: {
@@ -43,6 +43,7 @@ Kirigami.ApplicationWindow {
                 id: nameField
                 placeholderText: "例如：生日、纪念日"
                 Layout.fillWidth: true
+                Layout.alignment: Qt.AlignCenter
             }
 
             Label {
@@ -53,6 +54,7 @@ Kirigami.ApplicationWindow {
                 id: repeatField
                 currentIndex: 0
                 model: ["无", "月重复", "年重复"]   // 三个选项
+                Layout.alignment: Qt.AlignCenter
             }
 
             Label {
@@ -63,6 +65,11 @@ Kirigami.ApplicationWindow {
                 id: dateField
                 Layout.alignment: Qt.AlignCenter
             }
+        }
+        onOpened: {
+            nameField.text = ""
+            repeatField.currentIndex = 0
+            dateField.selectedDate = new Date()
         }
         onAccepted: {
             var date = dateField.selectedDate
@@ -78,13 +85,83 @@ Kirigami.ApplicationWindow {
             manager.addCountdown(JSON.stringify(payload))
         }
     }
-//==========================================================================页面
-    pageStack.initialPage: Kirigami.Page {
+//==========================================================================卡片主界面
+    pageStack.initialPage: Kirigami.ScrollablePage {
         title: "倒数日"
-        Label {
-            anchors.centerIn: parent
-            text: "滚木"
+        MouseArea {
+                anchors.fill: parent
+                z: 0
+                acceptedButtons: Qt.RightButton
+                onClicked: (mouse) => {
+                    if (mouse.button === Qt.RightButton) {
+                        blankMenu.popup(mouse.x, mouse.y)
+                    }
+                }
+                onPressAndHold: (mouse) => {
+                    blankMenu.popup(mouse.x, mouse.y)
+                }
+            }
+
+            Menu {
+                id: blankMenu
+                MenuItem {
+                    text: "新建倒数日"
+                    icon.name: "document-new"
+                    onTriggered: adddata.open()
+                }
+            }
+        ColumnLayout {
+            Kirigami.CardsLayout {
+                Repeater {
+                    model: manager.countdowns
+                    delegate: Kirigami.AbstractCard {
+                        Layout.preferredWidth: Kirigami.Units.gridUnit * 20
+                        //菜单
+                        Menu {
+                            id: cardMenu
+                            // MenuItem {
+                            //     text: "编辑"
+                            //     icon.name: "document-edit"
+                            //     onTriggered: console.log("点了编辑，id =", modelData.id)
+                            // }
+                            MenuItem {
+                                text: "删除"
+                                icon.name: "edit-delete"
+                                onTriggered: manager.removeCountdown(modelData.id)
+                            }
+                        }
+                        //主卡片
+                        contentItem: ColumnLayout {
+                            anchors.margins: Kirigami.Units.largeSpacing
+
+                            Label {
+                                text: modelData.name
+                                font.bold: true
+                                Layout.fillWidth: true
+                                wrapMode: Text.Wrap
+                                maximumLineCount: 2
+                                elide: Text.ElideRight
+                            }
+                            Label { text: modelData.repeat }
+                            Label { text: modelData.date }
+                            Label { text: modelData.daysText }
+                        }
+                        //鼠标右键
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onClicked: (mouse) => {
+                                if (mouse.button === Qt.RightButton) {
+                                    cardMenu.popup(mouse.x, mouse.y)
+                                }
+                            }
+                            onPressAndHold: (mouse) => {
+                                cardMenu.popup(mouse.x, mouse.y)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
-
 }

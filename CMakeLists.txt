@@ -15,8 +15,14 @@ find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
 # 查找 Qt6 和 Kirigami
-find_package(Qt6 REQUIRED COMPONENTS Core Quick)
-find_package(KF6 REQUIRED COMPONENTS Kirigami)
+find_package(Qt6 REQUIRED COMPONENTS
+    Core
+    Quick
+)
+find_package(KF6 REQUIRED COMPONENTS
+    Kirigami
+    CoreAddons
+)
 
 qt_policy(SET QTP0001 NEW)
 
@@ -30,12 +36,14 @@ qt6_add_executable(Countdown
 target_link_libraries(Countdown PRIVATE
     Qt6::Core
     Qt6::Quick
+    KF6::CoreAddons
     KF6::Kirigami
 )
 
 qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
+    NO_IMPORT_SCAN
     QML_FILES
         src/qt/qml/com/countdown/Main.qml
 )
