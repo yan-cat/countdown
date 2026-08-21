@@ -1,0 +1,39 @@
+name: Build Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: 拉取代码
+      uses: actions/checkout@v4
+
+    - name: 安装Qt
+      uses: jurplel/install-qt-action@v4  # 社区流行的Qt安装Action[reference:3]
+      with:
+        version: '6.6.3'  # 根据需要修改版本
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'  # 指定使用MinGW [reference:6]
+        cache: true
+
+    - name: 配置CMake
+      run: |
+        cmake -S . -B build -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+
+    - name: 编译
+      run: |
+        cmake --build build --config Release
+
+    - name: 部署Qt依赖 (windeployqt)
+      run: |
+        windeployqt --release --dir deploy build/你的程序名.exe
+
+    - name: 上传编译结果 (Artifact)
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-build
+        path: deploy/
