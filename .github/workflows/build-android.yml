@@ -1,0 +1,47 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:  # 仅手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      # KDE 官方 Android 编译镜像（包含 Qt、SDK、NDK、Kirigami 等）
+      image: kdeorg/android-arm-sdk
+
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      # 这一步构建所有 KDE 依赖（根据你的项目需要调整）
+      - name: 构建 KDE 依赖
+        run: |
+          export PATH=/opt/helpers/:$PATH
+          # 构建 Kirigami（必需）
+          build-kde-dependencies kirigami
+          build-kde-project kirigami kirigami
+          # 如果你的项目还需要其他 KDE 框架，在这里追加
+          # 例如：build-kde-dependencies ki18n
+          #      build-kde-project ki18n ki18n
+        shell: bash
+
+      # 构建你的应用并生成 APK
+      - name: 构建应用
+        run: |
+          export PATH=/opt/helpers/:$PATH
+          # 将 'your_app_name' 替换为你的 CMake 项目名称（project() 中的名字）
+          # 将 '/path/to/your/android/APK/dir' 替换为你的 android 目录路径
+          build-cmake your_app_name Applications \
+            "-DQTANDROID_EXPORTED_TARGET=your_app_name \
+             -DANDROID_APK_DIR=/home/user/src/path/to/your/android/APK/dir"
+          # 生成 APK
+          create-apk your_app_name
+        shell: bash
+
+      - name: 上传 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          # APK 生成路径，根据实际情况调整
+          path: /home/user/build/your_app_name/your_app_name_build_apk/build/outputs/apk/debug/*.apk
