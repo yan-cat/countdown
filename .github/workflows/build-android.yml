@@ -1,41 +1,51 @@
 name: Build Android APK
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # 手动触发
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 使用 KDE 官方 Android CI 镜像（已包含 SDK、NDK、Qt、Craft 环境）
+    container:
+      image: invent-registry.kde.org/sysadmin/ci-images/android-qt69:latest
 
     steps:
       - name: 拉取代码
         uses: actions/checkout@v4
 
-      - name: 使用 KDE Craft 构建 APK
+      # 设置 Craft 环境变量（镜像中已安装 Craft）
+      - name: 设置 Craft 环境
         run: |
-          # 创建 Craft 工作目录
-          mkdir -p craft-kde-android
+          echo "source /home/user/CraftRoot/craft/craftenv.sh" >> $GITHUB_ENV
+          # 设置 Android 架构（arm64 支持 Android 9+）
+          echo "CRAFT_ARCH=arm64" >> $GITHUB_ENV
 
-          # 初始化 Craft 环境，并自动输入 'arm64' 作为架构选择
-          echo "arm64" | docker run -i --rm \
-            -v $PWD/craft-kde-android:/home/user/CraftRoot \
-            kdeorg/android-sdk \
-            craft-bootstrap
+      # 构建你的应用（使用 Craft）
+      - name: 构建应用
+        run: |
+          # 切换到项目目录（在容器中，代码被映射到 /home/user/src）
+          cd /home/user/src
+          # 使用 craft 构建你的项目（将 'your_app_name' 替换为实际项目名）
+          craft your_app_name
 
-          # 构建你的应用（将 your_app_name 替换为实际名称）
-          docker run --rm \
-            -v $PWD/craft-kde-android:/home/user/CraftRoot \
-            kdeorg/android-sdk \
-            craft your_app_name
+      # 打包为 APK
+      - name: 生成 APK
+        run: |
+          cd /home/user/src
+          craft --package your_app_name
 
-          # 打包为 APK
-          docker run --rm \
-            -v $PWD/craft-kde-android:/home/user/CraftRoot \
-            kdeorg/android-sdk \
-            craft --package your_app_name
+      # 查找并复制 APK 到工作目录
+      - name: 收集 APK
+        run: |
+          mkdir -p /github/workspace/apk-output
+          # Craft 生成的 APK 通常在 ~/CraftRoot/tmp/ 下
+          find /home/user/CraftRoot/tmp -name "*.apk" -exec cp {} /github/workspace/apk-output/ \;
+          # 如果未找到，检查其他路径（如 ~/CraftRoot/Applications/...）
+          find /home/user/CraftRoot/Applications -name "*.apk" -exec cp {} /github/workspace/apk-output/ \; 2>/dev/null || true
 
       - name: 上传 APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: craft-kde-android/tmp/*.apk
+          path: apk-output/*.apk
