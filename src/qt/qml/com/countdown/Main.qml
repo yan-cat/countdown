@@ -21,6 +21,15 @@ Kirigami.ApplicationWindow {
                 onTriggered: {
                     adddata.open()
                 }
+            },
+            Kirigami.Action {
+                text: "关于"
+                icon.name: "help-about"
+                onTriggered: {
+                    if (root.pageStack.currentItem?.objectName !== "aboutPage") {
+                        root.pageStack.push(aboutPageComponent)   // 推入整页
+                    }
+                }
             }
         ]
     }
@@ -163,5 +172,10 @@ Kirigami.ApplicationWindow {
                 }
             }
         }
+    }
+
+    Component {
+        id: aboutPageComponent
+        AboutPage {}
     }
 }

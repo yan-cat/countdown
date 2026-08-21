@@ -48,4 +48,5 @@ qt_add_qml_module(Countdown
     NO_IMPORT_SCAN
     QML_FILES
         src/qt/qml/com/countdown/Main.qml
+        src/qt/qml/com/countdown/AboutPage.qml
 )
