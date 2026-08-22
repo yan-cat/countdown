@@ -64,6 +64,6 @@ jobs:
           name: ${{ github.event.inputs.release_name || format('Release {0}', github.event.inputs.version) }}
           draft: ${{ github.event.inputs.draft }}
           prerelease: ${{ github.event.inputs.prerelease }}
-          files: Countdown-linux-arch-x86_64.tar.gz
+          files: Countdown-linux-x86_64.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
