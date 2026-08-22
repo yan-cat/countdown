@@ -49,15 +49,13 @@ jobs:
 
       - name: 打包可执行文件
         run: |
-          mkdir -p dist
-          cp build/Countdown dist/
-          tar -czf Countdown-linux-arch-x86_64.tar.gz -C dist Countdown
+          tar -czf Countdown-linux-x86_64.tar.gz -C build Countdown
 
       - name: 上传构建产物 (Artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: Countdown-linux-arch-x86_64
-          path: Countdown-linux-arch-x86_64.tar.gz
+          name: Countdown-linux-x86_64
+          path: Countdown-linux-x86_64.tar.gz
 
       - name: 创建发布并上传附件
         uses: softprops/action-gh-release@v2
