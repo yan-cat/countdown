@@ -1,0 +1,39 @@
+name: build-
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # 等价写法：docker.io/archlinux/archlinux:base-devel
+    container:
+      image: archlinux:base-devel
+
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu --noconfirm git cmake ninja \
+              extra-cmake-modules qt6-base qt6-declarative \
+              kirigami kcoreaddons
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure (CMake)
+        run: cmake -S . -B build -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_INSTALL_PREFIX=/usr
+        # QML_IMPORT_PATH 保持 CMakeLists.txt 默认的
+        # /usr/lib/qt6/qml; /usr/lib/qml —— 正好是 Arch 的路径
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Countdown-linux-arch-x86_64
+          path: build/Countdown
