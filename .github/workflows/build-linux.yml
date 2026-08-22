@@ -1,4 +1,4 @@
-name: 构建 Linux (Arch / pacman)
+name: build-linux
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       version:
         description: '版本号 (例如 v1.0.0)'
         required: true
-        default: 'v1.1'
+        default: 'v1.0.0'
       release_name:
         description: '发布名称 (可选，留空则自动生成)'
         required: false
