@@ -32,6 +32,8 @@ qt_policy(SET QTP0001 NEW)
 qt6_add_executable(Countdown
     src/main.cpp
     src/manager.cpp
+    src/countdowndata.cpp
+    src/datediff.cpp
 )
 
 # 链接库
@@ -47,6 +49,7 @@ qt_add_qml_module(Countdown
     VERSION 1.0
     NO_IMPORT_SCAN
     QML_FILES
-        src/qt/qml/com/countdown/Main.qml
-        src/qt/qml/com/countdown/AboutPage.qml
+        src/resources/qml/Main.qml
+        src/resources/qml/AboutPage.qml
+        src/resources/qml/SettingsWindow.qml
 )

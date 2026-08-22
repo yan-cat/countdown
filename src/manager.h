@@ -1,22 +1,22 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include <QObject>
-#include <QString>
-#include <qjsonarray.h>
-#include <QVariant>
+#include <QJsonArray>
 
 class CountdownManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantList countdowns READ countdowns NOTIFY countdownsChanged)
+    Q_PROPERTY(QVariantList countdowns READ countdowns NOTIFY refreshCountdowns)
 
 public:
     explicit CountdownManager(QObject *parent = nullptr);
     QVariantList countdowns() const;
 
+    Q_INVOKABLE int setting(const QString &key, int def = 0) const;
+    Q_INVOKABLE void setSetting(const QString &key, int value);
+
 signals:
-    void countdownsChanged();
+    void refreshCountdowns();
 
 public slots:
     void addCountdown(const QString &dateString);

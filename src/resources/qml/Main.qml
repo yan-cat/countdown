@@ -23,6 +23,11 @@ Kirigami.ApplicationWindow {
                 }
             },
             Kirigami.Action {
+                text: "设置"
+                icon.name: "settings-configure"
+                onTriggered: settingsWindow.show()
+            },
+            Kirigami.Action {
                 text: "关于"
                 icon.name: "help-about"
                 onTriggered: {
@@ -36,8 +41,9 @@ Kirigami.ApplicationWindow {
 //==========================================================================菜单
     Kirigami.Dialog {
         id: adddata
-        title: "选择倒数日"
+        title: "新建倒数日"
         modal: true
+        height: root.height
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
 
         ColumnLayout {
@@ -88,7 +94,7 @@ Kirigami.ApplicationWindow {
 
             var payload = {
                 name: nameField.text,
-                repeat: repeatField.currentText,
+                repeat: repeatField.currentIndex,
                 date: dateStr
             }
             manager.addCountdown(JSON.stringify(payload))
@@ -174,6 +180,10 @@ Kirigami.ApplicationWindow {
         }
     }
 
+
+    SettingsWindow {
+        id: settingsWindow        // 类型名按文件名，这里是隐藏的窗口实例
+    }
     Component {
         id: aboutPageComponent
         AboutPage {}

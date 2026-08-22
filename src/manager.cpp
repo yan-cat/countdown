@@ -1,13 +1,9 @@
-#include "manager.h"
-#include <QDebug>
-#include <QDateTime>
-#include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
-#include <QFile>
-#include <QFileInfo>
 #include <QDir>
 #include <QStandardPaths>
+#include <QSettings>
+#include "manager.h"
+#include "countdowndata.h"
 
 CountdownManager::CountdownManager(QObject *parent) : QObject(parent) //初始化
 {
@@ -49,51 +45,7 @@ void CountdownManager::loadCountdowns() //加载倒数日
 
 QVariantList CountdownManager::countdowns() const //数据丢qml
 {
-    qDebug() << "查询数据";
-    QVariantList list;
-    for (const QJsonValue &v : m_countdowns) {
-        QJsonObject obj = v.toObject(); //拿出来
-
-        QString repeat = obj.value("repeat").toString(); //不重复文案
-        if (repeat == "无") repeat = "不重复";
-        obj.insert("repeat", repeat);
-
-        QString date = obj.value("date").toString(); //日期
-
-        QDateTime target = QDateTime::fromString(date, "yyyy-MM-dd"); //天数
-        QDate today = QDate::currentDate();
-        QDate nextDue;
-        if (repeat == "年重复") { //重复吗
-            int m = target.date().month();
-            int d = target.date().day();
-            nextDue = QDate(today.year(), m, d);
-            if (nextDue < today) {
-                nextDue = QDate(today.year() + 1, m, d);
-            }
-        } else if (repeat == "月重复") {
-            int d = target.date().day();
-            nextDue = QDate(today.year(), today.month(), d);
-            if (nextDue < today) {
-                nextDue = QDate(today.addMonths(1).year(),
-                                today.addMonths(1).month(), d);
-            }
-        } else { //不重复或数据异常
-            nextDue = target.date();
-        }
-        qint64 days = today.daysTo(nextDue);
-        QString daysText; //文案
-        if (days > 0) {
-            daysText = QString("还有 %1 天").arg(days);
-        } else if (days < 0) {
-            daysText = QString("已经过了 %1 天").arg(-days);
-        } else {
-            daysText = QStringLiteral("今天");
-        }
-        obj.insert("daysText", daysText);
-
-        list.append(obj.toVariantMap()); //丢回去
-    }
-    return list;
+    return buildCountdownViewData(m_countdowns);
 }
 
 void CountdownManager::addCountdown(const QString &dateString) //添加倒数日
@@ -117,7 +69,7 @@ void CountdownManager::addCountdown(const QString &dateString) //添加倒数日
 
     m_countdowns.append(obj);
     saveCountdowns();
-    emit countdownsChanged(); //添加后刷新列表
+    emit refreshCountdowns(); //添加后刷新列表
 }
 
 void CountdownManager::removeCountdown(int id) //删除倒数日
@@ -126,10 +78,24 @@ void CountdownManager::removeCountdown(int id) //删除倒数日
         if (m_countdowns.at(i).toObject().value("id").toInt() == id) {
             m_countdowns.removeAt(i);
             saveCountdowns();
-            emit countdownsChanged();
+            emit refreshCountdowns();
             qDebug() << "已删除，id：" << id;
             return;
         }
     }
     qWarning() << "删除失败，id：" << id;
+}
+
+int CountdownManager::setting(const QString &key, int def) const //读设置
+{
+    QSettings s;
+    return s.value(key, def).toInt();
+}
+
+void CountdownManager::setSetting(const QString &key, int value) //写设置
+{
+    QSettings s;
+    s.setValue(key, value);
+    emit refreshCountdowns();
+    qDebug() << "修改设置键：" << key << "值：" << value;
 }
