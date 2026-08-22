@@ -29,25 +29,23 @@ jobs:
       image: archlinux:base-devel
 
     permissions:
-      contents: write   # 必须，用于创建 Release 和上传附件
+      contents: write
 
     steps:
       - name: 安装依赖
-        run: pacman -Syu --noconfirm git cmake ninja \
-              extra-cmake-modules qt6-base qt6-declarative \
-              kirigami kcoreaddons
+        run: pacman -Syu --noconfirm git cmake extra-cmake-modules qt6-base qt6-declarative kcoreaddons kirigami
 
       - name: 检出代码
         uses: actions/checkout@v4
 
       - name: 配置 (CMake)
         run: |
-          cmake -S . -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=/usr
+          mkdir -p build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
 
       - name: 编译
-        run: cmake --build build
+        working-directory: build
+        run: cmake --build . --parallel $(nproc)
 
       - name: 打包可执行文件
         run: |
