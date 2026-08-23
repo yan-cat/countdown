@@ -53,3 +53,7 @@ qt_add_qml_module(Countdown
         src/resources/qml/AboutPage.qml
         src/resources/qml/SettingsWindow.qml
 )
+
+install(TARGETS Countdown
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
