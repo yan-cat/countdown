@@ -41,7 +41,7 @@ jobs:
 
       - name: 安装 KDE Craft
         run: |
-          iex ((new-object net.webclient).DownloadString('https://invent.kde.org/packaging/craft/-/raw/master/setup/install_craft.ps1'))
+          iex ((new-object net.webclient).DownloadString('https://invent.kde.org/packaging/craft/-/raw/master/setup/install_craft.ps1')) -root "C:\CraftRoot" -useDefaults
 
       - name: 测试
         run: |
