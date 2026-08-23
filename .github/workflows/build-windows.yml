@@ -37,7 +37,7 @@ jobs:
 
       - name: 安装 KDE Craft
         run: |
-          python3 -c "$(wget https://raw.githubusercontent.com/KDE/craft/master/setup/CraftBootstrap.py -O -)" --prefix ~/CraftRoot
+          python3 -c "$(wget https://raw.githubusercontent.com/KDE/craft/master/setup/CraftBootstrap.py -O -)" --prefix ~/CraftRoot --abi x86_64
 
       # - name: 检出代码
       #   uses: actions/checkout@v5
