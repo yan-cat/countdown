@@ -13,6 +13,7 @@ countdown
 ├── android
 │   └── AndroidManifest.xml        暂未使用
 ├── CMakeLists.txt
+├── Countdown.py                   KDE Craft 蓝图
 ├── LICENSE
 ├── README.md
 └── src
