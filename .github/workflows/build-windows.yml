@@ -30,10 +30,10 @@ jobs:
       contents: write
 
     steps:
-     - name: 设置 Python
-       uses: actions/setup-python@v5
-       with:
-         python-version: '3.13'
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
       - name: 处理前置
         run: |
