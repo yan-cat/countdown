@@ -30,11 +30,14 @@ jobs:
       contents: write
 
     steps:
-      - name: 安装依赖
+      - name: 安装 KDE Craft
         run: winget install --id=LukiLabs.Craft --disable-interactivity --accept-source-agreements --accept-package-agreements
 
-      - name: 检出代码
-        uses: actions/checkout@v5
+      - name: 初始化 KDE Craft
+        run: winget list "KDE Craft" --details
+
+      # - name: 检出代码
+      #   uses: actions/checkout@v5
 
       # - name: 配置 CMake
       #   run: |
