@@ -54,6 +54,14 @@ qt_add_qml_module(Countdown
         src/resources/qml/SettingsWindow.qml
 )
 
+if (WIN32)
+    if (CMAKE_BUILD_TYPE STREQUAL "Release" OR
+        CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR
+        CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+        set_target_properties(Countdown PROPERTIES WIN32_EXECUTABLE TRUE)
+    endif()
+endif()
+
 install(TARGETS Countdown
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
