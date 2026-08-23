@@ -34,7 +34,8 @@ jobs:
         run: winget install --id=LukiLabs.Craft --disable-interactivity --accept-source-agreements --accept-package-agreements
 
       - name: 初始化 KDE Craft
-        run: | C:\CraftRoot\craft\craftenv.ps1
+        run: |
+               C:\CraftRoot\craft\craftenv.ps1
                winget --info
 
       # - name: 检出代码
