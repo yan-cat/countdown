@@ -4,6 +4,7 @@
 #include <QLockFile>
 #include <QStandardPaths>
 #include <QDir>
+#include <KIconTheme>
 #include "manager.h"
 
 int main(int argc, char *argv[])
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 //===================================================================后续启动
+    KIconTheme::initTheme();
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 

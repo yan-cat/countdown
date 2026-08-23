@@ -4,6 +4,7 @@ project(Countdown VERSION 1.1.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
+set(BINARY_ICONS_RESOURCE ON)
 
 # ===== 关键：定义 KF6 版本 =====
 set(KF6_MIN_VERSION 6.12.0)
@@ -24,6 +25,7 @@ find_package(Qt6 REQUIRED COMPONENTS
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
     CoreAddons
+    IconThemes
 )
 
 qt_policy(SET QTP0001 NEW)
@@ -42,6 +44,7 @@ target_link_libraries(Countdown PRIVATE
     Qt6::Quick
     KF6::CoreAddons
     KF6::Kirigami
+    KF6::IconThemes
 )
 
 target_compile_definitions(Countdown PRIVATE

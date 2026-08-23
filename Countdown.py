@@ -23,6 +23,7 @@ class subinfo(info.infoclass):
         self.runtimeDependencies["kde/frameworks/tier1/kirigami"] = None
         self.runtimeDependencies["kde/unreleased/kirigami-addons"] = None
         self.runtimeDependencies["kde/frameworks/tier1/breeze-icons"] = None
+        self.runtimeDependencies["kde/frameworks/tier1/kiconthemes"] = None
 
 
 class Package(CMakePackageBase):
