@@ -1,0 +1,59 @@
+name: build-windows
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       version:
+#         description: '版本号 (例如 v1.0.0)'
+#         required: true
+#         default: 'v1.0.0'
+#       release_name:
+#         description: '发布名称 (可选，留空则自动生成)'
+#         required: false
+#         default: ''
+#       draft:
+#         description: '是否为草稿'
+#         required: false
+#         default: false
+#         type: boolean
+#       prerelease:
+#         description: '是否为预发布'
+#         required: false
+#         default: false
+#         type: boolean
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: 安装依赖
+        run: |
+          winget install --id LukiLabs.Craft --silent --accept-package-agreements --accept-source-agreements
+
+      - name: 检出代码
+        uses: actions/checkout@v5
+
+      - name: 打包可执行文件
+        run: |
+          tar -czf Countdown-linux-x86_64.tar.gz -C build Countdown
+
+      # - name: 上传构建产物
+      #   uses: actions/upload-artifact@v7
+      #   with:
+      #     name: Countdown-linux-x86_64
+      #     path: Countdown-linux-x86_64.tar.gz
+
+      # - name: 创建发布并上传附件
+      #   uses: softprops/action-gh-release@v3
+      #   with:
+      #     tag_name: ${{ github.event.inputs.version }}
+      #     name: ${{ github.event.inputs.release_name || format('Release {0}', github.event.inputs.version) }}
+      #     draft: ${{ github.event.inputs.draft }}
+      #     prerelease: ${{ github.event.inputs.prerelease }}
+      #     files: Countdown-linux-x86_64.tar.gz
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
