@@ -24,21 +24,29 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     permissions:
       contents: write
 
     steps:
-      - name: 安装依赖
+     - name: 设置 Python
+       uses: actions/setup-python@v5
+       with:
+         python-version: '3.13'
+
+      - name: 处理前置
         run: |
-          sudo apt update
-          sudo apt install python3 python3-pip python3-venv build-essential git wget libxcb-xinerama0-dev libegl1-mesa-dev
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
       - name: 安装 KDE Craft
         run: |
-          python3 -c "$(wget https://raw.githubusercontent.com/KDE/craft/master/setup/CraftBootstrap.py -O -)" --prefix ~/CraftRoot --abi x86_64
+          iex ((new-object net.webclient).DownloadString('https://invent.kde.org/packaging/craft/-/raw/master/setup/install_craft.ps1'))
 
+      - name: 测试
+        run: |
+          powershell C:\CraftRoot\craft\craftenv.ps1
+          craft
       # - name: 检出代码
       #   uses: actions/checkout@v5
 
