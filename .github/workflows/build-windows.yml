@@ -41,8 +41,9 @@ jobs:
 
       - name: 安装 KDE Craft
         run: |
-          $scriptContent = (new-object net.webclient).DownloadString('https://invent.kde.org/packaging/craft/-/raw/master/setup/install_craft.ps1')
-          "`n`n" | & ([scriptblock]::Create($scriptContent)) -root "C:\CraftRoot" -useDefaults
+          pip install wexpect -q; python -c "import wexpect, sys; child = wexpect.spawn('powershell.exe -Command \"iex ((new-object net.webclient).DownloadString(\"\"https://invent.kde.org/packaging/craft/-/raw/master/setup/install_craft.ps1\"\"))\"'); child.expect('Select compiler'); child.sendline('0'); child.expect(wexpect.EOF); sys.stdout.write(child.before.decode())"
+
+
 
       - name: 测试
         run: |
