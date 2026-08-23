@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setOrganizationName("yancat");
     QCoreApplication::setApplicationName("Countdown");
-    QCoreApplication::setApplicationVersion("1.1.1");
+    QCoreApplication::setApplicationVersion(APP_VERSION);
 //===================================================================锁
     const QString lockDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(lockDir);

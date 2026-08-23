@@ -11,6 +11,16 @@ Kirigami.ApplicationWindow {
     visible: true
     title: "倒数日"
 
+    Label { //空项目引导
+        visible: manager.countdowns.length === 0
+        text: "还没有倒数日\n右键空白处新建倒数日"
+        anchors.centerIn: parent
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        enabled: false
+        z: 1
+    }
+
     globalDrawer: Kirigami.GlobalDrawer {
         title: "菜单"
         isMenu: true

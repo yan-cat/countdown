@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Countdown LANGUAGES CXX)
+project(Countdown VERSION 1.1.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -42,6 +42,10 @@ target_link_libraries(Countdown PRIVATE
     Qt6::Quick
     KF6::CoreAddons
     KF6::Kirigami
+)
+
+target_compile_definitions(Countdown PRIVATE
+    APP_VERSION="${PROJECT_VERSION}"
 )
 
 qt_add_qml_module(Countdown
