@@ -12,7 +12,7 @@ Kirigami.ApplicationWindow {
     title: "倒数日"
 
     Label { //空项目引导
-        visible: manager.countdowns.length === 0
+        visible: manager.countdowns.length === 0 && root.pageStack.depth === 1
         text: "还没有倒数日\n右键空白处新建倒数日"
         anchors.centerIn: parent
         horizontalAlignment: Text.AlignHCenter
