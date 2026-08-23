@@ -24,19 +24,20 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: debain-latest
 
     permissions:
       contents: write
 
     steps:
-      - name: 安装 KDE Craft
-        run: winget install --id=LukiLabs.Craft --disable-interactivity --accept-source-agreements --accept-package-agreements
-
-      - name: 初始化 KDE Craft
+      - name: 安装依赖
         run: |
-               C:\CraftRoot\craft\craftenv.ps1
-               winget --info
+          sudo apt update
+          sudo apt install python3 python3-pip python3-venv build-essential git wget libxcb-xinerama0-dev libegl1-mesa-dev
+
+      - name: 安装 KDE Craft
+        run: |
+          python3 -c "$(wget https://raw.githubusercontent.com/KDE/craft/master/setup/CraftBootstrap.py -O -)" --prefix ~/CraftRoot
 
       # - name: 检出代码
       #   uses: actions/checkout@v5
