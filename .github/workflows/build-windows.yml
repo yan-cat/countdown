@@ -1,26 +1,26 @@
 name: build-windows
 
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       version:
-#         description: '版本号 (例如 v1.0.0)'
-#         required: true
-#         default: 'v1.0.0'
-#       release_name:
-#         description: '发布名称 (可选，留空则自动生成)'
-#         required: false
-#         default: ''
-#       draft:
-#         description: '是否为草稿'
-#         required: false
-#         default: false
-#         type: boolean
-#       prerelease:
-#         description: '是否为预发布'
-#         required: false
-#         default: false
-#         type: boolean
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (例如 v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+      release_name:
+        description: '发布名称 (可选，留空则自动生成)'
+        required: false
+        default: ''
+      draft:
+        description: '是否为草稿'
+        required: false
+        default: false
+        type: boolean
+      prerelease:
+        description: '是否为预发布'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -31,15 +31,23 @@ jobs:
 
     steps:
       - name: 安装依赖
-        run: |
-          winget install --id LukiLabs.Craft --silent --accept-package-agreements --accept-source-agreements
+        run: winget install --id=LukiLabs.Craft --disable-interactivity --accept-source-agreements --accept-package-agreements
 
       - name: 检出代码
         uses: actions/checkout@v5
 
-      - name: 打包可执行文件
-        run: |
-          tar -czf Countdown-linux-x86_64.tar.gz -C build Countdown
+      # - name: 配置 CMake
+      #   run: |
+      #     mkdir -p build && cd build
+      #     cmake -DCMAKE_BUILD_TYPE=Release ..
+
+      # - name: 编译
+      #   working-directory: build
+      #   run: cmake --build . --parallel $(nproc)
+
+      # - name: 打包可执行文件
+      #   run: |
+      #     tar -czf Countdown-linux-x86_64.tar.gz -C build Countdown
 
       # - name: 上传构建产物
       #   uses: actions/upload-artifact@v7
