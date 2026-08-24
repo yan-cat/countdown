@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(Countdown VERSION 1.1.1 LANGUAGES CXX)
 
-#ifdef Q_OS_ANDROID
-Q_DECL_EXPORT
-#endif
-int main(int argc, char *argv[])
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
