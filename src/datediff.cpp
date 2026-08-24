@@ -1,20 +1,26 @@
 #include "datediff.h"
 
-DateDiff dateDiff(const QDate &from, const QDate &to) //天转年月日
+DateDiff dateDiff(const QDate &from, const QDate &to) //天换算年月日
 {
     DateDiff d;
-    d.years  = to.year()  - from.year();
-    d.months = to.month() - from.month();
-    d.days   = to.day()   - from.day();
 
-    if (d.days < 0) { //天数不够，向月份借
-        d.months--;
-        d.days += to.addMonths(-1).daysInMonth();
+    int days = qAbs(from.daysTo(to));
+
+    int months = 0;
+    while (days > 30) { //天多了减天
+        days -= 30;
+        months++;
     }
-    if (d.months < 0) { //月份不够，向年份借
-        d.years--;
-        d.months += 12;
+
+    int years = 0;
+    while (months > 12) { //月多了减月
+        months -= 12;
+        years++;
     }
+
+    d.years = years;
+    d.months = months;
+    d.days = days;
     return d;
 }
 QString dateDiffText(const QDate &from, const QDate &to) //年月日文案

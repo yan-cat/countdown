@@ -25,6 +25,10 @@ Window {
             model: ["456 天", "1 年 3 个月 1 天"]
             Layout.alignment: Qt.AlignHCenter
         }
+        Label {
+            text: "注：年月日显示模式为估算仅作参考，具体以单天数显示为准"
+            Layout.alignment: Qt.AlignHCenter
+        }
         Item { //占满不让分配
             Layout.fillHeight: true
             Layout.fillWidth: true
