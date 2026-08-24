@@ -23,7 +23,6 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
 ```
 只支持 **Ubuntu 24.10 (Oracular) 或更高版本**
 
----
 ## 技术细节
 
 项目目录：
@@ -64,5 +63,16 @@ countdown
     └── yancat
         └── Countdown.conf          # 设置项
 ```
+
+## 待完成
+
+- [] 时间到/差几天提醒
+- [] 静默启动参数
+- [] 可选软件背景
+- [] 编辑已添加的事项
+- [] 安卓支持
+- [] Webdav云同步事项
+- [] 桌面磁贴
+- [] windows深色显示问题修复
 
 此程序由 AI 辅助编写
