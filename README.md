@@ -3,6 +3,26 @@
 
 一个简单的倒数日应用
 
+## 安装帮助
+
+发行版内提供linux的二进制
+
+通常需要这些包以供运行：
+
+ArchLinux:
+```bash
+sudo pacman -S qt6-base qt6-declarative kirigami kcoreaddons kiconthemes breeze qqc2-desktop-style qt6-wayland
+```
+
+Ubuntu / Debian:
+```bash
+sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
+  libkf6coreaddons6 libkf6iconthemes6 libkf6kirigami6 \
+  breeze qml6-module-qtquick-controls qml6-module-qt-labs-platform \
+  qml6-module-qtquick-layouts qt6-wayland
+```
+只支持 **Ubuntu 24.10 (Oracular) 或更高版本**
+
 ---
 ## 技术细节
 
@@ -11,24 +31,24 @@
 ```plaintext
 countdown
 ├── android
-│   └── AndroidManifest.xml        暂未使用
+│   └── AndroidManifest.xml        # 暂未使用
 ├── CMakeLists.txt
-├── Countdown.py                   KDE Craft 蓝图
+├── Countdown.py                   # KDE Craft 蓝图
 ├── LICENSE
 ├── README.md
 └── src
-    ├── countdowndata.cpp          处理需要显示的数据
+    ├── countdowndata.cpp          # 处理需要显示的数据
     ├── countdowndata.h
-    ├── datediff.cpp               从天计算年月日
+    ├── datediff.cpp               # 从天计算年月日
     ├── datediff.h
-    ├── main.cpp                   主程序
-    ├── manager.cpp                管理数据
+    ├── main.cpp                   # 主程序
+    ├── manager.cpp                # 管理数据
     ├── manager.h
     └── resources
         └── qml
-            ├── AboutPage.qml      关于页面
+            ├── AboutPage.qml      # 关于页面
             ├── Main.qml主页面
-            └── SettingsWindow.qml 设置页面
+            └── SettingsWindow.qml # 设置页面
 ```
 
 软件创建的文件（夹）：
@@ -39,10 +59,10 @@ countdown
 │   └── share
 │       └── yancat
 │           └── Countdown
-│               └── countdowns.json 倒数日数据
+│               └── countdowns.json # 倒数日数据
 └── .config
     └── yancat
-        └── Countdown.conf          设置项
+        └── Countdown.conf          # 设置项
 ```
 
-ds辅助编写
+此程序由 AI 辅助编写
