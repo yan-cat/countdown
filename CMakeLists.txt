@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(Countdown VERSION 1.1.1 LANGUAGES CXX)
 
+
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
@@ -15,6 +17,8 @@ set(QML_IMPORT_PATH "/usr/lib/qt6/qml;/usr/lib/qml" CACHE STRING "QML Import Pat
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
+include(ECMAddAndroidApk)
+ecm_add_android_apk(Countdown ANDROID_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android)
 set(ANDROID_APK_DIR "${CMAKE_SOURCE_DIR}/android")
 
 # 查找 Qt6 和 Kirigami
