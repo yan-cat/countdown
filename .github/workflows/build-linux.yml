@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: 安装依赖
-        run: pacman -Syu --noconfirm git cmake extra-cmake-modules qt6-base qt6-declarative kcoreaddons kirigami
+        run: pacman -Syu --noconfirm git cmake extra-cmake-modules qt6-base qt6-declarative kcoreaddons kirigami kiconthemes
 
       - name: 检出代码
         uses: actions/checkout@v5
