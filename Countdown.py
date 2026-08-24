@@ -29,3 +29,12 @@ class subinfo(info.infoclass):
 class Package(CMakePackageBase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        def createPackage(self):
+                self.defines["shortcuts"] = [
+                    {
+                        "name": "Countdown",
+                        "target": "bin/Countdown.exe",
+                        "description": self.subinfo.description,
+                    }
+                ]
+                return super().createPackage()
