@@ -19,7 +19,7 @@ signals:
     void refreshCountdowns();
 
 public slots:
-    void addCountdown(const QString &dateString);
+    void editCountdown(const QString &dateString);
     void removeCountdown(int id);
 
 private:

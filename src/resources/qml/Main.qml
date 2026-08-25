@@ -26,13 +26,6 @@ Kirigami.ApplicationWindow {
         isMenu: true
         actions: [
             Kirigami.Action {
-                text: "新建倒数日"
-                icon.name: "document-new"
-                onTriggered: {
-                    adddata.open()
-                }
-            },
-            Kirigami.Action {
                 text: "设置"
                 icon.name: "settings-configure"
                 onTriggered: settingsWindow.show()
@@ -50,11 +43,14 @@ Kirigami.ApplicationWindow {
     }
 //==========================================================================菜单
     Kirigami.Dialog {
-        id: adddata
+        id: adddate
         title: "新建倒数日"
         modal: true
         height: root.height
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+
+        property int editingId: -1
+        property var editingData: ({})
 
         ColumnLayout {
             anchors.fill: parent
@@ -92,9 +88,17 @@ Kirigami.ApplicationWindow {
             }
         }
         onOpened: {
-            nameField.text = ""
-            repeatField.currentIndex = 0
-            dateField.selectedDate = new Date()
+            if (editingId >= 0) {
+                nameField.text = editingData.name
+                repeatField.currentIndex = editingData.repeatIndex
+                dateField.selectedDate = new Date(editingData.date)
+            }
+            else
+            {
+                nameField.text = ""
+                repeatField.currentIndex = 0
+                dateField.selectedDate = new Date()
+            }
         }
         onAccepted: {
             var date = dateField.selectedDate
@@ -105,9 +109,10 @@ Kirigami.ApplicationWindow {
             var payload = {
                 name: nameField.text,
                 repeat: repeatField.currentIndex,
-                date: dateStr
+                date: dateStr,
+                id: editingId
             }
-            manager.addCountdown(JSON.stringify(payload))
+            manager.editCountdown(JSON.stringify(payload))
         }
     }
 //==========================================================================卡片主界面
@@ -132,7 +137,10 @@ Kirigami.ApplicationWindow {
                 MenuItem {
                     text: "新建倒数日"
                     icon.name: "document-new"
-                    onTriggered: adddata.open()
+                    onTriggered: {
+                        adddate.editingId = -1
+                        adddate.open()
+                    }
                 }
             }
         ColumnLayout {
@@ -144,11 +152,19 @@ Kirigami.ApplicationWindow {
                         //菜单
                         Menu {
                             id: cardMenu
-                            // MenuItem {
-                            //     text: "编辑"
-                            //     icon.name: "document-edit"
-                            //     onTriggered: console.log("点了编辑，id =", modelData.id)
-                            // }
+                            MenuItem {
+                                text: "编辑"
+                                icon.name: "document-edit"
+                                onTriggered: {
+                                    adddate.editingId = modelData.id
+                                    adddate.editingData = {
+                                        name: modelData.name,
+                                        repeatIndex: { "不重复": 0, "月重复": 1, "年重复": 2 }[modelData.repeat] ?? 0,
+                                        date: modelData.date
+                                    }
+                                    adddate.open()
+                                }
+                            }
                             MenuItem {
                                 text: "删除"
                                 icon.name: "edit-delete"

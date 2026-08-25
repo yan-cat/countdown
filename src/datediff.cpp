@@ -7,13 +7,13 @@ DateDiff dateDiff(const QDate &from, const QDate &to) //天换算年月日
     int days = qAbs(from.daysTo(to));
 
     int months = 0;
-    while (days > 30) { //天多了减天
+    while (days >= 30) { //天多了减天
         days -= 30;
         months++;
     }
 
     int years = 0;
-    while (months > 12) { //月多了减月
+    while (months >= 12) { //月多了减月
         months -= 12;
         years++;
     }

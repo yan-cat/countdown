@@ -48,28 +48,39 @@ QVariantList CountdownManager::countdowns() const //数据丢qml
     return buildCountdownViewData(m_countdowns);
 }
 
-void CountdownManager::addCountdown(const QString &dateString) //添加倒数日
+void CountdownManager::editCountdown(const QString &dateString) //添加或编辑倒数日
 {
     QJsonObject obj = QJsonDocument::fromJson(dateString.toUtf8()).object();
+    int id = obj.value("id").toInt();
 
-    int id = 0; //找未占用id
-    while (true) {
-        bool found = false;
-        for (const QJsonValue &v : std::as_const(m_countdowns)) {
-            if (v.toObject().value("id").toInt() == id) {
-                found = true;
-                break;
+    if (id >= 0) { //编辑
+        for (int i = 0; i < m_countdowns.size(); ++i) {
+            if (m_countdowns.at(i).toObject().value("id").toInt() == id) {
+                m_countdowns.removeAt(i);
+                m_countdowns.insert(i, obj);
+                saveCountdowns();
+                emit refreshCountdowns();
+                qDebug() << "已编辑，id：" << id;
+                return;
             }
         }
-        if (!found) break;
-        id++;
+        qWarning() << "编辑失败，找不到 id：" << id;
+    } else { //新建
+        int newId = 0;
+        while (true) {
+            bool found = false;
+            for (const QJsonValue &v : std::as_const(m_countdowns)) {
+                if (v.toObject().value("id").toInt() == newId) { found = true; break; }
+            }
+            if (!found) break;
+            newId++;
+        }
+        obj.insert("id", newId);
+        m_countdowns.append(obj);
+        saveCountdowns();
+        emit refreshCountdowns();
+        qDebug() << "新增，id：" << newId;
     }
-    qDebug() <<"新增倒数日，id："<< id;
-    obj.insert("id", id);
-
-    m_countdowns.append(obj);
-    saveCountdowns();
-    emit refreshCountdowns(); //添加后刷新列表
 }
 
 void CountdownManager::removeCountdown(int id) //删除倒数日
