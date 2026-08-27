@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Countdown VERSION 1.1.2 LANGUAGES CXX)
+project(Countdown VERSION 1.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -23,6 +23,7 @@ set(ANDROID_APK_DIR "${CMAKE_SOURCE_DIR}/android")
 find_package(Qt6 REQUIRED COMPONENTS
     Core
     Quick
+    DBus
 )
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
@@ -38,12 +39,19 @@ qt6_add_executable(Countdown
     src/manager.cpp
     src/countdowndata.cpp
     src/datediff.cpp
+    src/reminder.cpp
+
+    src/include/manager.h
+
 )
+
+target_include_directories(Countdown PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include)
 
 # 链接库
 target_link_libraries(Countdown PRIVATE
     Qt6::Core
     Qt6::Quick
+    Qt6::DBus
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes

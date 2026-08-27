@@ -5,7 +5,7 @@
 
 ## 安装帮助
 
-发行版内提供linux的二进制
+Release 内提供linux的二进制
 
 通常需要这些包以供运行：
 
@@ -43,6 +43,7 @@ countdown
     ├── main.cpp                   # 主程序
     ├── manager.cpp                # 管理数据
     ├── manager.h
+    ├── include                    # 头文件 
     └── resources
         └── qml
             ├── AboutPage.qml      # 关于页面
@@ -68,12 +69,12 @@ countdown
 
 - [ ] 软件内检查更新和默认关闭的自动检查
 - [ ] 时间到/差几天提醒
-- [ ] 静默启动参数
 - [ ] 可选软件背景
-- [ ] 编辑已添加的事项
 - [ ] 安卓支持
 - [ ] Webdav云同步事项
 - [ ] 桌面磁贴
 - [ ] windows深色显示问题修复
+- [x] 静默启动参数
+- [x] 编辑已添加的事项
 
 此程序由 AI 辅助编写

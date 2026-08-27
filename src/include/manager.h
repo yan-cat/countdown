@@ -2,6 +2,7 @@
 #define MANAGER_H
 
 #include <QJsonArray>
+#include <QJsonObject>
 
 class CountdownManager : public QObject
 {
@@ -21,10 +22,12 @@ signals:
 public slots:
     void editCountdown(const QString &dateString);
     void removeCountdown(int id);
+    void run_reminder(int id);
 
 private:
     void saveCountdowns();
     void loadCountdowns();
+    QJsonObject getCountdownJson(int id, QString key) const;
 
     QJsonArray m_countdowns;
     QString m_filePath;

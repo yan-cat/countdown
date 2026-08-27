@@ -30,6 +30,11 @@ Kirigami.ApplicationWindow {
                 icon.name: "settings-configure"
                 onTriggered: settingsWindow.show()
             },
+            // Kirigami.Action {
+            //     text: "测试"
+            //     icon.name: "none"
+            //     onTriggered: manager.run_reminder(4)
+            // },
             Kirigami.Action {
                 text: "关于"
                 icon.name: "help-about"
@@ -44,7 +49,7 @@ Kirigami.ApplicationWindow {
 //==========================================================================菜单
     Kirigami.Dialog {
         id: adddate
-        title: "新建倒数日"
+        title: editingId >= 0 ? "编辑倒数日" : "新建倒数日"
         modal: true
         height: root.height
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel

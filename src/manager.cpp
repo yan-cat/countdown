@@ -4,6 +4,7 @@
 #include <QSettings>
 #include "manager.h"
 #include "countdowndata.h"
+#include "reminder.h"
 
 CountdownManager::CountdownManager(QObject *parent) : QObject(parent) //初始化
 {
@@ -109,4 +110,26 @@ void CountdownManager::setSetting(const QString &key, int value) //写设置
     s.setValue(key, value);
     emit refreshCountdowns();
     qDebug() << "修改设置键：" << key << "值：" << value;
+}
+
+QJsonObject CountdownManager::getCountdownJson(int id, QString key) const //按id查
+{
+    return ::getCountdownJson(m_countdowns, id, key);
+}
+
+void CountdownManager::run_reminder(int id) //发通知
+{
+    QString data = getCountdownJson(id, "name").value("name").toString();
+    qDebug() << "查询数据返回：" << data;
+
+    QDate today = QDate::currentDate();
+    QDate nextDue = getNextDue(getCountdownJson(id, "none"), today);
+    qint64 days = today.daysTo(nextDue);
+    qDebug() << "距今：" << days << "天";
+
+    QString out;
+    if (days == 0) out = "就是今天";
+    else out = QString("还有 %1 天").arg(days);
+
+    reminder(QString(data + out));
 }
