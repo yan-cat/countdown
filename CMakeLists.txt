@@ -24,6 +24,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Core
     Quick
     DBus
+    QuickControls2
 )
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
@@ -52,6 +53,7 @@ target_link_libraries(Countdown PRIVATE
     Qt6::Core
     Qt6::Quick
     Qt6::DBus
+    Qt6::QuickControls2
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes

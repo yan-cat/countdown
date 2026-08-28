@@ -1,5 +1,6 @@
-#include <QtDBus>
-#include <QImage>
+#include <QDBusInterface>
+#include <QDBusPendingCall>
+#include <QDBusPendingReply>
 #include <QVariant>
 #include "reminder.h"
 

@@ -15,6 +15,7 @@ public:
 
     Q_INVOKABLE int setting(const QString &key, int def = 0) const;
     Q_INVOKABLE void setSetting(const QString &key, int value);
+    void push_reminder();
 
 signals:
     void refreshCountdowns();

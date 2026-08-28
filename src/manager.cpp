@@ -12,6 +12,8 @@ CountdownManager::CountdownManager(QObject *parent) : QObject(parent) //初始�
                  + "/countdowns.json";
     QDir().mkpath(QFileInfo(m_filePath).absolutePath());
     loadCountdowns(); //首次加载数据
+
+    push_reminder(); //检查提醒
 }
 
 void CountdownManager::saveCountdowns() //保存倒数日
@@ -51,12 +53,14 @@ QVariantList CountdownManager::countdowns() const //数据丢qml
 
 void CountdownManager::editCountdown(const QString &dateString) //添加或编辑倒数日
 {
+    qDebug() << "收到数据：" << dateString;
+
     QJsonObject obj = QJsonDocument::fromJson(dateString.toUtf8()).object();
-    int id = obj.value("id").toInt();
+    int id = obj.value("id").toInteger();
 
     if (id >= 0) { //编辑
         for (int i = 0; i < m_countdowns.size(); ++i) {
-            if (m_countdowns.at(i).toObject().value("id").toInt() == id) {
+            if (m_countdowns.at(i).toObject().value("id").toInteger() == id) {
                 m_countdowns.removeAt(i);
                 m_countdowns.insert(i, obj);
                 saveCountdowns();
@@ -71,7 +75,7 @@ void CountdownManager::editCountdown(const QString &dateString) //添加或编�
         while (true) {
             bool found = false;
             for (const QJsonValue &v : std::as_const(m_countdowns)) {
-                if (v.toObject().value("id").toInt() == newId) { found = true; break; }
+                if (v.toObject().value("id").toInteger() == newId) { found = true; break; }
             }
             if (!found) break;
             newId++;
@@ -87,7 +91,7 @@ void CountdownManager::editCountdown(const QString &dateString) //添加或编�
 void CountdownManager::removeCountdown(int id) //删除倒数日
 {
     for (int i = 0; i < m_countdowns.size(); ++i) {
-        if (m_countdowns.at(i).toObject().value("id").toInt() == id) {
+        if (m_countdowns.at(i).toObject().value("id").toInteger() == id) {
             m_countdowns.removeAt(i);
             saveCountdowns();
             emit refreshCountdowns();
@@ -128,8 +132,25 @@ void CountdownManager::run_reminder(int id) //发通知
     qDebug() << "距今：" << days << "天";
 
     QString out;
-    if (days == 0) out = "就是今天";
-    else out = QString("还有 %1 天").arg(days);
+    if (days == 0) out = "今天";
+    else out = QString("还剩 %1 天").arg(days);
 
-    reminder(QString(data + out));
+    reminder(QString(out + data));
+}
+
+void CountdownManager::push_reminder()
+{
+    QSettings s;
+    qDebug() << "查询需提醒倒数日";
+    QDate today = QDate::currentDate();
+    for (const QJsonValue &v : std::as_const(m_countdowns))
+    {
+        QJsonObject obj = v.toObject();
+        if (getCountdownJson(obj.value("id").toInteger(), "notificationdays").value("notificationdays").toInteger() >= 0)
+        {
+            qint64 days = today.daysTo(QDate::fromString(obj.value("date").toString(), Qt::ISODate));
+            qDebug() << days;
+            run_reminder(obj.value("id").toInteger());
+        }
+    }
 }

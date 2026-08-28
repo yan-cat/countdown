@@ -21,7 +21,7 @@ Kirigami.ApplicationWindow {
         z: 1
     }
 
-    globalDrawer: Kirigami.GlobalDrawer {
+    globalDrawer: Kirigami.GlobalDrawer { //左上角菜单
         title: "菜单"
         isMenu: true
         actions: [
@@ -47,7 +47,7 @@ Kirigami.ApplicationWindow {
         ]
     }
 //==========================================================================菜单
-    Kirigami.Dialog {
+    Kirigami.Dialog { //新建&编辑倒数日
         id: adddate
         title: editingId >= 0 ? "编辑倒数日" : "新建倒数日"
         modal: true
@@ -79,8 +79,43 @@ Kirigami.ApplicationWindow {
             ComboBox {
                 id: repeatField
                 currentIndex: 0
-                model: ["无", "月重复", "年重复"]   // 三个选项
+                model: ["无", "月重复", "年重复"]
                 Layout.alignment: Qt.AlignCenter
+            }
+
+            CheckBox {
+                id: notificationField
+                checked: false
+                text: "到设定日期时提醒"
+                Layout.alignment: Qt.AlignCenter
+            }
+            ComboBox {
+                id: notificationtypeField
+                currentIndex: 0
+                model: ["当天提醒", "前一天提醒", "自定义"]
+                visible: notificationField.checked
+                Layout.alignment: Qt.AlignCenter
+            }
+            RowLayout {
+                spacing: 10
+                visible: notificationtypeField.currentIndex === 2 && notificationField.checked
+                Layout.alignment: Qt.AlignCenter
+
+                TextField {
+                    id: notificationdaysField
+                    placeholderText: "7"
+                    Layout.preferredWidth: 100
+                    inputMethodHints: Qt.ImhDigitsOnly
+
+                        validator: RegularExpressionValidator {
+                            regularExpression: /^\d+$/
+                        }
+                }
+                Label {
+                    id: rightText
+                    text: "天"
+                    Layout.preferredWidth: 15
+                }
             }
 
             Label {
@@ -102,6 +137,9 @@ Kirigami.ApplicationWindow {
             {
                 nameField.text = ""
                 repeatField.currentIndex = 0
+                notificationField.checked = false
+                notificationtypeField.currentIndex = 0
+                notificationdaysField.text = ""
                 dateField.selectedDate = new Date()
             }
         }
@@ -111,17 +149,35 @@ Kirigami.ApplicationWindow {
                           String(date.getMonth() + 1).padStart(2, '0') + "-" +
                           String(date.getDate()).padStart(2, '0')
 
+            var days = 0
+            if (!notificationField.checked) days = -1
+            else if (notificationtypeField.currentIndex === 0) days = 0
+            else if (notificationtypeField.currentIndex === 1) days = 1
+            else if (notificationtypeField.currentIndex === 2 && notificationdaysField.text !== "") days = parseInt(notificationdaysField.text, 10)
+            else
+            {
+                days = -1
+                inlineMessage.text = "提醒天数为空，已禁用提醒"
+                inlineMessage.type = Kirigami.MessageType.Warning
+                inlineMessage.visible = true
+            }
+
             var payload = {
-                name: nameField.text,
-                repeat: repeatField.currentIndex,
-                date: dateStr,
-                id: editingId
+                id: editingId, //id
+                name: nameField.text, //名字
+                repeat: repeatField.currentIndex, //重复
+                notificationdays: days, //提醒
+                date: dateStr, //日期
             }
             manager.editCountdown(JSON.stringify(payload))
+
+            inlineMessage.text = "保存成功"
+            inlineMessage.type = Kirigami.MessageType.Positive
+            inlineMessage.visible = true
         }
     }
-//==========================================================================卡片主界面
-    pageStack.initialPage: Kirigami.ScrollablePage {
+
+    pageStack.initialPage: Kirigami.ScrollablePage { //卡片主界面
         title: "倒数日"
         MouseArea {
                 anchors.fill: parent
@@ -157,6 +213,9 @@ Kirigami.ApplicationWindow {
                         //菜单
                         Menu {
                             id: cardMenu
+
+                            property var inlineMessage1: inlineMessage
+
                             MenuItem {
                                 text: "编辑"
                                 icon.name: "document-edit"
@@ -167,13 +226,39 @@ Kirigami.ApplicationWindow {
                                         repeatIndex: { "不重复": 0, "月重复": 1, "年重复": 2 }[modelData.repeat] ?? 0,
                                         date: modelData.date
                                     }
+
+                                    var days = modelData.notificationdays
+
+                                    notificationField.checked = false
+                                    notificationtypeField.currentIndex = 0
+                                    notificationdaysField.text = ""
+                                    if (days === -1) {
+                                        notificationField.checked = false
+                                    } else {
+                                        notificationField.checked = true
+                                        if (days === 0) {
+                                            notificationtypeField.currentIndex = 0
+                                        } else if (days === 1) {
+                                            notificationtypeField.currentIndex = 1
+                                        } else {
+                                            notificationtypeField.currentIndex = 2
+                                            notificationdaysField.text = days.toString()
+                                        }
+                                    }
+
                                     adddate.open()
                                 }
                             }
                             MenuItem {
                                 text: "删除"
                                 icon.name: "edit-delete"
-                                onTriggered: manager.removeCountdown(modelData.id)
+                                onTriggered: {
+                                    manager.removeCountdown(modelData.id)
+
+                                    cardMenu.inlineMessage1.text = "删除成功"
+                                    cardMenu.inlineMessage1.type = Kirigami.MessageType.Positive
+                                    cardMenu.inlineMessage1.visible = true
+                                }
                             }
                         }
                         //主卡片
@@ -190,6 +275,7 @@ Kirigami.ApplicationWindow {
                             }
                             Label { text: modelData.repeat }
                             Label { text: modelData.date }
+                            Label { text: modelData.notificationdaystext }
                             Label { text: modelData.daysText }
                         }
                         //鼠标右键
@@ -219,4 +305,26 @@ Kirigami.ApplicationWindow {
         id: aboutPageComponent
         AboutPage {}
     }
+
+    Kirigami.InlineMessage { //提醒土司
+        id: inlineMessage
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        visible: false
+        showCloseButton: true
+        onVisibleChanged: {
+            if (visible) {
+                hideMessageTimer.restart()
+            }
+        }
+    }
+    Timer { //两秒自动关闭
+        id: hideMessageTimer
+        interval: 2000
+        onTriggered: {
+            inlineMessage.visible = false
+        }
+    }
+
 }

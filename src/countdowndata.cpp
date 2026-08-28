@@ -9,7 +9,7 @@ QJsonObject getCountdownJson(QJsonArray m_countdowns, int id, QString key) //按
 {
     for (const QJsonValue &v : m_countdowns) {
         QJsonObject obj = v.toObject();
-        if (obj.value("id").toInt() == id) {
+        if (obj.value("id").toInteger() == id) {
             if (key != "none")
             {
                 QJsonObject result;
@@ -28,7 +28,7 @@ QDate getNextDue(const QJsonObject &obj, const QDate &today)
     QDateTime target = QDateTime::fromString(date, "yyyy-MM-dd");
     QDate targetDate = target.date();
 
-    int repeat = obj.value("repeat").toInt(); // 0=不重复, 1=月重复, 2=年重复
+    int repeat = obj.value("repeat").toInteger(); // 0=不重复, 1=月重复, 2=年重复
 
     QDate nextDue;
     if (repeat == 2) {
@@ -54,7 +54,8 @@ QDate getNextDue(const QJsonObject &obj, const QDate &today)
     return nextDue;
 }
 
-// 修改后的原函数
+qint64 getnotificationdays(const QJsonObject &obj){return obj.value("notificationdays").toInteger();}
+
 QVariantList buildCountdownViewData(const QJsonArray &rawCountdowns)
 {
     QSettings s;
@@ -67,10 +68,17 @@ QVariantList buildCountdownViewData(const QJsonArray &rawCountdowns)
 
         // 重复文案
         QString repeat;
-        int repeatVal = obj.value("repeat").toInt();
+        int repeatVal = obj.value("repeat").toInteger();
         if (repeatVal == 0) repeat = "不重复";
         else if (repeatVal == 1) repeat = "月重复";
         else if (repeatVal == 2) repeat = "年重复";
+
+        // 提醒
+        qint64 notificationdays = obj.value("notificationdays").toInteger();
+        QString notificationdaystext;
+        if (notificationdays == -1) notificationdaystext = "无提醒";
+        else if (notificationdays == 0) notificationdaystext = "当天提醒";
+        else notificationdaystext = QString("提前 %1 天提醒").arg(notificationdays);
 
         // 计算下一个到期日
         QDate nextDue = getNextDue(obj, today);
@@ -97,6 +105,7 @@ QVariantList buildCountdownViewData(const QJsonArray &rawCountdowns)
         }
 
         obj.insert("repeat", repeat);
+        obj.insert("notificationdaystext", notificationdaystext);
         obj.insert("daysText", daysText);
 
         list.append(obj.toVariantMap());
