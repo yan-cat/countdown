@@ -147,6 +147,9 @@ Kirigami.ApplicationWindow {
                           String(date.getMonth() + 1).padStart(2, '0') + "-" +
                           String(date.getDate()).padStart(2, '0')
 
+            var name = nameField.text;
+            if (name === "") name = "未命名";
+
             var days = 0
             if (!notificationField.checked) days = -1
             else if (notificationtypeField.currentIndex === 0) days = 0
@@ -162,7 +165,7 @@ Kirigami.ApplicationWindow {
 
             var payload = {
                 id: editingId, // id
-                name: nameField.text, // 名字
+                name: name, // 名字
                 repeat: repeatField.currentIndex, // 重复
                 notificationdays: days, // 提醒
                 date: dateStr, // 日期

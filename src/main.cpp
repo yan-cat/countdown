@@ -47,13 +47,22 @@ int main(int argc, char *argv[])
 
 //===================================================================Debug
 
-    //显示详细日志吗
-    if (manager.getDebugOn("outputAllDebuglog")) QLoggingCategory::setFilterRules("*.debug=true");
-    else QLoggingCategory::setFilterRules("*.debug=false");
-
-    //显示app日志吗
-    if (manager.getDebugOn("outputDebuglog")) QLoggingCategory::setFilterRules("Countdown.app.debug=true");
-    else QLoggingCategory::setFilterRules("Countdown.app.debug=false");
+    //显示日志吗
+    if (getDebugOn("outputDebuglog") == 0)
+    {
+        QLoggingCategory::setFilterRules("*.debug=false");
+        qInfo() << "[ Info ]" << "debug日志为关";
+    }
+    else if (getDebugOn("outputDebuglog") == 1)
+    {
+        QLoggingCategory::setFilterRules("Countdown.app.debug=true");
+        qInfo() << "[ Info ]" << "debug日志为仅app";
+    }
+    else if (getDebugOn("outputDebuglog") == 2)
+    {
+        QLoggingCategory::setFilterRules("*.debug=true");
+        qInfo() << "[ Info ]" << "debug日志为开";
+    }
 
 //===================================================================后续启动
 

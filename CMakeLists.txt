@@ -74,6 +74,7 @@ qt_add_qml_module(Countdown
         src/resources/qml/Main.qml
         src/resources/qml/AboutPage.qml
         src/resources/qml/SettingsWindow.qml
+        src/resources/qml/ReminderWindow.qml
 )
 
 # win的不知道什么编译参数

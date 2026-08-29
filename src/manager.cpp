@@ -277,13 +277,3 @@ void CountdownManager::push_reminder()
         }
     }
 }
-
-// 获取debug设置
-bool CountdownManager::getDebugOn(const QString &key)
-{
-    QSettings s;
-    if (s.value("debugmode", false).toBool()){
-        return s.value(key, false).toBool();
-    }
-    else return false;
-}

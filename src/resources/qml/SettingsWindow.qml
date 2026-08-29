@@ -44,23 +44,21 @@ Window {
             visible: debugmode.checked
             Layout.alignment: Qt.AlignHCenter
         }
-        CheckBox {
+
+        ComboBox {
             id: outputDebuglog
-            text: "输出APP调试日志"
-            visible: debugmode.checked
-            checked: manager.setting("outputDebuglog", false)
-            onCheckedChanged: {
-                manager.setSetting("outputDebuglog", checked)
-            }
+            currentIndex: manager.setting("outputDebuglog", 0)
+            model: ["关闭调试日志", "仅APP调试日志", "调试日志全开（此设置会拖慢软件速度！！！）"]
+            onActivated: manager.setSetting("outputDebuglog", currentIndex)
             Layout.alignment: Qt.AlignHCenter
         }
         CheckBox {
-            id: outputAllDebuglog
-            text: "输出全部调试日志"
+            id: useWindowsReminderType
+            text: "强制使用windows通知窗口而非系统通知"
             visible: debugmode.checked
-            checked: manager.setting("outputAllDebuglog", false)
+            checked: manager.setting("useWindowsReminderType", false)
             onCheckedChanged: {
-                manager.setSetting("outputAllDebuglog", checked)
+                manager.setSetting("useWindowsReminderType", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }
