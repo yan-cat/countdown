@@ -41,6 +41,7 @@ qt6_add_executable(Countdown
     src/countdowndata.cpp
     src/datediff.cpp
     src/reminder.cpp
+    src/debug.cpp
 
     src/include/manager.h
 
@@ -60,9 +61,11 @@ target_link_libraries(Countdown PRIVATE
 )
 
 target_compile_definitions(Countdown PRIVATE
-    APP_VERSION="${PROJECT_VERSION}"
+    APP_VERSION="${PROJECT_VERSION}" # 版本号丢宏
 )
 
+
+# qml资源
 qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
@@ -73,6 +76,7 @@ qt_add_qml_module(Countdown
         src/resources/qml/SettingsWindow.qml
 )
 
+# win的不知道什么编译参数
 if (WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Release" OR
         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR
@@ -83,6 +87,8 @@ endif()
 
 install(TARGETS Countdown
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+
+    # 没用的安卓安装
     LIBRARY DESTINATION lib/${ANDROID_ABI}
     ARCHIVE DESTINATION lib/${ANDROID_ABI}
 )

@@ -11,7 +11,8 @@ Kirigami.ApplicationWindow {
     visible: true
     title: "倒数日"
 
-    Label { //空项目引导
+    // 空项目引导
+    Label {
         visible: manager.countdowns.length === 0 && root.pageStack.depth === 1
         text: "还没有倒数日\n右键空白处新建倒数日"
         anchors.centerIn: parent
@@ -21,7 +22,8 @@ Kirigami.ApplicationWindow {
         z: 1
     }
 
-    globalDrawer: Kirigami.GlobalDrawer { //左上角菜单
+    // 左上角菜单
+    globalDrawer: Kirigami.GlobalDrawer {
         title: "菜单"
         isMenu: true
         actions: [
@@ -30,11 +32,6 @@ Kirigami.ApplicationWindow {
                 icon.name: "settings-configure"
                 onTriggered: settingsWindow.show()
             },
-            // Kirigami.Action {
-            //     text: "测试"
-            //     icon.name: "none"
-            //     onTriggered: manager.run_reminder(4)
-            // },
             Kirigami.Action {
                 text: "关于"
                 icon.name: "help-about"
@@ -47,7 +44,8 @@ Kirigami.ApplicationWindow {
         ]
     }
 //==========================================================================菜单
-    Kirigami.Dialog { //新建&编辑倒数日
+    // 新建&编辑倒数日
+    Kirigami.Dialog {
         id: adddate
         title: editingId >= 0 ? "编辑倒数日" : "新建倒数日"
         modal: true
@@ -163,11 +161,11 @@ Kirigami.ApplicationWindow {
             }
 
             var payload = {
-                id: editingId, //id
-                name: nameField.text, //名字
-                repeat: repeatField.currentIndex, //重复
-                notificationdays: days, //提醒
-                date: dateStr, //日期
+                id: editingId, // id
+                name: nameField.text, // 名字
+                repeat: repeatField.currentIndex, // 重复
+                notificationdays: days, // 提醒
+                date: dateStr, // 日期
             }
             manager.editCountdown(JSON.stringify(payload))
 
@@ -177,7 +175,8 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    pageStack.initialPage: Kirigami.ScrollablePage { //卡片主界面
+    // 卡片主界面
+    pageStack.initialPage: Kirigami.ScrollablePage {
         title: "倒数日"
         MouseArea {
                 anchors.fill: parent
@@ -261,7 +260,7 @@ Kirigami.ApplicationWindow {
                                 }
                             }
                         }
-                        //主卡片
+                        // 主卡片
                         contentItem: ColumnLayout {
                             anchors.margins: Kirigami.Units.largeSpacing
 
@@ -278,7 +277,7 @@ Kirigami.ApplicationWindow {
                             Label { text: modelData.notificationdaystext }
                             Label { text: modelData.daysText }
                         }
-                        //鼠标右键
+                        // 鼠标右键
                         MouseArea {
                             anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -299,14 +298,15 @@ Kirigami.ApplicationWindow {
 
 
     SettingsWindow {
-        id: settingsWindow        // 类型名按文件名，这里是隐藏的窗口实例
+        id: settingsWindow // 类型名按文件名，这里是隐藏的窗口实例
     }
     Component {
         id: aboutPageComponent
         AboutPage {}
     }
 
-    Kirigami.InlineMessage { //提醒土司
+    //提醒土司
+    Kirigami.InlineMessage {
         id: inlineMessage
         anchors.top: parent.top
         anchors.left: parent.left
@@ -319,7 +319,9 @@ Kirigami.ApplicationWindow {
             }
         }
     }
-    Timer { //两秒自动关闭
+
+    // 两秒自动关闭
+    Timer {
         id: hideMessageTimer
         interval: 2000
         onTriggered: {

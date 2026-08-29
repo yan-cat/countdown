@@ -29,7 +29,44 @@ Window {
             text: "注：年月日显示模式为估算仅作参考，具体以单天数显示为准"
             Layout.alignment: Qt.AlignHCenter
         }
-        Item { //占满不让分配
+
+        CheckBox {
+            id: debugmode
+            text: "调试模式"
+            checked: manager.setting("debugmode", false)
+            onCheckedChanged: {
+                manager.setSetting("debugmode", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+        Label {
+            text: "调试选项需要重启才能生效！"
+            visible: debugmode.checked
+            Layout.alignment: Qt.AlignHCenter
+        }
+        CheckBox {
+            id: outputDebuglog
+            text: "输出APP调试日志"
+            visible: debugmode.checked
+            checked: manager.setting("outputDebuglog", false)
+            onCheckedChanged: {
+                manager.setSetting("outputDebuglog", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+        CheckBox {
+            id: outputAllDebuglog
+            text: "输出全部调试日志"
+            visible: debugmode.checked
+            checked: manager.setting("outputAllDebuglog", false)
+            onCheckedChanged: {
+                manager.setSetting("outputAllDebuglog", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        // 占满不让分配
+        Item {
             Layout.fillHeight: true
             Layout.fillWidth: true
         }

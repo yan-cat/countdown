@@ -1,11 +1,12 @@
-#include "countdowndata.h"
-#include "datediff.h"
 #include <QJsonObject>
 #include <QSettings>
 #include <QString>
+#include "countdowndata.h"
+#include "datediff.h"
+#include "debug.h"
 
-
-QJsonObject getCountdownJson(QJsonArray m_countdowns, int id, QString key) //按id查
+// 按id查
+QJsonObject getCountdownJson(QJsonArray m_countdowns, int id, QString key)
 {
     for (const QJsonValue &v : m_countdowns) {
         QJsonObject obj = v.toObject();
@@ -59,7 +60,7 @@ qint64 getnotificationdays(const QJsonObject &obj){return obj.value("notificatio
 QVariantList buildCountdownViewData(const QJsonArray &rawCountdowns)
 {
     QSettings s;
-    qDebug() << "查询数据";
+    qCDebug(CountdownLog) << "[ Debug ]" << "查询数据";
     QVariantList list;
     QDate today = QDate::currentDate();
 

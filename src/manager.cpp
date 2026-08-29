@@ -2,43 +2,67 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QSettings>
+#include <QCoreApplication>
 #include "manager.h"
 #include "countdowndata.h"
 #include "reminder.h"
+#include "debug.h"
 
-CountdownManager::CountdownManager(QObject *parent) : QObject(parent) //初始化
+// 初始化
+CountdownManager::CountdownManager(QObject *parent) : QObject(parent)
 {
-    m_filePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) //设定倒数日json
+    m_filePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) // 设定倒数日json
                  + "/countdowns.json";
     QDir().mkpath(QFileInfo(m_filePath).absolutePath());
-    loadCountdowns(); //首次加载数据
+    loadCountdowns(); // 首次加载数据
 
-    push_reminder(); //检查提醒
+    push_reminder(); // 检查提醒
 }
 
-void CountdownManager::saveCountdowns() //保存倒数日
+// 保存倒数日
+void CountdownManager::saveCountdowns()
 {
     QFile file(m_filePath);
-    if (!file.open(QIODevice::WriteOnly)) { //只读报错
+    if (!file.open(QIODevice::WriteOnly)) { // 只读报错
         qWarning() << "无法写入：" << m_filePath;
         return;
     }
-    file.write(QJsonDocument(m_countdowns).toJson(QJsonDocument::Indented));
+    QJsonObject rootobj{
+        {"version", APP_VERSION},
+        {"data", m_countdowns}
+    };
+    QJsonDocument root(rootobj);
+    file.write(root.toJson(QJsonDocument::Indented));
 }
-void CountdownManager::loadCountdowns() //加载倒数日
+
+// 加载倒数日
+void CountdownManager::loadCountdowns()
 {
-    qDebug() << "开始加载数据文件";
+    qCDebug(CountdownLog) << "[ Debug ]" << "开始加载数据文件";
     QFile file(m_filePath);
 
-    if (!file.open(QIODevice::ReadOnly)) { //找不到数据文件
+    if (!file.open(QIODevice::ReadOnly)) { // 找不到数据文件
         qWarning() << "打开失败，首次可忽略：" << m_filePath;
         return;
     }
 
-    QJsonDocument doc = QJsonDocument::fromJson(file.readAll()); //读取全文成json
+    QJsonObject root = QJsonDocument::fromJson(file.readAll()).object(); // 读取全文成json
 
-    if (doc.isArray()) { //是json写入m_countdowns
-        m_countdowns = doc.array();
+    QString fileVersion = root.value("version").toString();
+    qCDebug(CountdownLog) << "[ Debug ]" << "文件版本" << fileVersion;
+    qCDebug(CountdownLog) << "[ Debug ]" << "软件版本" << APP_VERSION;
+    if (fileVersion != APP_VERSION)
+    {
+        file.close();
+        updateOlddata();
+        loadCountdowns();
+        return;
+    }
+    else qCDebug(CountdownLog) << "[ Debug ]" << "无需升级数据";
+
+    // 是json写入m_countdowns
+    if (root.contains("data") && root.value("data").isArray()) {
+        m_countdowns = root.value("data").toArray();
     }
     else
     {
@@ -46,31 +70,119 @@ void CountdownManager::loadCountdowns() //加载倒数日
     }
 }
 
-QVariantList CountdownManager::countdowns() const //数据丢qml
+// 旧版本数据转移
+void CountdownManager::updateOlddata()
+{
+    qCDebug(CountdownLog) << "[ Debug ]" << "旧数据转移启动";
+
+    QFile file(m_filePath);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qCDebug(CountdownLog) << "找不到数据文件" << m_filePath;
+        qApp->quit();
+        return;
+    }
+
+    QJsonObject root = QJsonDocument::fromJson(file.readAll()).object(); // 读取全文成json
+
+    file.close();
+
+    //是不是新的数据结构
+    if (!root.contains("data"))
+    {
+        qCDebug(CountdownLog) << "[ Debug ]" << "数据结构为旧结构";
+
+        if (!file.open(QIODevice::ReadOnly)) {
+            qCDebug(CountdownLog) << "找不到数据文件" << m_filePath;
+            qApp->quit();
+            return;
+        }
+        QJsonArray data = QJsonDocument::fromJson(file.readAll()).array();
+        file.close();
+
+        if (!file.open(QIODevice::WriteOnly)) {
+            qCDebug(CountdownLog) << "数据文件不可写" << m_filePath;
+            qApp->quit();
+            return;
+        }
+
+        QJsonObject rootobj{
+            {"data", data}
+        };
+        QJsonDocument newroot(rootobj);
+        file.write(newroot.toJson(QJsonDocument::Indented));
+
+        qCDebug(CountdownLog) << "[ Debug ]" << "已转移成新结构";
+    }
+    else
+    {
+        qCDebug(CountdownLog) << "[ Debug ]" << "数据结构为新结构";
+
+        // 读数据
+        if (!file.open(QIODevice::ReadOnly)) {
+            qCDebug(CountdownLog) << "找不到数据文件" << m_filePath;
+            qApp->quit();
+            return;
+        }
+        QJsonArray data = QJsonDocument::fromJson(file.readAll()).object().value("data").toArray();
+        file.close();
+
+        // 处理缺失项
+        for (int i = 0; i < data.size(); ++i) {
+            QJsonObject obj = data[i].toObject();
+
+            if (!obj.contains("notificationdays")) obj["notificationdays"] = -1;
+            if (!obj.contains("repeat")) obj["repeat"] = 0;
+
+            data[i] = obj;
+        }
+
+        // 放好版本存回去
+        if (!file.open(QIODevice::WriteOnly)) {
+            qCDebug(CountdownLog) << "数据文件不可写" << m_filePath;
+            qApp->quit();
+            return;
+        }
+        QJsonObject rootobj{
+            {"version", APP_VERSION},
+            {"data", data}
+        };
+        QJsonDocument root(rootobj);
+        file.write(root.toJson(QJsonDocument::Indented));
+
+        qCDebug(CountdownLog) << "[ Debug ]" << "已添加缺失项";
+    }
+}
+
+// 数据丢qml
+QVariantList CountdownManager::countdowns() const
 {
     return buildCountdownViewData(m_countdowns);
 }
 
-void CountdownManager::editCountdown(const QString &dateString) //添加或编辑倒数日
+// 添加或编辑倒数日
+void CountdownManager::editCountdown(const QString &dateString)
 {
-    qDebug() << "收到数据：" << dateString;
+    qCDebug(CountdownLog) << "[ Debug ]" << "收到数据：" << dateString;
 
     QJsonObject obj = QJsonDocument::fromJson(dateString.toUtf8()).object();
     int id = obj.value("id").toInteger();
 
-    if (id >= 0) { //编辑
+    if (id >= 0) //编辑
+    {
         for (int i = 0; i < m_countdowns.size(); ++i) {
             if (m_countdowns.at(i).toObject().value("id").toInteger() == id) {
                 m_countdowns.removeAt(i);
                 m_countdowns.insert(i, obj);
                 saveCountdowns();
                 emit refreshCountdowns();
-                qDebug() << "已编辑，id：" << id;
+                qCDebug(CountdownLog) << "[ Debug ]" << "已编辑，id：" << id;
                 return;
             }
         }
         qWarning() << "编辑失败，找不到 id：" << id;
-    } else { //新建
+    }
+    else // 新建
+    {
         int newId = 0;
         while (true) {
             bool found = false;
@@ -84,52 +196,65 @@ void CountdownManager::editCountdown(const QString &dateString) //添加或编�
         m_countdowns.append(obj);
         saveCountdowns();
         emit refreshCountdowns();
-        qDebug() << "新增，id：" << newId;
+        qCDebug(CountdownLog) << "[ Debug ]" << "新增，id：" << newId;
     }
 }
 
-void CountdownManager::removeCountdown(int id) //删除倒数日
+// 删除倒数日
+void CountdownManager::removeCountdown(int id)
 {
     for (int i = 0; i < m_countdowns.size(); ++i) {
         if (m_countdowns.at(i).toObject().value("id").toInteger() == id) {
             m_countdowns.removeAt(i);
             saveCountdowns();
             emit refreshCountdowns();
-            qDebug() << "已删除，id：" << id;
+            qCDebug(CountdownLog) << "[ Debug ]" << "已删除，id：" << id;
             return;
         }
     }
     qWarning() << "删除失败，id：" << id;
 }
 
-int CountdownManager::setting(const QString &key, int def) const //读设置
+// 读设置
+int CountdownManager::setting(const QString &key, int def) const
 {
     QSettings s;
+    qCDebug(CountdownLog) << "[ Debug ]" << "查询设置：" << key;
     return s.value(key, def).toInt();
 }
 
-void CountdownManager::setSetting(const QString &key, int value) //写设置
+// 写设置
+void CountdownManager::setSetting(const QString &key, int value)
 {
     QSettings s;
     s.setValue(key, value);
     emit refreshCountdowns();
-    qDebug() << "修改设置键：" << key << "值：" << value;
+    qCDebug(CountdownLog) << "[ Debug ]" << "修改设置键：" << key << "值：" << value;
 }
 
-QJsonObject CountdownManager::getCountdownJson(int id, QString key) const //按id查
+// 按id查
+QJsonObject CountdownManager::getCountdownJson(int id, QString key) const
 {
     return ::getCountdownJson(m_countdowns, id, key);
 }
 
-void CountdownManager::run_reminder(int id) //发通知
+// 确认满足发送条件发通知
+void CountdownManager::run_reminder(int id)
 {
     QString data = getCountdownJson(id, "name").value("name").toString();
-    qDebug() << "查询数据返回：" << data;
+    qCDebug(CountdownLog) << "[ Debug ]" << "查询数据返回：" << data;
 
     QDate today = QDate::currentDate();
     QDate nextDue = getNextDue(getCountdownJson(id, "none"), today);
     qint64 days = today.daysTo(nextDue);
-    qDebug() << "距今：" << days << "天";
+    qCDebug(CountdownLog) << "[ Debug ]" << "距今：" << days << "天";
+
+    qint64 setdays = getCountdownJson(id, "notificationdays").value("notificationdays").toInteger();
+    if (days > setdays)
+    {
+        qCDebug(CountdownLog) << "[ Debug ]" << "超过设定天数" << setdays << "天，驳回";
+        return;
+    }
 
     QString out;
     if (days == 0) out = "今天";
@@ -138,19 +263,27 @@ void CountdownManager::run_reminder(int id) //发通知
     reminder(QString(out + data));
 }
 
+// 首次查需要提醒的日子
 void CountdownManager::push_reminder()
 {
     QSettings s;
-    qDebug() << "查询需提醒倒数日";
-    QDate today = QDate::currentDate();
+    qCDebug(CountdownLog) << "[ Debug ]" << "查询需提醒倒数日";
     for (const QJsonValue &v : std::as_const(m_countdowns))
     {
         QJsonObject obj = v.toObject();
         if (getCountdownJson(obj.value("id").toInteger(), "notificationdays").value("notificationdays").toInteger() >= 0)
         {
-            qint64 days = today.daysTo(QDate::fromString(obj.value("date").toString(), Qt::ISODate));
-            qDebug() << days;
             run_reminder(obj.value("id").toInteger());
         }
     }
+}
+
+// 获取debug设置
+bool CountdownManager::getDebugOn(const QString &key)
+{
+    QSettings s;
+    if (s.value("debugmode", false).toBool()){
+        return s.value(key, false).toBool();
+    }
+    else return false;
 }

@@ -3,6 +3,7 @@
 #include <QDBusPendingReply>
 #include <QVariant>
 #include "reminder.h"
+#include "debug.h"
 
 void reminder(QString body)
 {
@@ -36,8 +37,8 @@ void reminder(QString body)
     if (reply.isError()) {
         qWarning() << "发送通知失败:" << reply.error().message();
     } else {
-        qDebug() << "已成功发送通知";
-        qDebug() << "通知id:" << reply.value();
-        qDebug() << "通知内容:" << body;
+        qCDebug(CountdownLog) << "[ Debug ]" << "已成功发送通知";
+        qCDebug(CountdownLog) << "[ Debug ]" << "通知id:" << reply.value();
+        qCDebug(CountdownLog) << "[ Debug ]" << "通知内容:" << body;
     }
 }

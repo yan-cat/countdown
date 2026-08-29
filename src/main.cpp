@@ -8,7 +8,9 @@
 #include <QQuickWindow>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QLoggingCategory>
 #include "manager.h"
+#include "debug.h"
 
 int main(int argc, char *argv[])
 {
@@ -35,16 +37,28 @@ int main(int argc, char *argv[])
 
     QCommandLineOption minimized({"start-minimized", "minimized", "m"}, "静默启动（最小化窗口启动）");
     parser.addOption(minimized);
+
 //===================================================================后续启动
 
     KIconTheme::initTheme();
     QGuiApplication app(argc, argv);
-    parser.process(app);
     QQmlApplicationEngine engine;
-
     CountdownManager manager;
-    engine.rootContext()->setContextProperty("manager", &manager);
 
+//===================================================================Debug
+
+    //显示详细日志吗
+    if (manager.getDebugOn("outputAllDebuglog")) QLoggingCategory::setFilterRules("*.debug=true");
+    else QLoggingCategory::setFilterRules("*.debug=false");
+
+    //显示app日志吗
+    if (manager.getDebugOn("outputDebuglog")) QLoggingCategory::setFilterRules("Countdown.app.debug=true");
+    else QLoggingCategory::setFilterRules("Countdown.app.debug=false");
+
+//===================================================================后续启动
+
+    parser.process(app);
+    engine.rootContext()->setContextProperty("manager", &manager);
     engine.loadFromModule("com.countdown", "Main");
     if (engine.rootObjects().isEmpty())
         return -1;
@@ -52,7 +66,7 @@ int main(int argc, char *argv[])
 //===================================================================最小化启动
 
     if (parser.isSet(minimized)) {
-        qDebug() << "静默启动";
+        qCDebug(CountdownLog) << "[ Debug ]" << "静默启动";
         QObject *root = engine.rootObjects().constFirst();
         if (auto *window = qobject_cast<QQuickWindow*>(root)) {
             window->showMinimized();

@@ -16,6 +16,7 @@ public:
     Q_INVOKABLE int setting(const QString &key, int def = 0) const;
     Q_INVOKABLE void setSetting(const QString &key, int value);
     void push_reminder();
+    bool getDebugOn(const QString &key);
 
 signals:
     void refreshCountdowns();
@@ -28,6 +29,7 @@ public slots:
 private:
     void saveCountdowns();
     void loadCountdowns();
+    void updateOlddata();
     QJsonObject getCountdownJson(int id, QString key) const;
 
     QJsonArray m_countdowns;

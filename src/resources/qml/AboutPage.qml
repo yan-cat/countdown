@@ -2,16 +2,17 @@ import QtQuick 2.15
 import org.kde.kirigami as Kirigami
 
 Kirigami.AboutPage {
-    objectName: "aboutPage"                 // 用来防止重复推入
+    objectName: "aboutPage" // 用来防止重复推入
 
     actions: [
         Kirigami.Action {
             text: "关闭"
             icon.name: "window-close"
-            onTriggered: applicationWindow().pageStack.pop()   // 页栈里弹自己
+            onTriggered: applicationWindow().pageStack.pop() // 页栈里弹自己
         }
     ]
 
+    // 乱七八糟信息
     aboutData: {
         "productName": "countdown",
         "componentName": "countdown",

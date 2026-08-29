@@ -1,19 +1,22 @@
 #include "datediff.h"
 
-DateDiff dateDiff(const QDate &from, const QDate &to) //天换算年月日
+// 天换算年月日
+DateDiff dateDiff(const QDate &from, const QDate &to)
 {
     DateDiff d;
 
     int days = qAbs(from.daysTo(to));
 
+    // 天多了减天
     int months = 0;
-    while (days >= 30) { //天多了减天
+    while (days >= 30) {
         days -= 30;
         months++;
     }
 
+    // 月多了减月
     int years = 0;
-    while (months >= 12) { //月多了减月
+    while (months >= 12) {
         months -= 12;
         years++;
     }
@@ -23,7 +26,9 @@ DateDiff dateDiff(const QDate &from, const QDate &to) //天换算年月日
     d.days = days;
     return d;
 }
-QString dateDiffText(const QDate &from, const QDate &to) //年月日文案
+
+// 年月日文案
+QString dateDiffText(const QDate &from, const QDate &to)
 {
     DateDiff d = dateDiff(from, to);
 
