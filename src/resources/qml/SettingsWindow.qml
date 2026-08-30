@@ -47,6 +47,7 @@ Window {
 
         ComboBox {
             id: outputDebuglog
+            visible: debugmode.checked
             currentIndex: manager.setting("outputDebuglog", 0)
             model: ["关闭调试日志", "仅APP调试日志", "调试日志全开（此设置会拖慢软件速度！！！）"]
             onActivated: manager.setSetting("outputDebuglog", currentIndex)
