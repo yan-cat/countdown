@@ -129,6 +129,8 @@ void CountdownUpdater::downloadNewVersion()
 
     // 下载完成
     connect(reply, &QNetworkReply::finished, this, [this, savePath]() {
+        downloadFile.flush();
+        downloadFile.close();
         if (reply->error() != QNetworkReply::NoError)
             emit downloadError(reply->errorString());
         else
@@ -136,7 +138,6 @@ void CountdownUpdater::downloadNewVersion()
             emit downloadFinished();
             CountdownUpdater::installNewVersion(savePath);
         }
-        downloadFile.close();
         reply->deleteLater();
         reply = nullptr;
         networkManager.clearConnectionCache();
