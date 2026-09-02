@@ -195,11 +195,30 @@ void CountdownUpdater::installNewVersion(QString path)
     }
     else if (os == "winnt")
     {
-        if (!QDesktopServices::openUrl(QUrl::fromLocalFile(path))) {
+#ifdef Q_OS_WIN
+        // 先按"双击"语义打开（自动触发 UAC）；SE_ERR_ACCESSDENIED 表示被拒，再强制 runas
+        QString nativePath = QDir::toNativeSeparators(path);
+        HINSTANCE ret = ShellExecuteW(nullptr, L"open",
+                                      (LPCWSTR)nativePath.utf16(),
+                                      nullptr, nullptr, SW_SHOWNORMAL);
+        if ((intptr_t)ret == SE_ERR_ACCESSDENIED) {
+            ret = ShellExecuteW(nullptr, L"runas",
+                                (LPCWSTR)nativePath.utf16(),
+                                nullptr, nullptr, SW_SHOWNORMAL);
+        }
+        if ((intptr_t)ret <= 32) {
+            qWarning() << "启动安装包失败，ShellExecute 返回:" << (intptr_t)ret
+                       << "路径:" << nativePath;
+            emit downloadError(tr("启动安装包失败（错误码 %1）").arg((intptr_t)ret));
+            return;
+        }
+#else
+        if (!QProcess::startDetached(path, {})) {
             qWarning() << "启动安装包失败:" << path;
             emit downloadError(tr("启动安装包失败：%1").arg(path));
             return;
         }
+#endif
         QCoreApplication::quit();
         return;
     }
