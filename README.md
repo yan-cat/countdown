@@ -29,26 +29,33 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
 
 ```plaintext
 countdown
-├── android
-│   └── AndroidManifest.xml        # 暂未使用
+├── android                           # 暂未使用
+│   ├── AndroidManifest.xml
+│   └── splash.xml
 ├── CMakeLists.txt
-├── Countdown.py                   # KDE Craft 蓝图
+├── Countdown.py                      # KDE Craft 蓝图
 ├── LICENSE
 ├── README.md
-└── src
-    ├── countdowndata.cpp          # 处理需要显示的数据
-    ├── countdowndata.h
-    ├── datediff.cpp               # 从天计算年月日
-    ├── datediff.h
-    ├── main.cpp                   # 主程序
-    ├── manager.cpp                # 管理数据
-    ├── manager.h
-    ├── include                    # 头文件 
-    └── resources
-        └── qml
-            ├── AboutPage.qml      # 关于页面
-            ├── Main.qml主页面
-            └── SettingsWindow.qml # 设置页面
+├── src
+│   ├── countdowndata.cpp             # 处理需要显示的数据
+│   ├── datediff.cpp                  # 从天计算年月日
+│   ├── debug.cpp                     # Debug相关
+│   ├── main.cpp                      # 主程序
+│   ├── manager.cpp                   # 管理数据
+│   ├── reminder.cpp                  # 倒数日提醒
+│   └── updater.cpp                   # 检查并更新
+│   ├── include                       # 头文件
+│   ├── resources
+│   │   └── qml
+│   │       ├── AboutPageWindow.qml   # 关于页面
+│   │       ├── Main.qml              # 主页
+│   │       ├── ReminderWindow.qml    # Windows的独立提醒弹窗
+│   │       ├── SettingsWindow.qml    # 设置页面
+│   │       └── UpdaterWindow.qml     # 更新页面
+└── translations                      # I18n
+    ├── countdown_en.ts
+    ├── countdown_en_US.ts
+    └── countdown_zh_CN.ts
 ```
 
 软件创建的文件（夹）：
