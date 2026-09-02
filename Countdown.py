@@ -19,6 +19,7 @@ class subinfo(info.infoclass):
         # 运行时依赖
         self.runtimeDependencies["libs/qt6/qtbase"] = None
         self.runtimeDependencies["libs/qt6/qtdeclarative"] = None
+        self.runtimeDependencies["libs/qt6/qttools"] = None
         self.runtimeDependencies["kde/frameworks/tier1/kcoreaddons"] = None
         self.runtimeDependencies["kde/frameworks/tier1/kirigami"] = None
         self.runtimeDependencies["kde/unreleased/kirigami-addons"] = None
