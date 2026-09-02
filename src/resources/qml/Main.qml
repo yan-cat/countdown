@@ -33,6 +33,11 @@ Kirigami.ApplicationWindow {
                 onTriggered: settingsWindow.show()
             },
             Kirigami.Action {
+                text: "检查更新"
+                icon.name: "update-none"
+                onTriggered: updaterWindow.show()
+            },
+            Kirigami.Action {
                 text: "关于"
                 icon.name: "help-about"
                 onTriggered: {
@@ -302,6 +307,9 @@ Kirigami.ApplicationWindow {
 
     SettingsWindow {
         id: settingsWindow // 类型名按文件名，这里是隐藏的窗口实例
+    }
+    UpdaterWindow {
+        id: updaterWindow // 类型名按文件名，这里是隐藏的窗口实例
     }
     Component {
         id: aboutPageComponent

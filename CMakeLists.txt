@@ -42,8 +42,10 @@ qt6_add_executable(Countdown
     src/datediff.cpp
     src/reminder.cpp
     src/debug.cpp
+    src/updater.cpp
 
     src/include/manager.h
+    src/include/updater.h
 
 )
 
@@ -75,6 +77,8 @@ qt_add_qml_module(Countdown
         src/resources/qml/AboutPage.qml
         src/resources/qml/SettingsWindow.qml
         src/resources/qml/ReminderWindow.qml
+        SOURCES src/include/updater.h
+        QML_FILES src/resources/qml/UpdaterWindow.qml
 )
 
 # win的不知道什么编译参数

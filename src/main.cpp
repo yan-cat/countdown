@@ -10,6 +10,7 @@
 #include <QCommandLineOption>
 #include <QLoggingCategory>
 #include "manager.h"
+#include "updater.h"
 #include "debug.h"
 
 int main(int argc, char *argv[])
@@ -43,7 +44,10 @@ int main(int argc, char *argv[])
     KIconTheme::initTheme();
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+
+    //链接的可调用类
     CountdownManager manager;
+    CountdownUpdater updater;
 
 //===================================================================Debug
 
@@ -67,7 +71,11 @@ int main(int argc, char *argv[])
 //===================================================================后续启动
 
     parser.process(app);
+
+    //链接
     engine.rootContext()->setContextProperty("manager", &manager);
+    engine.rootContext()->setContextProperty("updater", &updater);
+
     engine.loadFromModule("com.countdown", "Main");
     if (engine.rootObjects().isEmpty())
         return -1;
