@@ -156,7 +156,7 @@ void CountdownManager::updateOlddata()
 // 数据丢qml
 QVariantList CountdownManager::countdowns() const
 {
-    return buildCountdownViewData(m_countdowns);
+    return CountdownData::buildCountdownViewData(m_countdowns);
 }
 
 // 添加或编辑倒数日
@@ -235,7 +235,7 @@ void CountdownManager::setSetting(const QString &key, int value)
 // 按id查
 QJsonObject CountdownManager::getCountdownJson(int id, QString key) const
 {
-    return ::getCountdownJson(m_countdowns, id, key);
+    return CountdownData::getCountdownJson(m_countdowns, id, key);
 }
 
 // 确认满足发送条件发通知
@@ -245,7 +245,7 @@ void CountdownManager::run_reminder(int id)
     qCDebug(CountdownLog) << "[ Debug ]" << "查询数据返回：" << data;
 
     QDate today = QDate::currentDate();
-    QDate nextDue = getNextDue(getCountdownJson(id, "none"), today);
+    QDate nextDue = CountdownData::getNextDue(getCountdownJson(id, "none"), today);
     qint64 days = today.daysTo(nextDue);
     qCDebug(CountdownLog) << "[ Debug ]" << "距今：" << days << "天";
 

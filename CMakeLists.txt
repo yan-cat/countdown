@@ -9,7 +9,6 @@ set(BINARY_ICONS_RESOURCE ON)
 # ===== 关键：定义 KF6 版本 =====
 set(KF6_MIN_VERSION 6.12.0)
 # ===============================
-
 set(QML_IMPORT_PATH "/usr/lib/qt6/qml;/usr/lib/qml" CACHE STRING "QML Import Paths")
 
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
@@ -25,6 +24,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Quick
     DBus
     QuickControls2
+    LinguistTools
 )
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
@@ -46,6 +46,7 @@ qt6_add_executable(Countdown
 
     src/include/manager.h
     src/include/updater.h
+    src/include/countdowndata.h
 
 )
 
@@ -78,6 +79,14 @@ qt_add_qml_module(Countdown
         src/resources/qml/SettingsWindow.qml
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/UpdaterWindow.qml
+)
+# 翻译
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES zh_CN en_US)# 支持的语言
+
+qt_add_translations(Countdown
+    RESOURCE_PREFIX /i18n
+    TS_FILE_BASE countdown
+    TS_FILE_DIR translations
 )
 
 # win的不知道什么编译参数

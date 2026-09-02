@@ -6,7 +6,7 @@ import org.kde.kirigami as Kirigami
 
 Window {
     id: updaterWindow
-    title: "检查更新"
+    title: qsTr("更新")
     width: 640
     height: 480
     visible: false
@@ -17,7 +17,7 @@ Window {
         function onNewVersion(latestVersion, version , updateLog)
         {
             if ( latestVersion ) versionShow.text = version
-            else versionShow.text = "当前已是最新版本：" + version
+            else versionShow.text = qsTr("当前已是最新版本：") + version
             versionShow.visible = true
 
             versionUpdateLog.text = updateLog
@@ -35,6 +35,7 @@ Window {
         font.pointSize: Kirigami.Theme.defaultFont.pointSize * 2
         color: Kirigami.Theme.textColor
         font.weight: Font.Bold
+        text: qsTr("未知版本")
 
         anchors.left: parent.left
         anchors.top: parent.top
@@ -57,7 +58,7 @@ Window {
             anchors.bottomMargin: 10
             TextArea {
                 id: versionUpdateLog
-                text: "未知更新日志"
+                text: qsTr("未知更新日志")
                 wrapMode: TextArea.Wrap
                 textFormat: TextArea.MarkdownText
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
@@ -78,7 +79,7 @@ Window {
         Button
         {
             id: getReleaseInfo
-            text: "检查更新"
+            text: qsTr("检查更新")
             icon.name: "system-software-update"
             onClicked: {
                 loadingOverlay.visible = true
@@ -89,7 +90,7 @@ Window {
         {
             id: downloadUpdate
             visible: false
-            text: "下载更新"
+            text: qsTr("下载更新")
             icon.name: "download"
             onClicked: a
         }
@@ -120,7 +121,7 @@ Window {
             anchors.top: busyIndicator.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 10
-            text: "正在检查更新..."
+            text: qsTr("正在检查更新...")
             color: "white"
             font.pointSize: 12
         }

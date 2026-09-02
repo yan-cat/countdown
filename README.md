@@ -73,6 +73,7 @@ countdown
 - [ ] Webdav云同步事项
 - [ ] 桌面磁贴
 - [ ] windows深色显示问题修复
+- [x] I18n
 - [x] Windows 时间到/差几天提醒
 - [x] 从老版本数据迁移到新版本
 - [x] debug开关

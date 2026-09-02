@@ -9,12 +9,12 @@ Kirigami.ApplicationWindow {
     width: 800
     height: 600
     visible: true
-    title: "倒数日"
+    title: qsTr("倒数日")
 
     // 空项目引导
     Label {
         visible: manager.countdowns.length === 0 && root.pageStack.depth === 1
-        text: "还没有倒数日\n右键空白处新建倒数日"
+        text: qsTr("还没有倒数日\n右键空白处新建倒数日")
         anchors.centerIn: parent
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
@@ -24,21 +24,21 @@ Kirigami.ApplicationWindow {
 
     // 左上角菜单
     globalDrawer: Kirigami.GlobalDrawer {
-        title: "菜单"
+        title: qsTr("菜单")
         isMenu: true
         actions: [
             Kirigami.Action {
-                text: "设置"
+                text: qsTr("设置")
                 icon.name: "settings-configure"
                 onTriggered: settingsWindow.show()
             },
             Kirigami.Action {
-                text: "检查更新"
+                text: qsTr("检查更新")
                 icon.name: "update-none"
                 onTriggered: updaterWindow.show()
             },
             Kirigami.Action {
-                text: "关于"
+                text: qsTr("关于")
                 icon.name: "help-about"
                 onTriggered: aboutPageWindow.show()
             }
@@ -48,7 +48,7 @@ Kirigami.ApplicationWindow {
     // 新建&编辑倒数日
     Kirigami.Dialog {
         id: adddate
-        title: editingId >= 0 ? "编辑倒数日" : "新建倒数日"
+        title: editingId >= 0 ? qsTr("编辑倒数日") : qsTr("新建倒数日")
         modal: true
         height: root.height
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
@@ -61,37 +61,37 @@ Kirigami.ApplicationWindow {
             spacing: 10
 
             Label {
-                text: "名称："
+                text: qsTr("名称：")
                 Layout.alignment: Qt.AlignCenter
             }
             TextField {
                 id: nameField
-                placeholderText: "例如：生日、纪念日"
+                placeholderText: qsTr("例如：生日、纪念日")
                 Layout.fillWidth: true
                 Layout.alignment: Qt.AlignCenter
             }
 
             Label {
-                text: "重复："
+                text: qsTr("重复：")
                 Layout.alignment: Qt.AlignCenter
             }
             ComboBox {
                 id: repeatField
                 currentIndex: 0
-                model: ["无", "月重复", "年重复"]
+                model: [qsTr("无"), qsTr("月重复"), qsTr("年重复")]
                 Layout.alignment: Qt.AlignCenter
             }
 
             CheckBox {
                 id: notificationField
                 checked: false
-                text: "到设定日期时提醒"
+                text: qsTr("到设定日期时提醒")
                 Layout.alignment: Qt.AlignCenter
             }
             ComboBox {
                 id: notificationtypeField
                 currentIndex: 0
-                model: ["当天提醒", "前一天提醒", "自定义"]
+                model: [qsTr("当天提醒"), qsTr("前一天提醒"), qsTr("自定义")]
                 visible: notificationField.checked
                 Layout.alignment: Qt.AlignCenter
             }
@@ -112,13 +112,13 @@ Kirigami.ApplicationWindow {
                 }
                 Label {
                     id: rightText
-                    text: "天"
+                    text: qsTr("天")
                     Layout.preferredWidth: 15
                 }
             }
 
             Label {
-                text: "请选择目标日期："
+                text: qsTr("请选择目标日期：")
                 Layout.alignment: Qt.AlignCenter
             }
             KA.DatePicker {
@@ -149,7 +149,7 @@ Kirigami.ApplicationWindow {
                           String(date.getDate()).padStart(2, '0')
 
             var name = nameField.text;
-            if (name === "") name = "未命名";
+            if (name === "") name = qsTr("未命名");
 
             var days = 0
             if (!notificationField.checked) days = -1
@@ -159,7 +159,7 @@ Kirigami.ApplicationWindow {
             else
             {
                 days = -1
-                inlineMessage.text = "提醒天数为空，已禁用提醒"
+                inlineMessage.text = qsTr("提醒天数为空，已禁用提醒")
                 inlineMessage.type = Kirigami.MessageType.Warning
                 inlineMessage.visible = true
             }
@@ -173,7 +173,7 @@ Kirigami.ApplicationWindow {
             }
             manager.editCountdown(JSON.stringify(payload))
 
-            inlineMessage.text = "保存成功"
+            inlineMessage.text = qsTr("保存成功")
             inlineMessage.type = Kirigami.MessageType.Positive
             inlineMessage.visible = true
         }
@@ -181,7 +181,7 @@ Kirigami.ApplicationWindow {
 
     // 卡片主界面
     pageStack.initialPage: Kirigami.ScrollablePage {
-        title: "倒数日"
+        title: qsTr("倒数日")
         MouseArea {
                 anchors.fill: parent
                 z: 0
@@ -199,7 +199,7 @@ Kirigami.ApplicationWindow {
             Menu {
                 id: blankMenu
                 MenuItem {
-                    text: "新建倒数日"
+                    text: qsTr("新建倒数日")
                     icon.name: "document-new"
                     onTriggered: {
                         adddate.editingId = -1
@@ -220,13 +220,13 @@ Kirigami.ApplicationWindow {
                             property var inlineMessage1: inlineMessage
 
                             MenuItem {
-                                text: "编辑"
+                                text: qsTr("编辑")
                                 icon.name: "document-edit"
                                 onTriggered: {
                                     adddate.editingId = modelData.id
                                     adddate.editingData = {
                                         name: modelData.name,
-                                        repeatIndex: { "不重复": 0, "月重复": 1, "年重复": 2 }[modelData.repeat] ?? 0,
+                                        repeatIndex: modelData.repeatIndex,
                                         date: modelData.date
                                     }
 
@@ -253,12 +253,12 @@ Kirigami.ApplicationWindow {
                                 }
                             }
                             MenuItem {
-                                text: "删除"
+                                text: qsTr("删除")
                                 icon.name: "edit-delete"
                                 onTriggered: {
                                     manager.removeCountdown(modelData.id)
 
-                                    cardMenu.inlineMessage1.text = "删除成功"
+                                    cardMenu.inlineMessage1.text = qsTr("删除成功")
                                     cardMenu.inlineMessage1.type = Kirigami.MessageType.Positive
                                     cardMenu.inlineMessage1.visible = true
                                 }
