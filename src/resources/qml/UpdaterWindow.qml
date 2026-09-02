@@ -12,6 +12,13 @@ Window {
     visible: false
     color: Kirigami.Theme.backgroundColor
 
+    onVisibleChanged: {
+        if (visible) {
+            loadingOverlay.visible = true
+            updater.getReleaseInfo()
+        }
+    }
+
     Connections {
         target: updater
 

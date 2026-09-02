@@ -14,6 +14,7 @@
 #include <KArchiveDirectory>
 #include <QProcess>
 #include <QDesktopServices>
+#include <QVersionNumber>
 #include "updater.h"
 #include "debug.h"
 
@@ -62,7 +63,7 @@ void CountdownUpdater::getReleaseInfo()
         qCDebug(CountdownLog) << "[ Debug ]" << "当前版本:" << currentVersion;
         qCDebug(CountdownLog) << "[ Debug ]" << "最新版本:" << latestVersion;
 
-        bool haveNewVersion = latestVersion > currentVersion;
+        bool haveNewVersion =  QVersionNumber::fromString(latestVersion) >  QVersionNumber::fromString(currentVersion);
         if (getDebugOn("forceDownloadLatest"))
         {
             haveNewVersion = true;

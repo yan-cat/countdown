@@ -69,6 +69,10 @@ int main(int argc, char *argv[])
         qInfo() << "[ Info ]" << "debug日志为开";
     }
 
+//===================================================================自动更新
+
+    if (getDebugOn("autoGetNewVersion")) updater.getReleaseInfo();
+
 //===================================================================后续启动
 
     parser.process(app);

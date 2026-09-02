@@ -31,6 +31,16 @@ Window {
         }
 
         CheckBox {
+            id: autoGetNewVersion
+            text: qsTr("有新版本时自动打开更新窗口")
+            checked: manager.setting("autoGetNewVersion", false)
+            onCheckedChanged: {
+                manager.setSetting("autoGetNewVersion", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        CheckBox {
             id: debugmode
             text: qsTr("调试模式")
             checked: manager.setting("debugmode", false)
