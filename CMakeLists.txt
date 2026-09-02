@@ -30,6 +30,7 @@ find_package(KF6 REQUIRED COMPONENTS
     Kirigami
     CoreAddons
     IconThemes
+    Archive
 )
 
 qt_policy(SET QTP0001 NEW)
@@ -61,6 +62,7 @@ target_link_libraries(Countdown PRIVATE
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes
+    KF6::Archive
 )
 
 target_compile_definitions(Countdown PRIVATE

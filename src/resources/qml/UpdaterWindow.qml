@@ -14,6 +14,8 @@ Window {
 
     Connections {
         target: updater
+
+        // 检查更新
         function onNewVersion(latestVersion, version , updateLog)
         {
             if ( latestVersion ) versionShow.text = version
@@ -26,6 +28,38 @@ Window {
             downloadUpdate.visible = latestVersion
 
             loadingOverlay.visible = false // 转圈圈
+        }
+
+        // 下载进度
+        function onDownloadProgress(bytesReceived, bytesTotal)
+        {
+            downloadProgressBar.indeterminate = false
+            downloadProgressBar.value = bytesReceived / bytesTotal
+        }
+
+        // 下载完成
+        function onDownloadFinished()
+        {
+            downloadProgressBar.indeterminate = true
+            downloadText.text = qsTr("正在安装更新...")
+        }
+
+        // 下载失败
+        function onDownloadError(errorString)
+        {
+            downloadOverlay.visible = false
+            inlineMessage.text = qsTr("下载失败：") + errorString
+            inlineMessage.type = Kirigami.MessageType.Error
+            inlineMessage.visible = true
+        }
+
+        // 安装成功
+        function onInstallSuccess()
+        {
+            downloadOverlay.visible = false
+            inlineMessage.text = qsTr("安装成功，请手动重启程序")
+            inlineMessage.type = Kirigami.MessageType.Positive
+            inlineMessage.visible = true
         }
     }
 
@@ -71,7 +105,6 @@ Window {
         id: buttonRow
         spacing: 10
         Layout.alignment: Qt.AlignCenter
-        // anchors.centerIn: parent
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
@@ -80,7 +113,7 @@ Window {
         {
             id: getReleaseInfo
             text: qsTr("检查更新")
-            icon.name: "system-software-update"
+            icon.name: "update-none"
             onClicked: {
                 loadingOverlay.visible = true
                 updater.getReleaseInfo()
@@ -92,7 +125,10 @@ Window {
             visible: false
             text: qsTr("下载更新")
             icon.name: "download"
-            onClicked: a
+            onClicked: {
+                downloadOverlay.visible = true
+                updater.downloadNewVersion()
+            }
         }
     }
 
@@ -102,28 +138,84 @@ Window {
         anchors.fill: parent
         visible: false
         z: 100
-
         Rectangle {
             anchors.fill: parent
             color: "black"
             opacity: 0.5
         }
-
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+        }
         BusyIndicator {
-            id: busyIndicator
+            id: loadingBusyIndicator
             anchors.centerIn: parent
             running: parent.visible
             width: 80
             height: 80
         }
-
         Label {
-            anchors.top: busyIndicator.bottom
+            anchors.top: loadingBusyIndicator.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 10
             text: qsTr("正在检查更新...")
             color: "white"
             font.pointSize: 12
+        }
+    }
+
+    Item {
+        id: downloadOverlay
+        anchors.fill: parent
+        visible: false
+        z: 100
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.5
+        }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+        }
+        ProgressBar {
+            id: downloadProgressBar
+            value: 0.0
+            indeterminate: true // 不确定模式
+            anchors.centerIn: parent
+        }
+        Label {
+            id: downloadText
+            anchors.top: downloadProgressBar.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: 10
+            text: qsTr("正在下载更新...")
+            color: "white"
+            font.pointSize: 12
+        }
+    }
+
+    //提醒土司
+    Kirigami.InlineMessage {
+        id: inlineMessage
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        visible: false
+        showCloseButton: true
+        onVisibleChanged: {
+            if (visible) {
+                hideMessageTimer.restart()
+            }
+        }
+    }
+
+    // 两秒自动关闭
+    Timer {
+        id: hideMessageTimer
+        interval: 2000
+        onTriggered: {
+            inlineMessage.visible = false
         }
     }
 }

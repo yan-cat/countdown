@@ -76,6 +76,17 @@ Window {
             Layout.alignment: Qt.AlignHCenter
         }
 
+        CheckBox {
+            id: forceDownloadLatest
+            text: qsTr("强制下载最新版本即使当前版本为最新")
+            visible: debugmode.checked
+            checked: manager.setting("forceDownloadLatest", false)
+            onCheckedChanged: {
+                manager.setSetting("forceDownloadLatest", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+
         // 占满不让分配
         Item {
             Layout.fillHeight: true
