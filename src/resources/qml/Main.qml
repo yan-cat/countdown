@@ -40,11 +40,7 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: "关于"
                 icon.name: "help-about"
-                onTriggered: {
-                    if (root.pageStack.currentItem?.objectName !== "aboutPage") {
-                        root.pageStack.push(aboutPageComponent)   // 推入整页
-                    }
-                }
+                onTriggered: aboutPageWindow.show()
             }
         ]
     }
@@ -311,9 +307,8 @@ Kirigami.ApplicationWindow {
     UpdaterWindow {
         id: updaterWindow // 类型名按文件名，这里是隐藏的窗口实例
     }
-    Component {
-        id: aboutPageComponent
-        AboutPage {}
+    AboutPageWindow {
+        id: aboutPageWindow
     }
 
     //提醒土司

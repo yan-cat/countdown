@@ -74,11 +74,10 @@ qt_add_qml_module(Countdown
     NO_IMPORT_SCAN
     QML_FILES
         src/resources/qml/Main.qml
-        src/resources/qml/AboutPage.qml
+        src/resources/qml/AboutPageWindow.qml
         src/resources/qml/SettingsWindow.qml
         src/resources/qml/ReminderWindow.qml
-        SOURCES src/include/updater.h
-        QML_FILES src/resources/qml/UpdaterWindow.qml
+        src/resources/qml/UpdaterWindow.qml
 )
 
 # win的不知道什么编译参数
