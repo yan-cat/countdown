@@ -1,4 +1,5 @@
 # 倒数日
+[English](README_en.md) | 中文
 ## 简介
 
 一个基于 Kirigami / Qt 6 的倒数日桌面应用，用来记录和追踪生日、纪念日、截止日期等重要日子。
@@ -21,9 +22,9 @@
 <p align="center">
   <table>
     <tr>
-      <td><img src="readme_img/app.png" width="600"></td>
-      <td><img src="readme_img/new.png" width="600"></td>
-      <td><img src="readme_img/reminder.png" width="600"></td>
+      <td><img src="readme_img/cn/app.png" width="600"></td>
+      <td><img src="readme_img/cn/new.png" width="600"></td>
+      <td><img src="readme_img/cn/reminder.png" width="600"></td>
     </tr>
   </table>
 </p>
