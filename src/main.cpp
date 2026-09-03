@@ -42,7 +42,9 @@ int main(int argc, char *argv[])
 
 //===================================================================后续启动
 
+#ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
+#endif
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
