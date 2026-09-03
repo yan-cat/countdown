@@ -22,10 +22,13 @@ set(ANDROID_APK_DIR "${CMAKE_SOURCE_DIR}/android")
 find_package(Qt6 REQUIRED COMPONENTS
     Core
     Quick
-    DBus
     QuickControls2
     LinguistTools
 )
+if (NOT ANDROID)
+    list(APPEND QT_REQUIRED_COMPONENTS DBus)
+endif()
+
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
     CoreAddons
@@ -57,13 +60,15 @@ target_include_directories(Countdown PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/inc
 target_link_libraries(Countdown PRIVATE
     Qt6::Core
     Qt6::Quick
-    Qt6::DBus
     Qt6::QuickControls2
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes
     KF6::Archive
 )
+if (NOT ANDROID)
+    target_link_libraries(Countdown PRIVATE Qt6::DBus)
+endif()
 
 target_compile_definitions(Countdown PRIVATE
     APP_VERSION="${PROJECT_VERSION}" # 版本号丢宏
