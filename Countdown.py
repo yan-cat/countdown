@@ -12,14 +12,16 @@ class subinfo(info.infoclass):
         self.svnTargets["main"] = "[git]https://github.com/yan-cat/countdown.git|main"
         self.defaultTarget = "main"
 
+        self.buildType = "Release"
+
     def setDependencies(self):
         # 构建依赖
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
+        self.buildDependencies["libs/qt6/qttools"] = None
 
         # 运行时依赖
         self.runtimeDependencies["libs/qt6/qtbase"] = None
         self.runtimeDependencies["libs/qt6/qtdeclarative"] = None
-        self.runtimeDependencies["libs/qt6/qttools"] = None
         self.runtimeDependencies["kde/frameworks/tier1/kcoreaddons"] = None
         self.runtimeDependencies["kde/frameworks/tier1/kirigami"] = None
         self.runtimeDependencies["kde/unreleased/kirigami-addons"] = None
@@ -32,11 +34,12 @@ class Package(CMakePackageBase):
         super().__init__(**kwargs)
 
     def createPackage(self):
-            self.defines["shortcuts"] = [
-                {
-                    "name": "Countdown",
-                    "target": "bin/Countdown.exe",
-                    "description": self.subinfo.description,
-                }
-            ]
-            return super().createPackage()
+        self.defines["shortcuts"] = [
+            {
+                "name": "Countdown",
+                "target": "bin/Countdown.exe",
+                "description": self.subinfo.description,
+            }
+        ]
+        self.defines["strip"] = True
+        return super().createPackage()
