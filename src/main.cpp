@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     QCommandLineOption minimized({"start-minimized", "minimized", "m"}, "静默启动（最小化窗口启动）");
     parser.addOption(minimized);
 
+
 //===================================================================后续启动
 
 #ifndef Q_OS_ANDROID
@@ -47,6 +48,30 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+
+    //翻译
+    QTranslator translator;
+    QString locale;
+    if (getDebugOn("useEnLang"))
+    {
+        locale = "en_US"; // 强制英语
+        qCDebug(CountdownLog) << "[ Debug ]" << "强制语言为英语";
+    }
+    else
+    {
+        locale = QLocale::system().name(); // 按照系统
+        qCDebug(CountdownLog) << "[ Debug ]" << "使用系统语言";
+    }
+    // 尝试加载对应的翻译文件
+    if (translator.load(QString(":/i18n/countdown_%1.qm").arg(locale))) {
+        app.installTranslator(&translator);
+    } else {
+        // 如果精确匹配失败，可以尝试只取语言部分，如 "zh"
+        QString shortLocale = locale.left(locale.indexOf('_'));
+        if (translator.load(QString(":/i18n/countdown_%1.qm").arg(shortLocale))) {
+            app.installTranslator(&translator);
+        }
+    }
 
     //链接的可调用类
     CountdownManager manager;
@@ -82,30 +107,6 @@ int main(int argc, char *argv[])
     //链接
     engine.rootContext()->setContextProperty("manager", &manager);
     engine.rootContext()->setContextProperty("updater", &updater);
-
-    // 翻译
-    QTranslator translator;
-    QString locale;
-    if (getDebugOn("useEnLang"))
-    {
-        locale = "en_US"; // 强制英语
-        qCDebug(CountdownLog) << "[ Debug ]" << "强制语言为英语";
-    }
-    else
-    {
-        locale = QLocale::system().name(); // 按照系统
-        qCDebug(CountdownLog) << "[ Debug ]" << "使用系统语言";
-    }
-    // 尝试加载对应的翻译文件
-    if (translator.load(QString(":/i18n/countdown_%1.qm").arg(locale))) {
-        app.installTranslator(&translator);
-    } else {
-        // 如果精确匹配失败，可以尝试只取语言部分，如 "zh"
-        QString shortLocale = locale.left(locale.indexOf('_'));
-        if (translator.load(QString(":/i18n/countdown_%1.qm").arg(shortLocale))) {
-            app.installTranslator(&translator);
-        }
-    }
 
     engine.loadFromModule("com.countdown", "Main");
     if (engine.rootObjects().isEmpty())

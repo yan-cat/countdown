@@ -11,7 +11,7 @@
 #ifndef Q_OS_ANDROID
 #endif
 
-void linux_reminder(QString body)
+void linux_reminder(QString title, QString body)
 {
     QDBusInterface iface("org.freedesktop.Notifications",
                          "/org/freedesktop/Notifications",
@@ -28,7 +28,7 @@ void linux_reminder(QString body)
     args << "Countdown"; // 应用程序名称 (QString)
     args << 0u; // 通知ID，0表示让服务自动分配 (uint)
     args << ""; // 图标名称或路径 (QString)
-    args << "倒数日提醒"; // 通知标题/摘要 (QString)
+    args << title; // 通知标题/摘要 (QString)
     args << body; // 通知正文 (QString)
     args << QStringList(); // 操作列表 (QStringList)
     args << QVariantMap(); // 额外提示 (QVariantMap)
@@ -87,7 +87,7 @@ void windows_reminder(QString body)
     view->show();
 }
 
-void reminder(QString body)
+void reminder(QString title, QString body)
 {
     QString os = QSysInfo::kernelType();
 
@@ -103,7 +103,7 @@ void reminder(QString body)
     if (os == "linux")
     {
         qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：通知";
-        linux_reminder(body);
+        linux_reminder(title, body);
     }
     else if (os == "winnt")
     {

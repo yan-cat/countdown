@@ -6,7 +6,7 @@ import org.kde.kirigamiaddons.dateandtime 1.0 as KA
 
 Window {
     id: aboutPageWindow
-    title: "关于"
+    title: qsTr("关于")
     width: 420
     height: 480
     visible: false

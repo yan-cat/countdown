@@ -2,6 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US" sourcelanguage="en_US">
 <context>
+    <name>AboutPageWindow</name>
+    <message>
+        <location filename="../src/resources/qml/AboutPageWindow.qml" line="9"/>
+        <source>关于</source>
+        <translation>About</translation>
+    </message>
+</context>
+<context>
     <name>CountdownData</name>
     <message>
         <location filename="../src/countdowndata.cpp" line="74"/>
@@ -73,6 +81,24 @@
         <location filename="../src/countdowndata.cpp" line="109"/>
         <source>已经过了 %1</source>
         <translation>%1 ago</translation>
+    </message>
+</context>
+<context>
+    <name>CountdownManager</name>
+    <message>
+        <location filename="../src/manager.cpp" line="260"/>
+        <source>今天</source>
+        <translation>Today is</translation>
+    </message>
+    <message>
+        <location filename="../src/manager.cpp" line="261"/>
+        <source>还剩 %1 天</source>
+        <translation type="unfinished">%1 days left until </translation>
+    </message>
+    <message>
+        <location filename="../src/manager.cpp" line="264"/>
+        <source>倒数日提醒</source>
+        <translation>Countdown Reminder</translation>
     </message>
 </context>
 <context>

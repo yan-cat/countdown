@@ -2,7 +2,7 @@
 #define COUNTDOWNDATA_H
 
 #include <QJsonArray>
-#include <qjsonobject.h>
+#include <QJsonObject>
 
 class CountdownData : public QObject {
     Q_OBJECT

@@ -1,3 +1,3 @@
 #include <QString>
 
-void reminder(QString body);
+void reminder(QString title, QString body);
