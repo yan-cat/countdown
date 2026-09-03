@@ -16,6 +16,18 @@
 
 数据以 JSON 保存于本地，设置项存储在 `~/.config/yancat/Countdown.conf`。
 
+## 画廊
+
+<p align="center">
+  <table>
+    <tr>
+      <td><img src="readme_img/app.png" width="600"></td>
+      <td><img src="readme_img/new.png" width="600"></td>
+      <td><img src="readme_img/reminder.png" width="600"></td>
+    </tr>
+  </table>
+</p>
+
 ## 安装帮助
 
 Release 内提供linux的二进制
