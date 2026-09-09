@@ -45,18 +45,6 @@ Window {
             spacing: 10
 
             Text {
-                text: "[ Debug ] id：" + (modelData.id ?? qsTr("无数据"))
-                font.pointSize: Kirigami.Theme.defaultFont.pointSize
-                color: Kirigami.Theme.textColor
-                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-
-                visible: manager.setting("showId", false)
-
-                Layout.fillWidth: true
-                Layout.leftMargin: 10
-                Layout.rightMargin: 10
-            }
-            Text {
                 text: qsTr("日期：") + (modelData.date || qsTr("无数据"))
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
@@ -95,6 +83,49 @@ Window {
                 Layout.fillWidth: true
                 Layout.leftMargin: 10
                 Layout.rightMargin: 10
+            }
+
+            // Debug
+            Text {
+                text: "\nDebug信息"
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize
+                color: Kirigami.Theme.textColor
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                visible: manager.setting("showDebugDetails", false)
+
+                Layout.fillWidth: true
+                Layout.leftMargin: 10
+                Layout.rightMargin: 10
+            }
+            Repeater {
+                model: Object.keys(detailsWindow.modelData)
+                delegate: RowLayout {
+                    Layout.fillWidth: true
+                    Layout.leftMargin: 10
+                    Layout.rightMargin: 10
+                    spacing: 5
+                    visible: manager.setting("showDebugDetails", false)
+
+                    Label {
+                        text: modelData + "："
+                        font.bold: true
+                        color: Kirigami.Theme.textColor
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                        Layout.preferredWidth: detailsWindow.width * 0.5 - 20
+                        Layout.maximumWidth: detailsWindow.width * 0.5 - 20
+                    }
+                    Label {
+                        text: {
+                            var val = detailsWindow.modelData[modelData]
+                            if (val === undefined || val === null) return qsTr("无数据")
+                            if (typeof val === 'object') return JSON.stringify(val)
+                            return String(val)
+                        }
+                        color: Kirigami.Theme.textColor
+                        Layout.fillWidth: true
+                        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+                    }
+                }
             }
         }
     }

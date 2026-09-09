@@ -104,12 +104,12 @@ Window {
         }
 
         CheckBox {
-            id: showId
-            text: qsTr("在倒数日详情显示id")
+            id: showDebugDetails
+            text: qsTr("在倒数日详情显示调试信息")
             visible: debugmode.checked
-            checked: manager.setting("showId", false)
+            checked: manager.setting("showDebugDetails", false)
             onCheckedChanged: {
-                manager.setSetting("showId", checked)
+                manager.setSetting("showDebugDetails", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }

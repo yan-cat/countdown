@@ -88,6 +88,7 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
 
         // 计算天数
         qint64 days = today.daysTo(nextDue);
+        obj.insert("days", days);
         QString daysText;
         if (s.value("dayshow", 0).toInt() == 0) {
             if (days > 0) {

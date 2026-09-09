@@ -47,6 +47,11 @@ int main(int argc, char *argv[])
     KIconTheme::initTheme();
 #endif
     QGuiApplication app(argc, argv);
+
+    //链接的可调用类
+    CountdownManager manager;
+    CountdownUpdater updater;
+
     QQmlApplicationEngine engine;
 
     //翻译
@@ -72,10 +77,6 @@ int main(int argc, char *argv[])
             app.installTranslator(&translator);
         }
     }
-
-    //链接的可调用类
-    CountdownManager manager;
-    CountdownUpdater updater;
 
 //===================================================================Debug
 
