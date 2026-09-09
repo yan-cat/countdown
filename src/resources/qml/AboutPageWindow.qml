@@ -15,9 +15,10 @@ Window {
     Kirigami.AboutPage {
         anchors.fill: parent
         aboutData: {
-            "productName": "countdown",
-            "componentName": "countdown",
+            "productName": "Countdown",
+            "componentName": "Countdown",
             "displayName": "倒数日",
+            "desktopFileName": "com.Countdown",
             "shortDescription": "一个记录重要日子的倒计时小应用",
             "homepage": "https://github.com/yan-cat/countdown",
             "bugAddress": "https://github.com/yan-cat/countdown/issues",

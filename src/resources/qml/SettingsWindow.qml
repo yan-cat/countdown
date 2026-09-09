@@ -40,6 +40,12 @@ Window {
             Layout.alignment: Qt.AlignHCenter
         }
 
+        // 调试
+        Label {
+            text: "============================================="
+            visible: debugmode.checked
+            Layout.alignment: Qt.AlignHCenter
+        }
         CheckBox {
             id: debugmode
             text: qsTr("调试模式")
@@ -93,6 +99,17 @@ Window {
             checked: manager.setting("forceDownloadLatest", false)
             onCheckedChanged: {
                 manager.setSetting("forceDownloadLatest", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        CheckBox {
+            id: showId
+            text: qsTr("在倒数日详情显示id")
+            visible: debugmode.checked
+            checked: manager.setting("showId", false)
+            onCheckedChanged: {
+                manager.setSetting("showId", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Countdown VERSION 1.2.1 LANGUAGES CXX)
+project(Countdown VERSION 1.2.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -109,6 +109,7 @@ qt_add_qml_module(Countdown
         src/resources/qml/SettingsWindow.qml
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/UpdaterWindow.qml
+        QML_FILES src/resources/qml/DetailsWindow.qml
 )
 
 # 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，
@@ -155,7 +156,7 @@ endif()
 install(TARGETS Countdown
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 
-    # 没用的安卓安装  现在有用了😋
+    # 没用的安卓安装  现在有用了😋  哦不不不你又没用了
     LIBRARY DESTINATION lib/${ANDROID_ABI}
     ARCHIVE DESTINATION lib/${ANDROID_ABI}
 )

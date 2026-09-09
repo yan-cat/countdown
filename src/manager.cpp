@@ -257,7 +257,7 @@ void CountdownManager::run_reminder(int id)
     }
 
     QString out;
-    if (days == 0) out = tr("今天");
+    if (days == 0) out = tr("今天是");
     else out = tr("还剩 %1 天").arg(days);
 
     #ifndef Q_OS_ANDROID

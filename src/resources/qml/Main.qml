@@ -219,10 +219,22 @@ Kirigami.ApplicationWindow {
             }
         ColumnLayout {
             Kirigami.CardsLayout {
+                maximumColumns: 8
                 Repeater {
                     model: manager.countdowns
                     delegate: Kirigami.AbstractCard {
                         Layout.preferredWidth: Kirigami.Units.gridUnit * 20
+
+                        property int depressedId: -1
+                        property bool depressed: modelData.id === depressedId
+                        scale: depressed ? 0.95 : 1.0
+                        Behavior on scale {
+                                NumberAnimation {
+                                    duration: 180
+                                    easing.type: Easing.OutCubic
+                                }
+                            }
+
                         //菜单
                         Menu {
                             id: cardMenu
@@ -236,7 +248,7 @@ Kirigami.ApplicationWindow {
                                     adddate.editingId = modelData.id
                                     adddate.editingData = {
                                         name: modelData.name,
-                                        repeatIndex: modelData.repeatIndex,
+                                        repeatIndex: modelData.repeat,
                                         date: modelData.date
                                     }
 
@@ -274,6 +286,7 @@ Kirigami.ApplicationWindow {
                                 }
                             }
                         }
+
                         // 主卡片
                         contentItem: ColumnLayout {
                             anchors.margins: Kirigami.Units.largeSpacing
@@ -286,16 +299,20 @@ Kirigami.ApplicationWindow {
                                 maximumLineCount: 2
                                 elide: Text.ElideRight
                             }
-                            Label { text: modelData.repeat }
+                            Label { text: modelData.repeatText }
                             Label { text: modelData.date }
-                            Label { text: modelData.notificationdaystext }
                             Label { text: modelData.daysText }
                         }
                         // 鼠标右键
                         MouseArea {
                             anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            hoverEnabled: true
                             onClicked: (mouse) => {
+                                if (mouse.button === Qt.LeftButton) {
+                                    detailsWindow.modelData = modelData
+                                    detailsWindow.show()
+                                }
                                 if (mouse.button === Qt.RightButton) {
                                     cardMenu.popup(mouse.x, mouse.y)
                                 }
@@ -303,6 +320,9 @@ Kirigami.ApplicationWindow {
                             onPressAndHold: (mouse) => {
                                 cardMenu.popup(mouse.x, mouse.y)
                             }
+
+                            onEntered: { depressedId = modelData.id }
+                            onExited:  { depressedId = -1 }
                         }
                     }
                 }
@@ -312,13 +332,16 @@ Kirigami.ApplicationWindow {
 
 
     SettingsWindow {
-        id: settingsWindow // 类型名按文件名，这里是隐藏的窗口实例
+        id: settingsWindow
     }
     UpdaterWindow {
-        id: updaterWindow // 类型名按文件名，这里是隐藏的窗口实例
+        id: updaterWindow
     }
     AboutPageWindow {
         id: aboutPageWindow
+    }
+    DetailsWindow {
+            id: detailsWindow
     }
 
     //提醒土司

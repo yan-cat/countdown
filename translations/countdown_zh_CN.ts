@@ -12,17 +12,17 @@
 <context>
     <name>CountdownData</name>
     <message>
-        <location filename="../src/countdowndata.cpp" line="74"/>
+        <location filename="../src/countdowndata.cpp" line="73"/>
         <source>不重复</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="75"/>
+        <location filename="../src/countdowndata.cpp" line="74"/>
         <source>月重复</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="76"/>
+        <location filename="../src/countdowndata.cpp" line="75"/>
         <source>年重复</source>
         <translation></translation>
     </message>
@@ -42,43 +42,43 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="93"/>
+        <location filename="../src/countdowndata.cpp" line="94"/>
         <source>还有 %1 天</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="95"/>
+        <location filename="../src/countdowndata.cpp" line="96"/>
         <source>已经过了 %1 天</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="97"/>
-        <location filename="../src/countdowndata.cpp" line="111"/>
+        <location filename="../src/countdowndata.cpp" line="98"/>
+        <location filename="../src/countdowndata.cpp" line="112"/>
         <source>今天</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="102"/>
+        <location filename="../src/countdowndata.cpp" line="103"/>
         <source>%1 年 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="103"/>
+        <location filename="../src/countdowndata.cpp" line="104"/>
         <source>%1 个月 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="104"/>
+        <location filename="../src/countdowndata.cpp" line="105"/>
         <source>%1 天</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="107"/>
+        <location filename="../src/countdowndata.cpp" line="108"/>
         <source>还有 %1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="109"/>
+        <location filename="../src/countdowndata.cpp" line="110"/>
         <source>已经过了 %1</source>
         <translation></translation>
     </message>
@@ -87,7 +87,7 @@
     <name>CountdownManager</name>
     <message>
         <location filename="../src/manager.cpp" line="260"/>
-        <source>今天</source>
+        <source>今天是</source>
         <translation></translation>
     </message>
     <message>
@@ -131,6 +131,44 @@
     <message>
         <location filename="../src/updater.cpp" line="225"/>
         <source>启动安装包失败：%1</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>DetailsWindow</name>
+    <message>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="9"/>
+        <source>详情</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="19"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="47"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="58"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="67"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="76"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="85"/>
+        <source>无数据</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="58"/>
+        <source>日期：</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="67"/>
+        <source>天数：</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="76"/>
+        <source>重复：</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="85"/>
+        <source>提醒时间：</source>
         <translation></translation>
     </message>
 </context>
@@ -255,17 +293,17 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="233"/>
+        <location filename="../src/resources/qml/Main.qml" line="245"/>
         <source>编辑</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="266"/>
+        <location filename="../src/resources/qml/Main.qml" line="278"/>
         <source>删除</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="271"/>
+        <location filename="../src/resources/qml/Main.qml" line="283"/>
         <source>删除成功</source>
         <translation></translation>
     </message>
@@ -303,43 +341,48 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="45"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="51"/>
         <source>调试模式</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="53"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="59"/>
         <source>调试选项需要重启才能生效！</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="62"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="68"/>
         <source>关闭调试日志</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="62"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="68"/>
         <source>仅APP调试日志</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="62"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="68"/>
         <source>调试日志全开（此设置会拖慢软件速度！！！）</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="69"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="75"/>
         <source>强制使用windows通知窗口而非当前系统默认</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="80"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="86"/>
         <source>强制软件语言为英语</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="91"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="97"/>
         <source>强制下载最新版本即使当前版本为最新</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="108"/>
+        <source>在倒数日详情显示id</source>
         <translation></translation>
     </message>
 </context>

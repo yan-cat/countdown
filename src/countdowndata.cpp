@@ -68,19 +68,20 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
         QJsonObject obj = v.toObject();
 
         // 重复文案
-        QString repeat;
-        int repeatVal = obj.value("repeat").toInteger();
-        obj.insert("repeatIndex", repeatVal);
-        if (repeatVal == 0) repeat = tr("不重复");
-        else if (repeatVal == 1) repeat = tr("月重复");
-        else if (repeatVal == 2) repeat = tr("年重复");
+        QString repeatText;
+        int repeat = obj.value("repeat").toInteger();
+        if (repeat == 0) repeatText = tr("不重复");
+        else if (repeat == 1) repeatText = tr("月重复");
+        else if (repeat == 2) repeatText = tr("年重复");
+        obj.insert("repeatText", repeatText);
 
         // 提醒
         qint64 notificationdays = obj.value("notificationdays").toInteger();
-        QString notificationdaystext;
-        if (notificationdays == -1) notificationdaystext = tr("无提醒");
-        else if (notificationdays == 0) notificationdaystext = tr("当天提醒");
-        else notificationdaystext = tr("提前 %1 天提醒").arg(notificationdays);
+        QString notificationdaysText;
+        if (notificationdays == -1) notificationdaysText = tr("无提醒");
+        else if (notificationdays == 0) notificationdaysText = tr("当天提醒");
+        else notificationdaysText = tr("提前 %1 天提醒").arg(notificationdays);
+        obj.insert("notificationdaysText", notificationdaysText);
 
         // 计算下一个到期日
         QDate nextDue = getNextDue(obj, today);
@@ -112,10 +113,9 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
             }
         }
 
-        obj.insert("repeat", repeat);
-        obj.insert("notificationdaystext", notificationdaystext);
         obj.insert("daysText", daysText);
 
+        qCDebug(CountdownLog) << "[ Debug ]" << "卡片数据：" << obj;
         list.append(obj.toVariantMap());
     }
     return list;
