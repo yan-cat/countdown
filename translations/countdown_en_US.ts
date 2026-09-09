@@ -42,43 +42,43 @@
         <translation>Remind %1 days in advance</translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="94"/>
+        <location filename="../src/countdowndata.cpp" line="95"/>
         <source>还有 %1 天</source>
         <translation>%1 days left</translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="96"/>
+        <location filename="../src/countdowndata.cpp" line="97"/>
         <source>已经过了 %1 天</source>
         <translation>%1 days ago</translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="98"/>
-        <location filename="../src/countdowndata.cpp" line="112"/>
+        <location filename="../src/countdowndata.cpp" line="99"/>
+        <location filename="../src/countdowndata.cpp" line="113"/>
         <source>今天</source>
         <translation>Today</translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="103"/>
+        <location filename="../src/countdowndata.cpp" line="104"/>
         <source>%1 年 </source>
         <translation>%1 y </translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="104"/>
+        <location filename="../src/countdowndata.cpp" line="105"/>
         <source>%1 个月 </source>
         <translation>%1 m </translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="105"/>
+        <location filename="../src/countdowndata.cpp" line="106"/>
         <source>%1 天</source>
         <translation>%1 d</translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="108"/>
+        <location filename="../src/countdowndata.cpp" line="109"/>
         <source>还有 %1</source>
         <translation>%1 left</translation>
     </message>
     <message>
-        <location filename="../src/countdowndata.cpp" line="110"/>
+        <location filename="../src/countdowndata.cpp" line="111"/>
         <source>已经过了 %1</source>
         <translation>%1 ago</translation>
     </message>
@@ -143,31 +143,31 @@
     </message>
     <message>
         <location filename="../src/resources/qml/DetailsWindow.qml" line="19"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="47"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="48"/>
         <location filename="../src/resources/qml/DetailsWindow.qml" line="58"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="67"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="76"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="85"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="68"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="78"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="120"/>
         <source>无数据</source>
         <translation>No data</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="58"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="48"/>
         <source>日期：</source>
         <translation>Date:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="67"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="58"/>
         <source>天数：</source>
         <translation>Total days:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="76"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="68"/>
         <source>重复：</source>
         <translation>Repeat:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="85"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="78"/>
         <source>提醒时间：</source>
         <translation>Reminder time:</translation>
     </message>
@@ -300,11 +300,17 @@ Right-click on blank area to create a new countdown</translation>
     </message>
     <message>
         <location filename="../src/resources/qml/Main.qml" line="278"/>
+        <location filename="../src/resources/qml/Main.qml" line="374"/>
         <source>删除</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="283"/>
+        <location filename="../src/resources/qml/Main.qml" line="375"/>
+        <source>确认删除 %1 吗？</source>
+        <translation>Delete %1?</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="379"/>
         <source>删除成功</source>
         <translation>Deleted</translation>
     </message>
@@ -383,8 +389,8 @@ Right-click on blank area to create a new countdown</translation>
     </message>
     <message>
         <location filename="../src/resources/qml/SettingsWindow.qml" line="108"/>
-        <source>在倒数日详情显示id</source>
-        <translation>Show ID in countdown details</translation>
+        <source>在倒数日详情显示调试信息</source>
+        <translation>Show debug info in countdown details</translation>
     </message>
 </context>
 <context>

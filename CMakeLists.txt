@@ -109,7 +109,7 @@ qt_add_qml_module(Countdown
         src/resources/qml/SettingsWindow.qml
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/UpdaterWindow.qml
-        QML_FILES src/resources/qml/DetailsWindow.qml
+        src/resources/qml/DetailsWindow.qml
 )
 
 # 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，
@@ -136,12 +136,13 @@ if (ANDROID)
 endif()
 
 # 翻译
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES zh_CN en_US)# 支持的语言
-
 qt_add_translations(Countdown
     RESOURCE_PREFIX /i18n
     TS_FILE_BASE countdown
     TS_FILE_DIR translations
+    TS_FILES
+            translations/countdown_zh_CN.ts
+            translations/countdown_en_US.ts
 )
 
 # win的不知道什么编译参数
