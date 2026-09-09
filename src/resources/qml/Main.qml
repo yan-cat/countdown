@@ -229,11 +229,11 @@ Kirigami.ApplicationWindow {
                         property bool depressed: modelData.id === depressedId
                         scale: depressed ? 0.95 : 1.0
                         Behavior on scale {
-                                NumberAnimation {
-                                    duration: 180
-                                    easing.type: Easing.OutCubic
-                                }
+                            NumberAnimation {
+                                duration: 180
+                                easing.type: Easing.OutCubic
                             }
+                        }
 
                         //菜单
                         Menu {
@@ -278,11 +278,9 @@ Kirigami.ApplicationWindow {
                                 text: qsTr("删除")
                                 icon.name: "edit-delete"
                                 onTriggered: {
-                                    manager.removeCountdown(modelData.id)
-
-                                    cardMenu.inlineMessage1.text = qsTr("删除成功")
-                                    cardMenu.inlineMessage1.type = Kirigami.MessageType.Positive
-                                    cardMenu.inlineMessage1.visible = true
+                                    deleteCountdown.id = modelData.id
+                                    deleteCountdown.name = modelData.name
+                                    deleteCountdown.open()
                                 }
                             }
                         }
@@ -344,7 +342,7 @@ Kirigami.ApplicationWindow {
             id: detailsWindow
     }
 
-    //提醒土司
+    // 提醒土司
     Kirigami.InlineMessage {
         id: inlineMessage
         anchors.top: parent.top
@@ -368,4 +366,21 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    // 确认删除
+    Kirigami.PromptDialog {
+        property var name
+        property var id
+        id: deleteCountdown
+        title: qsTr("删除")
+        subtitle: qsTr("确认删除 %1 吗？").arg(name)
+        standardButtons: Kirigami.Dialog.Yes | Kirigami.Dialog.No
+        onAccepted: {
+            manager.removeCountdown(id)
+            inlineMessage.inlineMessage1.text = qsTr("删除成功")
+            inlineMessage.inlineMessage1.type = Kirigami.MessageType.Positive
+            inlineMessage.inlineMessage1.visible = true
+        }
+        onRejected: {
+        }
+    }
 }
