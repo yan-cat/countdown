@@ -76,7 +76,7 @@ target_link_libraries(Countdown PRIVATE
     KF6::IconThemes
     KF6::Archive
 )
-if (NOT ANDROID)
+if (LINUX)
     target_link_libraries(Countdown PRIVATE Qt6::DBus)
 endif()
 

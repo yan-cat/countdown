@@ -18,8 +18,6 @@ class subinfo(info.infoclass):
         # 构建依赖
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
         self.buildDependencies["libs/qt6/qttools"] = None
-        if not CraftCore.compiler.isAndroid:
-            self.runtimeDependencies["libs/dbus"] = None
 
         # 运行时依赖
         self.runtimeDependencies["libs/qt6/qtbase"] = None
