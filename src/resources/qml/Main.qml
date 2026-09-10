@@ -12,16 +12,6 @@ Kirigami.ApplicationWindow {
     visible: true
     title: qsTr("倒数日")
 
-    Connections {
-        target: CountdownUpdater
-
-        // 自动检查更新
-        function onNewVersion(latestVersion, version , updateLog)
-        {
-            if (latestVersion) updaterWindow.show()
-        }
-    }
-
     // 空项目引导
     Label {
         visible: cardsLayout.count === 0

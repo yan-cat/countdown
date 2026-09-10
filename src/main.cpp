@@ -12,6 +12,7 @@
 #include <QTranslator>
 #include "debug.h"
 #include "updater.h"
+#include "reminder.h"
 
 int main(int argc, char *argv[]) {
 //===================================================================信息
@@ -87,16 +88,17 @@ int main(int argc, char *argv[]) {
         qInfo() << "[ Info ]" << "debug日志为开";
     }
 
-//===================================================================自动更新
-
-    if (debug().getDebugOn("autoGetNewVersion")) updater().getReleaseInfo();
-
 //===================================================================后续启动
 
     parser.process(app);
 
     engine.loadFromModule("com.countdown", "Main");
     if (engine.rootObjects().isEmpty()) return -1;
+
+    if (debug().getDebugOn("autoGetNewVersion")) updater().getReleaseInfo(); // 检查更新
+    QObject::connect(&updater(), &CountdownUpdater::newVersion, [](bool haveNewVer) {
+        if(haveNewVer) reminder("软件更新", "软件有新版本！");
+    });
 
 //===================================================================最小化启动
 

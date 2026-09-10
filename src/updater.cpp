@@ -35,6 +35,12 @@ CountdownUpdater &updater()
     static CountdownUpdater instance;
     return instance;
 }
+CountdownUpdater *CountdownUpdater::create(QQmlEngine *, QJSEngine *)
+{
+    CountdownUpdater *m = &updater();                          // 复用同一个实例
+    QJSEngine::setObjectOwnership(m, QJSEngine::CppOwnership);  // 别让引擎删它
+    return m;
+}
 
 // 获取更新
 void CountdownUpdater::getReleaseInfo()
@@ -46,7 +52,7 @@ void CountdownUpdater::getReleaseInfo()
     request.setRawHeader("Accept", "application/vnd.github+json");
     request.setRawHeader("X-GitHub-Api-Version", "2026-03-10");
 
-    QNetworkReply *reply = updater.get(request);
+    QNetworkReply *reply = m_updater.get(request);
 
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() != QNetworkReply::NoError) {
@@ -73,7 +79,10 @@ void CountdownUpdater::getReleaseInfo()
         qCDebug(CountdownLog) << "[ Debug ]" << "当前版本:" << currentVersion;
         qCDebug(CountdownLog) << "[ Debug ]" << "最新版本:" << latestVersion;
 
-        bool haveNewVersion =  QVersionNumber::fromString(latestVersion) >  QVersionNumber::fromString(currentVersion);
+        auto stripV = [](QString v) {
+            return v.startsWith(QLatin1Char('v')) ? v.mid(1) : v;
+        };
+        bool haveNewVersion =  QVersionNumber::fromString(stripV(latestVersion)) >  QVersionNumber::fromString(stripV(currentVersion));
         if (debug().getDebugOn("forceDownloadLatest"))
         {
             haveNewVersion = true;

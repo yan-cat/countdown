@@ -4,6 +4,8 @@
 #include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QFile>
+#include <QQmlEngine>            // ← 新增
+#include <QJSEngine>
 #include <QtQml/qqmlregistration.h>
 
 class CountdownUpdater : public QObject
@@ -17,8 +19,11 @@ public:
     Q_INVOKABLE void getReleaseInfo();
     Q_INVOKABLE void downloadNewVersion();
 
+    // ★ 让 QML 单例复用 C++ 的同一个实例
+    static CountdownUpdater *create(QQmlEngine *, QJSEngine *);
+
 private:
-    QNetworkAccessManager updater;
+    QNetworkAccessManager m_updater;
     QNetworkAccessManager networkManager;
     QFile downloadFile;
     QNetworkReply *reply = nullptr;
