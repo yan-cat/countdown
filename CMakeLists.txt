@@ -26,9 +26,6 @@ find_package(Qt6 REQUIRED COMPONENTS
     QuickControls2
     LinguistTools
 )
-if (NOT ANDROID)
-    list(APPEND QT_REQUIRED_COMPONENTS DBus)
-endif()
 
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
@@ -104,6 +101,7 @@ target_compile_definitions(Countdown PRIVATE
 qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
+    NO_IMPORT_SCAN
     QML_FILES
         src/resources/qml/Main.qml
         src/resources/qml/AboutPageWindow.qml
