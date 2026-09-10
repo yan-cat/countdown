@@ -22,9 +22,9 @@ Window {
             Layout.alignment: Qt.AlignHCenter
         }
         ComboBox {
-            id: dayshow
-            currentIndex: CountdownManager.setting("dayshow", 0)
-            onActivated: CountdownManager.setSetting("dayshow", currentIndex)
+            id: dayShow
+            currentIndex: CountdownManager.setting("dayShow", 0)
+            onActivated: CountdownManager.setSetting("dayShow", currentIndex)
             model: [qsTr("456 天"), qsTr("1 年 3 个月 1 天")]
             Layout.alignment: Qt.AlignHCenter
         }
@@ -43,6 +43,29 @@ Window {
             }
             Layout.alignment: Qt.AlignHCenter
         }
+        RowLayout {
+            spacing: 10
+            visible: upcoming.checked
+            Layout.alignment: Qt.AlignCenter
+
+
+            Label { text: qsTr("距离") }
+            TextField {
+                text: CountdownManager.setting("upcomingDays", 3)
+                placeholderText: "3"
+                Layout.preferredWidth: 100
+                inputMethodHints: Qt.ImhDigitsOnly
+
+                validator: RegularExpressionValidator {
+                    regularExpression: /^\d+$/
+                }
+
+                onTextChanged: {
+                    CountdownManager.setSetting("upcomingDays", text)
+                }
+            }
+            Label { text: qsTr("天标红") }
+        }
 
         // 有新版本时自动打开更新窗口
         CheckBox {
@@ -54,31 +77,40 @@ Window {
             }
             Layout.alignment: Qt.AlignHCenter
         }
+        CheckBox {
+            id: fastDownload
+            text: qsTr("使用加速源快速下载")
+            checked: CountdownManager.setting("fastDownload", false)
+            onCheckedChanged: {
+                CountdownManager.setSetting("fastDownload", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
 
         // 调试
         Label {
             text: "============================================="
-            visible: debugmode.checked
+            visible: debugMode.checked
             Layout.alignment: Qt.AlignHCenter
         }
         CheckBox {
-            id: debugmode
+            id: debugMode
             text: qsTr("调试模式")
-            checked: CountdownManager.setting("debugmode", false)
+            checked: CountdownManager.setting("debugMode", false)
             onCheckedChanged: {
-                CountdownManager.setSetting("debugmode", checked)
+                CountdownManager.setSetting("debugMode", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }
         Label {
             text: qsTr("调试选项需要重启才能生效！")
-            visible: debugmode.checked
+            visible: debugMode.checked
             Layout.alignment: Qt.AlignHCenter
         }
 
         ComboBox {
             id: outputDebuglog
-            visible: debugmode.checked
+            visible: debugMode.checked
             currentIndex: CountdownManager.setting("outputDebuglog", 0)
             model: [qsTr("关闭调试日志"), qsTr("仅APP调试日志"), qsTr("调试日志全开（此设置会拖慢软件速度！！！）")]
             onActivated: CountdownManager.setSetting("outputDebuglog", currentIndex)
@@ -88,7 +120,7 @@ Window {
         CheckBox {
             id: useWindowsReminderType
             text: qsTr("强制使用windows通知窗口而非当前系统默认")
-            visible: debugmode.checked
+            visible: debugMode.checked
             checked: CountdownManager.setting("useWindowsReminderType", false)
             onCheckedChanged: {
                 CountdownManager.setSetting("useWindowsReminderType", checked)
@@ -99,7 +131,7 @@ Window {
         CheckBox {
             id: useEnLang
             text: qsTr("强制软件语言为英语")
-            visible: debugmode.checked
+            visible: debugMode.checked
             checked: CountdownManager.setting("useEnLang", false)
             onCheckedChanged: {
                 CountdownManager.setSetting("useEnLang", checked)
@@ -110,7 +142,7 @@ Window {
         CheckBox {
             id: forceDownloadLatest
             text: qsTr("强制下载最新版本即使当前版本为最新")
-            visible: debugmode.checked
+            visible: debugMode.checked
             checked: CountdownManager.setting("forceDownloadLatest", false)
             onCheckedChanged: {
                 CountdownManager.setSetting("forceDownloadLatest", checked)
@@ -121,7 +153,7 @@ Window {
         CheckBox {
             id: showDebugDetails
             text: qsTr("在倒数日详情显示调试信息")
-            visible: debugmode.checked
+            visible: debugMode.checked
             checked: CountdownManager.setting("showDebugDetails", false)
             onCheckedChanged: {
                 CountdownManager.setSetting("showDebugDetails", checked)

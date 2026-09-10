@@ -224,8 +224,8 @@ int CountdownManager::setting(const QString &key, int def) const {
 void CountdownManager::setSetting(const QString &key, int value) {
     QSettings s;
     s.setValue(key, value);
-    refreshCountdowns();
     qCDebug(CountdownLog) << "[ Debug ]" << "修改设置键：" << key << "值：" << value;
+    emit refreshCountdowns();
 }
 
 // 按id查

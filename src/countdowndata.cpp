@@ -61,6 +61,12 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
     QVariantList list;
     QDate today = QDate::currentDate();
 
+    // 统一读设置
+    qint64 dayshowset = manager().setting("dayShow", 0);
+    qint64 upcomingdays = manager().setting("upcomingDays", 3);
+    qint64 upcomingset = manager().setting("upcoming", 0);
+
+
     for (const QJsonValue &v : rawCountdowns) {
         QJsonObject obj = v.toObject();
 
@@ -89,7 +95,7 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
 
         // 天数文本
         QString daysText;
-        if (manager().setting("dayshow", 0) == 0) {
+        if (dayshowset == 0) {
             if (days > 0) {
                 daysText = tr("还有 %1 天").arg(days);
             } else if (days < 0) {
@@ -115,8 +121,7 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
         obj.insert("daysText", daysText);
 
         // 临近吗
-        qint64 upcomingdays = 3;
-        bool upcoming = days >= 0 && days <= upcomingdays && manager().setting("upcoming", 0);
+        bool upcoming = upcomingset && days >= 0 && days <= upcomingdays;
         obj.insert("upcoming", upcoming);
 
         // qCDebug(CountdownLog) << "[ Debug ]" << "卡片数据：" << obj;

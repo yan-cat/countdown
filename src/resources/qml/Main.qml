@@ -24,7 +24,7 @@ Kirigami.ApplicationWindow {
 
     // 空项目引导
     Label {
-        visible: CountdownManager.countdowns.length === 0 && root.pageStack.depth === 1
+        visible: cardsLayout.count === 0
         text: qsTr("还没有倒数日\n右键空白处新建倒数日")
         anchors.centerIn: parent
         horizontalAlignment: Text.AlignHCenter
@@ -125,7 +125,6 @@ Kirigami.ApplicationWindow {
                         }
                 }
                 Label {
-                    id: rightText
                     text: qsTr("天")
                     Layout.preferredWidth: 15
                 }
@@ -224,6 +223,7 @@ Kirigami.ApplicationWindow {
             Kirigami.CardsLayout {
                 maximumColumns: 8
                 Repeater {
+                    id: cardsLayout
                     model: CountdownManager.countdowns
                     delegate: Kirigami.AbstractCard {
                         id: cardAbs

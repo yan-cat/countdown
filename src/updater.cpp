@@ -17,6 +17,7 @@
 #include <QVersionNumber>
 #include "updater.h"
 #include "debug.h"
+#include "manager.h"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -24,6 +25,7 @@
 #endif
 
 QUrl downloadUrl;
+QUrl fastUrl("https://gh-proxy.org/");
 QString os;
 
 CountdownUpdater::CountdownUpdater(QObject *parent) : QObject(parent) { }
@@ -61,7 +63,9 @@ void CountdownUpdater::getReleaseInfo()
         QString latestVersion = jsonObj["tag_name"].toString(); // 最新版本
         QString latestVersionLog = jsonObj["body"].toString(); // 更新日志
 
-        downloadUrl = "https://github.com/yan-cat/countdown/releases/download/" + latestVersion;
+        QUrl fsUrl;
+        if (manager().setting("fastDownload", 0)) fsUrl = fastUrl;
+        downloadUrl = fsUrl.toString() + "https://github.com/yan-cat/countdown/releases/download/" + latestVersion;
         qCDebug(CountdownLog) << "[ Debug ]" << "获取到的下载地址：" << downloadUrl;
 
         QString currentVersion = "v" APP_VERSION;

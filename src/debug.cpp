@@ -18,7 +18,7 @@ CountdownDebug &debug() {
 // 获取debug设置
 qint64 CountdownDebug::getDebugOn(const QString &key) {
     QSettings settings;
-    if (settings.value("debugmode", false).toBool()){
+    if (settings.value("debugMode", false).toBool()){
         qint64 s = settings.value(key, false).toInt();
         qCDebug(CountdownLog) << "[ Debug ]" << "获取debug状态值：" << key << "，值：" << s;
         return s;

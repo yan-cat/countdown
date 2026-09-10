@@ -8,9 +8,6 @@
 #include "reminder.h"
 #include "debug.h"
 
-#ifndef Q_OS_ANDROID
-#endif
-
 void linux_reminder(QString title, QString body) {
     QDBusInterface iface("org.freedesktop.Notifications",
                          "/org/freedesktop/Notifications",
