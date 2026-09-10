@@ -212,7 +212,7 @@ void CountdownUpdater::installNewVersion(QString path)
     }
     else if (os == "winnt")
     {
-#ifdef Q_OS_WIN
+        #ifdef Q_OS_WIN
         // 先按"双击"语义打开（自动触发 UAC）；SE_ERR_ACCESSDENIED 表示被拒，再强制 runas
         QString nativePath = QDir::toNativeSeparators(path);
         HINSTANCE ret = ShellExecuteW(nullptr, L"open",
@@ -229,13 +229,13 @@ void CountdownUpdater::installNewVersion(QString path)
             emit downloadError(tr("启动安装包失败（错误码 %1）").arg((intptr_t)ret));
             return;
         }
-#else
+        #else
         if (!QProcess::startDetached(path, {})) {
             qWarning() << "启动安装包失败:" << path;
             emit downloadError(tr("启动安装包失败：%1").arg(path));
             return;
         }
-#endif
+        #endif
         QCoreApplication::quit();
         return;
     }

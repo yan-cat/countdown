@@ -1,6 +1,3 @@
-#include <QDBusInterface>
-#include <QDBusPendingCall>
-#include <QDBusPendingReply>
 #include <QVariant>
 #include <QQuickView>
 #include <QUrl>
@@ -8,6 +5,13 @@
 #include "reminder.h"
 #include "debug.h"
 
+#ifdef Q_OS_LINUX
+#include <QDBusInterface>
+#include <QDBusPendingCall>
+#include <QDBusPendingReply>
+#endif
+
+#ifdef Q_OS_LINUX
 void linux_reminder(QString title, QString body) {
     QDBusInterface iface("org.freedesktop.Notifications",
                          "/org/freedesktop/Notifications",
@@ -42,6 +46,7 @@ void linux_reminder(QString title, QString body) {
     qCDebug(CountdownLog) << "[ Debug ]" << "通知id:" << reply.value();
     qCDebug(CountdownLog) << "[ Debug ]" << "通知内容:" << body;
 }
+#endif
 
 void windows_reminder(QString body) {
     qCDebug(CountdownLog) << "[ Debug ]" << "准备显示弹窗";
@@ -93,7 +98,10 @@ void reminder(QString title, QString body) {
 
     if (os == "linux") {
         qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：通知";
+
+        #ifdef Q_OS_LINUX
         linux_reminder(title, body);
+        #endif
     }
     else if (os == "winnt") {
         qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：弹窗";
