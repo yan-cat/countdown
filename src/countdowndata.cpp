@@ -6,13 +6,11 @@
 #include "manager.h"
 
 // 按id查
-QJsonObject CountdownData::getCountdownJson(QJsonArray m_countdowns, int id, QString key)
-{
+QJsonObject CountdownData::getCountdownJson(QJsonArray m_countdowns, int id, QString key) {
     for (const QJsonValue &v : m_countdowns) {
         QJsonObject obj = v.toObject();
         if (obj.value("id").toInteger() == id) {
-            if (key != "none")
-            {
+            if (key != "none") {
                 QJsonObject result;
                 result.insert(key, obj.value(key));
                 return result;
@@ -23,8 +21,8 @@ QJsonObject CountdownData::getCountdownJson(QJsonArray m_countdowns, int id, QSt
     return QJsonObject();
 }
 
-QDate CountdownData::getNextDue(const QJsonObject &obj, const QDate &today)
-{
+// 下一次的日期
+QDate CountdownData::getNextDue(const QJsonObject &obj, const QDate &today) {
     QString date = obj.value("date").toString();
     QDateTime target = QDateTime::fromString(date, "yyyy-MM-dd");
     QDate targetDate = target.date();
@@ -57,8 +55,8 @@ QDate CountdownData::getNextDue(const QJsonObject &obj, const QDate &today)
 
 qint64 CountdownData::getnotificationdays(const QJsonObject &obj){return obj.value("notificationdays").toInteger();}
 
-QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdowns)
-{
+// 构建显示的数据
+QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdowns) {
     qCDebug(CountdownLog) << "[ Debug ]" << "查询数据";
     QVariantList list;
     QDate today = QDate::currentDate();

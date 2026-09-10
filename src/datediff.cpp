@@ -1,8 +1,7 @@
 #include "datediff.h"
 
 // 天换算年月日
-DateDiff dateDiff(const QDate &from, const QDate &to)
-{
+DateDiff dateDiff(const QDate &from, const QDate &to) {
     DateDiff d;
 
     int days = qAbs(from.daysTo(to));

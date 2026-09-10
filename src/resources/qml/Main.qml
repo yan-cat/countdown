@@ -71,6 +71,7 @@ Kirigami.ApplicationWindow {
             anchors.fill: parent
             spacing: 10
 
+            // 名字
             Label {
                 text: qsTr("名称：")
                 Layout.alignment: Qt.AlignCenter
@@ -82,6 +83,7 @@ Kirigami.ApplicationWindow {
                 Layout.alignment: Qt.AlignCenter
             }
 
+            // 重复
             Label {
                 text: qsTr("重复：")
                 Layout.alignment: Qt.AlignCenter
@@ -93,6 +95,7 @@ Kirigami.ApplicationWindow {
                 Layout.alignment: Qt.AlignCenter
             }
 
+            // 到日期提醒
             CheckBox {
                 id: notificationField
                 checked: false
@@ -128,6 +131,7 @@ Kirigami.ApplicationWindow {
                 }
             }
 
+            // 日期
             Label {
                 text: qsTr("请选择目标日期：")
                 Layout.alignment: Qt.AlignCenter
@@ -138,13 +142,12 @@ Kirigami.ApplicationWindow {
             }
         }
         onOpened: {
-            if (editingId >= 0) {
+            if (editingId >= 0) { // 编辑
                 nameField.text = editingData.name
                 repeatField.currentIndex = editingData.repeatIndex
                 dateField.selectedDate = new Date(editingData.date)
             }
-            else
-            {
+            else { // 新建
                 nameField.text = ""
                 repeatField.currentIndex = 0
                 notificationField.checked = false
@@ -167,8 +170,7 @@ Kirigami.ApplicationWindow {
             else if (notificationtypeField.currentIndex === 0) days = 0
             else if (notificationtypeField.currentIndex === 1) days = 1
             else if (notificationtypeField.currentIndex === 2 && notificationdaysField.text !== "") days = parseInt(notificationdaysField.text, 10)
-            else
-            {
+            else {
                 days = -1
                 inlineMessage.text = qsTr("提醒天数为空，已禁用提醒")
                 inlineMessage.type = Kirigami.MessageType.Warning
@@ -224,12 +226,18 @@ Kirigami.ApplicationWindow {
                 Repeater {
                     model: CountdownManager.countdowns
                     delegate: Kirigami.AbstractCard {
+                        id: cardAbs
                         Layout.preferredWidth: Kirigami.Units.gridUnit * 20
 
                         property int depressedId: -1
                         property bool depressed: modelData.id === depressedId
-                        scale: depressed ? 0.95 : 1.0
-                        Behavior on scale {
+
+                        property real hoverScale: depressed ? 0.95 : 1.0
+                        property real pulseScale: 1.0
+
+                        scale: hoverScale * pulseScale
+
+                        Behavior on hoverScale {
                             NumberAnimation {
                                 duration: 180
                                 easing.type: Easing.OutCubic
@@ -239,9 +247,6 @@ Kirigami.ApplicationWindow {
                         //菜单
                         Menu {
                             id: cardMenu
-
-                            property var inlineMessage1: inlineMessage
-
                             MenuItem {
                                 text: qsTr("编辑")
                                 icon.name: "document-edit"
@@ -271,7 +276,6 @@ Kirigami.ApplicationWindow {
                                             notificationdaysField.text = days.toString()
                                         }
                                     }
-
                                     adddate.open()
                                 }
                             }
@@ -289,7 +293,7 @@ Kirigami.ApplicationWindow {
                         // 主卡片
                         contentItem: Rectangle {
                             id: cardRect
-                            property int cardMargins: 10
+                            property int cardMargins: 5
                             // 卡片容器大小
                             implicitWidth: cardLayout.implicitWidth + (cardMargins * 2)
                             implicitHeight: cardLayout.implicitHeight + (cardMargins * 2)
@@ -320,8 +324,29 @@ Kirigami.ApplicationWindow {
                             color: "transparent"
                             border.color: "red"
                             border.width: 1
+                            radius: 8
                             enabled: false
                             visible: modelData.upcoming
+                        }
+
+                        // 卡片动画
+                        SequentialAnimation {
+                            id: pulseAnim
+
+                            NumberAnimation {
+                                target: cardAbs
+                                property: "pulseScale"
+                                to: 0.95
+                                duration: 120
+                                easing.type: Easing.OutCubic
+                            }
+                            NumberAnimation {
+                                target: cardAbs
+                                property: "pulseScale"
+                                to: 1.0
+                                duration: 120
+                                easing.type: Easing.OutCubic
+                            }
                         }
 
                         // 鼠标右键
@@ -331,6 +356,7 @@ Kirigami.ApplicationWindow {
                             hoverEnabled: true
                             onClicked: (mouse) => {
                                 if (mouse.button === Qt.LeftButton) {
+                                    pulseAnim.start()
                                     detailsWindow.modelData = modelData
                                     detailsWindow.show()
                                 }
@@ -350,7 +376,6 @@ Kirigami.ApplicationWindow {
             }
         }
     }
-
 
     SettingsWindow {
         id: settingsWindow
@@ -399,9 +424,9 @@ Kirigami.ApplicationWindow {
         standardButtons: Kirigami.Dialog.Yes | Kirigami.Dialog.No
         onAccepted: {
             CountdownManager.removeCountdown(cardid)
-            inlineMessage.inlineMessage1.text = qsTr("删除成功")
-            inlineMessage.inlineMessage1.type = Kirigami.MessageType.Positive
-            inlineMessage.inlineMessage1.visible = true
+            inlineMessage.text = qsTr("删除成功")
+            inlineMessage.type = Kirigami.MessageType.Positive
+            inlineMessage.visible = true
         }
         onRejected: {
         }

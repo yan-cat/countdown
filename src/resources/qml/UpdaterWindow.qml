@@ -24,8 +24,7 @@ Window {
         target: CountdownUpdater
 
         // 检查更新
-        function onNewVersion(latestVersion, version , updateLog)
-        {
+        function onNewVersion(latestVersion, version , updateLog) {
             if ( latestVersion ) versionShow.text = version
             else versionShow.text = qsTr("当前已是最新版本：") + version
             versionShow.visible = true
@@ -39,22 +38,19 @@ Window {
         }
 
         // 下载进度
-        function onDownloadProgress(bytesReceived, bytesTotal)
-        {
+        function onDownloadProgress(bytesReceived, bytesTotal) {
             downloadProgressBar.indeterminate = false
             downloadProgressBar.value = bytesReceived / bytesTotal
         }
 
         // 下载完成
-        function onDownloadFinished()
-        {
+        function onDownloadFinished() {
             downloadProgressBar.indeterminate = true
             downloadText.text = qsTr("正在安装更新...")
         }
 
         // 下载失败
-        function onDownloadError(errorString)
-        {
+        function onDownloadError(errorString) {
             downloadOverlay.visible = false
             inlineMessage.text = qsTr("下载失败：") + errorString
             inlineMessage.type = Kirigami.MessageType.Error
@@ -62,8 +58,7 @@ Window {
         }
 
         // 安装成功
-        function onInstallSuccess()
-        {
+        function onInstallSuccess() {
             downloadOverlay.visible = false
             inlineMessage.text = qsTr("安装成功，请手动重启程序")
             inlineMessage.type = Kirigami.MessageType.Positive
@@ -117,8 +112,7 @@ Window {
         anchors.bottomMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
 
-        Button
-        {
+        Button {
             id: getReleaseInfo
             text: qsTr("检查更新")
             icon.name: "update-none"
@@ -127,8 +121,7 @@ Window {
                 CountdownUpdater.getReleaseInfo()
             }
         }
-        Button
-        {
+        Button {
             id: downloadUpdate
             visible: false
             text: qsTr("下载更新")

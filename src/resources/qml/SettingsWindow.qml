@@ -33,7 +33,7 @@ Window {
             Layout.alignment: Qt.AlignHCenter
         }
 
-        //
+        // 描边
         CheckBox {
             id: upcoming
             text: qsTr("临近日期卡片红色描边")

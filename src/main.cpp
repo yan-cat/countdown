@@ -13,8 +13,8 @@
 #include "debug.h"
 #include "updater.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+//===================================================================信息
     QCoreApplication::setOrganizationName("yancat");
     QCoreApplication::setApplicationName("Countdown");
     QCoreApplication::setApplicationVersion(APP_VERSION);
@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
 
 //===================================================================后续启动
 
+    // 安卓不要初始化主题
 #ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
 #endif
@@ -51,13 +52,11 @@ int main(int argc, char *argv[])
     //翻译
     QTranslator translator;
     QString locale;
-    if (debug().getDebugOn("useEnLang"))
-    {
+    if (debug().getDebugOn("useEnLang")) {
         locale = "en_US"; // 强制英语
         qCDebug(CountdownLog) << "[ Debug ]" << "强制语言为英语";
     }
-    else
-    {
+    else {
         locale = QLocale::system().name(); // 按照系统
         qCDebug(CountdownLog) << "[ Debug ]" << "使用系统语言";
     }
@@ -75,18 +74,15 @@ int main(int argc, char *argv[])
 //===================================================================Debug
 
     //显示日志吗
-    if (debug().getDebugOn("outputDebuglog") == 0)
-    {
+    if (debug().getDebugOn("outputDebuglog") == 0) {
         QLoggingCategory::setFilterRules("*.debug=false");
         qInfo() << "[ Info ]" << "debug日志为关";
     }
-    else if (debug().getDebugOn("outputDebuglog") == 1)
-    {
+    else if (debug().getDebugOn("outputDebuglog") == 1) {
         QLoggingCategory::setFilterRules("Countdown.app.debug=true");
         qInfo() << "[ Info ]" << "debug日志为仅app";
     }
-    else if (debug().getDebugOn("outputDebuglog") == 2)
-    {
+    else if (debug().getDebugOn("outputDebuglog") == 2) {
         QLoggingCategory::setFilterRules("*.debug=true");
         qInfo() << "[ Info ]" << "debug日志为开";
     }
@@ -100,8 +96,7 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     engine.loadFromModule("com.countdown", "Main");
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    if (engine.rootObjects().isEmpty()) return -1;
 
 //===================================================================最小化启动
 

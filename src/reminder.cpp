@@ -11,8 +11,7 @@
 #ifndef Q_OS_ANDROID
 #endif
 
-void linux_reminder(QString title, QString body)
-{
+void linux_reminder(QString title, QString body) {
     QDBusInterface iface("org.freedesktop.Notifications",
                          "/org/freedesktop/Notifications",
                          "org.freedesktop.Notifications");
@@ -47,8 +46,7 @@ void linux_reminder(QString title, QString body)
     qCDebug(CountdownLog) << "[ Debug ]" << "通知内容:" << body;
 }
 
-void windows_reminder(QString body)
-{
+void windows_reminder(QString body) {
     qCDebug(CountdownLog) << "[ Debug ]" << "准备显示弹窗";
 
     QQuickView *view = new QQuickView;
@@ -85,26 +83,22 @@ void windows_reminder(QString body)
     view->show();
 }
 
-void reminder(QString title, QString body)
-{
+void reminder(QString title, QString body) {
     QString os = QSysInfo::kernelType();
 
     qCDebug(CountdownLog) << "[ Debug ]" << "准备发送通知";
     qCDebug(CountdownLog) << "[ Debug ]" << "当前系统为：" << os;
 
-    if (debug().getDebugOn("useWindowsReminderType"))
-    {
+    if (debug().getDebugOn("useWindowsReminderType")) {
         os = "winnt";
         qCDebug(CountdownLog) << "[ Debug ]" << "强制win通知模式为开启";
     }
 
-    if (os == "linux")
-    {
+    if (os == "linux") {
         qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：通知";
         linux_reminder(title, body);
     }
-    else if (os == "winnt")
-    {
+    else if (os == "winnt") {
         qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：弹窗";
         windows_reminder(body);
     }
