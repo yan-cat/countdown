@@ -2,16 +2,28 @@
 #include "debug.h"
 #include <QSettings>
 
-
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
 
-// 获取debug设置
-qint64 getDebugOn(const QString &key)
+CountdownDebug *CountdownDebug::create(QQmlEngine *, QJSEngine *)
 {
-    QSettings s;
-    if (s.value("debugmode", false).toBool()){
-        qCDebug(CountdownLog) << "[ Debug ]" << "获取debug状态值：" << key << "，值：" << s.value(key, false).toBool();
-        return s.value(key, false).toInt();
+    CountdownDebug *m = &debug();                      // 复用同一个实例
+    QJSEngine::setObjectOwnership(m, QJSEngine::CppOwnership);  // 别让引擎删它
+    return m;
+}
+CountdownDebug &debug()
+{
+    static CountdownDebug instance;
+    return instance;
+}
+
+// 获取debug设置
+qint64 CountdownDebug::getDebugOn(const QString &key)
+{
+    QSettings settings;
+    if (settings.value("debugmode", false).toBool()){
+        qint64 s = settings.value(key, false).toInt();
+        qCDebug(CountdownLog) << "[ Debug ]" << "获取debug状态值：" << key << "，值：" << s;
+        return s;
     }
     else return false;
 }

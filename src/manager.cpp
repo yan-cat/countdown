@@ -3,10 +3,24 @@
 #include <QStandardPaths>
 #include <QSettings>
 #include <QCoreApplication>
+#include <QJSEngine>
+#include <QQmlEngine>
 #include "manager.h"
 #include "countdowndata.h"
 #include "reminder.h"
 #include "debug.h"
+
+CountdownManager *CountdownManager::create(QQmlEngine *, QJSEngine *)
+{
+    CountdownManager *m = &manager();                      // 复用同一个实例
+    QJSEngine::setObjectOwnership(m, QJSEngine::CppOwnership);  // 别让引擎删它
+    return m;
+}
+CountdownManager &manager()
+{
+    static CountdownManager instance;
+    return instance;
+}
 
 // 初始化
 CountdownManager::CountdownManager(QObject *parent) : QObject(parent)
@@ -228,7 +242,7 @@ void CountdownManager::setSetting(const QString &key, int value)
 {
     QSettings s;
     s.setValue(key, value);
-    emit refreshCountdowns();
+    refreshCountdowns();
     qCDebug(CountdownLog) << "[ Debug ]" << "修改设置键：" << key << "值：" << value;
 }
 
@@ -268,7 +282,6 @@ void CountdownManager::run_reminder(int id)
 // 首次查需要提醒的日子
 void CountdownManager::push_reminder()
 {
-    QSettings s;
     qCDebug(CountdownLog) << "[ Debug ]" << "查询需提醒倒数日";
     for (const QJsonValue &v : std::as_const(m_countdowns))
     {

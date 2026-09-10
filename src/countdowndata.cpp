@@ -1,9 +1,9 @@
 #include <QJsonObject>
-#include <QSettings>
 #include <QString>
 #include "countdowndata.h"
 #include "datediff.h"
 #include "debug.h"
+#include "manager.h"
 
 // 按id查
 QJsonObject CountdownData::getCountdownJson(QJsonArray m_countdowns, int id, QString key)
@@ -59,7 +59,6 @@ qint64 CountdownData::getnotificationdays(const QJsonObject &obj){return obj.val
 
 QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdowns)
 {
-    QSettings s;
     qCDebug(CountdownLog) << "[ Debug ]" << "查询数据";
     QVariantList list;
     QDate today = QDate::currentDate();
@@ -89,8 +88,10 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
         // 计算天数
         qint64 days = today.daysTo(nextDue);
         obj.insert("days", days);
+
+        // 天数文本
         QString daysText;
-        if (s.value("dayshow", 0).toInt() == 0) {
+        if (manager().setting("dayshow", 0) == 0) {
             if (days > 0) {
                 daysText = tr("还有 %1 天").arg(days);
             } else if (days < 0) {
@@ -113,10 +114,14 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
                 daysText = tr("今天");
             }
         }
-
         obj.insert("daysText", daysText);
 
-        qCDebug(CountdownLog) << "[ Debug ]" << "卡片数据：" << obj;
+        // 临近吗
+        qint64 upcomingdays = 3;
+        bool upcoming = days >= 0 && days <= upcomingdays && manager().setting("upcoming", 0);
+        obj.insert("upcoming", upcoming);
+
+        // qCDebug(CountdownLog) << "[ Debug ]" << "卡片数据：" << obj;
         list.append(obj.toVariantMap());
     }
     return list;

@@ -1,3 +1,4 @@
+import com.countdown
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -12,7 +13,7 @@ Kirigami.ApplicationWindow {
     title: qsTr("倒数日")
 
     Connections {
-        target: updater
+        target: CountdownUpdater
 
         // 自动检查更新
         function onNewVersion(latestVersion, version , updateLog)
@@ -23,7 +24,7 @@ Kirigami.ApplicationWindow {
 
     // 空项目引导
     Label {
-        visible: manager.countdowns.length === 0 && root.pageStack.depth === 1
+        visible: CountdownManager.countdowns.length === 0 && root.pageStack.depth === 1
         text: qsTr("还没有倒数日\n右键空白处新建倒数日")
         anchors.centerIn: parent
         horizontalAlignment: Text.AlignHCenter
@@ -181,7 +182,7 @@ Kirigami.ApplicationWindow {
                 notificationdays: days, // 提醒
                 date: dateStr, // 日期
             }
-            manager.editCountdown(JSON.stringify(payload))
+            CountdownManager.editCountdown(JSON.stringify(payload))
 
             inlineMessage.text = qsTr("保存成功")
             inlineMessage.type = Kirigami.MessageType.Positive
@@ -221,7 +222,7 @@ Kirigami.ApplicationWindow {
             Kirigami.CardsLayout {
                 maximumColumns: 8
                 Repeater {
-                    model: manager.countdowns
+                    model: CountdownManager.countdowns
                     delegate: Kirigami.AbstractCard {
                         Layout.preferredWidth: Kirigami.Units.gridUnit * 20
 
@@ -278,7 +279,7 @@ Kirigami.ApplicationWindow {
                                 text: qsTr("删除")
                                 icon.name: "edit-delete"
                                 onTriggered: {
-                                    deleteCountdown.id = modelData.id
+                                    deleteCountdown.cardid = modelData.id
                                     deleteCountdown.name = modelData.name
                                     deleteCountdown.open()
                                 }
@@ -286,21 +287,43 @@ Kirigami.ApplicationWindow {
                         }
 
                         // 主卡片
-                        contentItem: ColumnLayout {
-                            anchors.margins: Kirigami.Units.largeSpacing
+                        contentItem: Rectangle {
+                            id: cardRect
+                            property int cardMargins: 10
+                            // 卡片容器大小
+                            implicitWidth: cardLayout.implicitWidth + (cardMargins * 2)
+                            implicitHeight: cardLayout.implicitHeight + (cardMargins * 2)
+                            color: "transparent"
+                            ColumnLayout {
+                                id: cardLayout
+                                // 卡片边距
+                                anchors.fill: parent
+                                anchors.margins: cardRect.cardMargins
 
-                            Label {
-                                text: modelData.name
-                                font.bold: true
-                                Layout.fillWidth: true
-                                wrapMode: Text.Wrap
-                                maximumLineCount: 2
-                                elide: Text.ElideRight
+                                //卡片内容
+                                Label {
+                                    text: modelData.name
+                                    font.bold: true
+                                    Layout.fillWidth: true
+                                    wrapMode: Text.Wrap
+                                    maximumLineCount: 2
+                                    elide: Text.ElideRight
+                                }
+                                Label { text: modelData.repeatText }
+                                Label { text: modelData.date }
+                                Label { text: modelData.daysText }
                             }
-                            Label { text: modelData.repeatText }
-                            Label { text: modelData.date }
-                            Label { text: modelData.daysText }
                         }
+                        // 临近日红色描边
+                        Rectangle {
+                            anchors.fill: parent
+                            color: "transparent"
+                            border.color: "red"
+                            border.width: 1
+                            enabled: false
+                            visible: modelData.upcoming
+                        }
+
                         // 鼠标右键
                         MouseArea {
                             anchors.fill: parent
@@ -369,13 +392,13 @@ Kirigami.ApplicationWindow {
     // 确认删除
     Kirigami.PromptDialog {
         property var name
-        property var id
+        property var cardid
         id: deleteCountdown
         title: qsTr("删除")
         subtitle: qsTr("确认删除 %1 吗？").arg(name)
         standardButtons: Kirigami.Dialog.Yes | Kirigami.Dialog.No
         onAccepted: {
-            manager.removeCountdown(id)
+            CountdownManager.removeCountdown(cardid)
             inlineMessage.inlineMessage1.text = qsTr("删除成功")
             inlineMessage.inlineMessage1.type = Kirigami.MessageType.Positive
             inlineMessage.inlineMessage1.visible = true

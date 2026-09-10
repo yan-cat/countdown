@@ -51,6 +51,7 @@ qt6_add_executable(Countdown
     src/include/manager.h
     src/include/updater.h
     src/include/countdowndata.h
+    src/include/debug.h
 
 )
 # 桌面/非安卓才编译的提醒实现（依赖 D-Bus、桌面弹窗；安卓不编译）

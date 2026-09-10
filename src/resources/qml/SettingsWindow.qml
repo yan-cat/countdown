@@ -1,3 +1,4 @@
+import com.countdown
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -14,14 +15,16 @@ Window {
 
     ColumnLayout {
         anchors.fill: parent
+
+        // 日期显示格式
         Label {
             text: qsTr("日期显示格式：")
             Layout.alignment: Qt.AlignHCenter
         }
         ComboBox {
             id: dayshow
-            currentIndex: manager.setting("dayshow", 0)
-            onActivated: manager.setSetting("dayshow", currentIndex)
+            currentIndex: CountdownManager.setting("dayshow", 0)
+            onActivated: CountdownManager.setSetting("dayshow", currentIndex)
             model: [qsTr("456 天"), qsTr("1 年 3 个月 1 天")]
             Layout.alignment: Qt.AlignHCenter
         }
@@ -30,12 +33,24 @@ Window {
             Layout.alignment: Qt.AlignHCenter
         }
 
+        //
+        CheckBox {
+            id: upcoming
+            text: qsTr("临近日期卡片红色描边")
+            checked: CountdownManager.setting("upcoming", false)
+            onCheckedChanged: {
+                CountdownManager.setSetting("upcoming", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+
+        // 有新版本时自动打开更新窗口
         CheckBox {
             id: autoGetNewVersion
             text: qsTr("有新版本时自动打开更新窗口")
-            checked: manager.setting("autoGetNewVersion", false)
+            checked: CountdownManager.setting("autoGetNewVersion", false)
             onCheckedChanged: {
-                manager.setSetting("autoGetNewVersion", checked)
+                CountdownManager.setSetting("autoGetNewVersion", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }
@@ -49,9 +64,9 @@ Window {
         CheckBox {
             id: debugmode
             text: qsTr("调试模式")
-            checked: manager.setting("debugmode", false)
+            checked: CountdownManager.setting("debugmode", false)
             onCheckedChanged: {
-                manager.setSetting("debugmode", checked)
+                CountdownManager.setSetting("debugmode", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }
@@ -64,9 +79,9 @@ Window {
         ComboBox {
             id: outputDebuglog
             visible: debugmode.checked
-            currentIndex: manager.setting("outputDebuglog", 0)
+            currentIndex: CountdownManager.setting("outputDebuglog", 0)
             model: [qsTr("关闭调试日志"), qsTr("仅APP调试日志"), qsTr("调试日志全开（此设置会拖慢软件速度！！！）")]
-            onActivated: manager.setSetting("outputDebuglog", currentIndex)
+            onActivated: CountdownManager.setSetting("outputDebuglog", currentIndex)
             Layout.alignment: Qt.AlignHCenter
         }
 
@@ -74,9 +89,9 @@ Window {
             id: useWindowsReminderType
             text: qsTr("强制使用windows通知窗口而非当前系统默认")
             visible: debugmode.checked
-            checked: manager.setting("useWindowsReminderType", false)
+            checked: CountdownManager.setting("useWindowsReminderType", false)
             onCheckedChanged: {
-                manager.setSetting("useWindowsReminderType", checked)
+                CountdownManager.setSetting("useWindowsReminderType", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }
@@ -85,9 +100,9 @@ Window {
             id: useEnLang
             text: qsTr("强制软件语言为英语")
             visible: debugmode.checked
-            checked: manager.setting("useEnLang", false)
+            checked: CountdownManager.setting("useEnLang", false)
             onCheckedChanged: {
-                manager.setSetting("useEnLang", checked)
+                CountdownManager.setSetting("useEnLang", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }
@@ -96,9 +111,9 @@ Window {
             id: forceDownloadLatest
             text: qsTr("强制下载最新版本即使当前版本为最新")
             visible: debugmode.checked
-            checked: manager.setting("forceDownloadLatest", false)
+            checked: CountdownManager.setting("forceDownloadLatest", false)
             onCheckedChanged: {
-                manager.setSetting("forceDownloadLatest", checked)
+                CountdownManager.setSetting("forceDownloadLatest", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }
@@ -107,9 +122,9 @@ Window {
             id: showDebugDetails
             text: qsTr("在倒数日详情显示调试信息")
             visible: debugmode.checked
-            checked: manager.setting("showDebugDetails", false)
+            checked: CountdownManager.setting("showDebugDetails", false)
             onCheckedChanged: {
-                manager.setSetting("showDebugDetails", checked)
+                CountdownManager.setSetting("showDebugDetails", checked)
             }
             Layout.alignment: Qt.AlignHCenter
         }

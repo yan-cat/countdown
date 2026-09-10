@@ -40,13 +40,11 @@ void linux_reminder(QString title, QString body)
     // (可选) 等待并处理回复
     QDBusPendingReply<uint> reply = call;
     reply.waitForFinished();
-    if (reply.isError()) {
-        qWarning() << "发送通知失败:" << reply.error().message();
-    } else {
-        qCDebug(CountdownLog) << "[ Debug ]" << "已成功发送通知";
-        qCDebug(CountdownLog) << "[ Debug ]" << "通知id:" << reply.value();
-        qCDebug(CountdownLog) << "[ Debug ]" << "通知内容:" << body;
-    }
+    if (reply.isError()) qWarning() << "发送通知失败:" << reply.error().message();
+    else qCDebug(CountdownLog) << "[ Debug ]" << "已成功发送通知";
+
+    qCDebug(CountdownLog) << "[ Debug ]" << "通知id:" << reply.value();
+    qCDebug(CountdownLog) << "[ Debug ]" << "通知内容:" << body;
 }
 
 void windows_reminder(QString body)
@@ -94,7 +92,7 @@ void reminder(QString title, QString body)
     qCDebug(CountdownLog) << "[ Debug ]" << "准备发送通知";
     qCDebug(CountdownLog) << "[ Debug ]" << "当前系统为：" << os;
 
-    if (getDebugOn("useWindowsReminderType"))
+    if (debug().getDebugOn("useWindowsReminderType"))
     {
         os = "winnt";
         qCDebug(CountdownLog) << "[ Debug ]" << "强制win通知模式为开启";

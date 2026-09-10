@@ -1,3 +1,4 @@
+import com.countdown
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -15,12 +16,12 @@ Window {
     onVisibleChanged: {
         if (visible) {
             loadingOverlay.visible = true
-            updater.getReleaseInfo()
+            CountdownUpdater.getReleaseInfo()
         }
     }
 
     Connections {
-        target: updater
+        target: CountdownUpdater
 
         // 检查更新
         function onNewVersion(latestVersion, version , updateLog)
@@ -123,7 +124,7 @@ Window {
             icon.name: "update-none"
             onClicked: {
                 loadingOverlay.visible = true
-                updater.getReleaseInfo()
+                CountdownUpdater.getReleaseInfo()
             }
         }
         Button
@@ -134,7 +135,7 @@ Window {
             icon.name: "download"
             onClicked: {
                 downloadOverlay.visible = true
-                updater.downloadNewVersion()
+                CountdownUpdater.downloadNewVersion()
             }
         }
     }

@@ -28,6 +28,12 @@ QString os;
 
 CountdownUpdater::CountdownUpdater(QObject *parent) : QObject(parent) { }
 
+CountdownUpdater &updater()
+{
+    static CountdownUpdater instance;
+    return instance;
+}
+
 // 获取更新
 void CountdownUpdater::getReleaseInfo()
 {
@@ -64,7 +70,7 @@ void CountdownUpdater::getReleaseInfo()
         qCDebug(CountdownLog) << "[ Debug ]" << "最新版本:" << latestVersion;
 
         bool haveNewVersion =  QVersionNumber::fromString(latestVersion) >  QVersionNumber::fromString(currentVersion);
-        if (getDebugOn("forceDownloadLatest"))
+        if (debug().getDebugOn("forceDownloadLatest"))
         {
             haveNewVersion = true;
             qCDebug(CountdownLog) << "[ Debug ]" << "强制下载最新版本";

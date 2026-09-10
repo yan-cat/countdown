@@ -1,3 +1,4 @@
+import com.countdown
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -91,7 +92,7 @@ Window {
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                visible: manager.setting("showDebugDetails", false)
+                visible: CountdownDebug.getDebugOn("showDebugDetails")
 
                 Layout.fillWidth: true
                 Layout.leftMargin: 10
@@ -104,7 +105,7 @@ Window {
                     Layout.leftMargin: 10
                     Layout.rightMargin: 10
                     spacing: 5
-                    visible: manager.setting("showDebugDetails", false)
+                    visible: CountdownDebug.getDebugOn("showDebugDetails")
 
                     Label {
                         text: modelData + "："

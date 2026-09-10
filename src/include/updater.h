@@ -4,10 +4,13 @@
 #include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QFile>
+#include <QtQml/qqmlregistration.h>
 
 class CountdownUpdater : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT          // 注册进 QML 模块
+    QML_SINGLETON        // 声明为 QML 单例
 
 public:
     explicit CountdownUpdater(QObject *parent = nullptr);
@@ -30,5 +33,5 @@ signals:
 private:
     void installNewVersion(QString path);
 };
-
+CountdownUpdater &updater();
 #endif // UPDATER_H

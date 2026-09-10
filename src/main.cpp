@@ -10,9 +10,8 @@
 #include <QCommandLineOption>
 #include <QLoggingCategory>
 #include <QTranslator>
-#include "manager.h"
-#include "updater.h"
 #include "debug.h"
+#include "updater.h"
 
 int main(int argc, char *argv[])
 {
@@ -47,17 +46,12 @@ int main(int argc, char *argv[])
     KIconTheme::initTheme();
 #endif
     QGuiApplication app(argc, argv);
-
-    //链接的可调用类
-    CountdownManager manager;
-    CountdownUpdater updater;
-
     QQmlApplicationEngine engine;
 
     //翻译
     QTranslator translator;
     QString locale;
-    if (getDebugOn("useEnLang"))
+    if (debug().getDebugOn("useEnLang"))
     {
         locale = "en_US"; // 强制英语
         qCDebug(CountdownLog) << "[ Debug ]" << "强制语言为英语";
@@ -81,17 +75,17 @@ int main(int argc, char *argv[])
 //===================================================================Debug
 
     //显示日志吗
-    if (getDebugOn("outputDebuglog") == 0)
+    if (debug().getDebugOn("outputDebuglog") == 0)
     {
         QLoggingCategory::setFilterRules("*.debug=false");
         qInfo() << "[ Info ]" << "debug日志为关";
     }
-    else if (getDebugOn("outputDebuglog") == 1)
+    else if (debug().getDebugOn("outputDebuglog") == 1)
     {
         QLoggingCategory::setFilterRules("Countdown.app.debug=true");
         qInfo() << "[ Info ]" << "debug日志为仅app";
     }
-    else if (getDebugOn("outputDebuglog") == 2)
+    else if (debug().getDebugOn("outputDebuglog") == 2)
     {
         QLoggingCategory::setFilterRules("*.debug=true");
         qInfo() << "[ Info ]" << "debug日志为开";
@@ -99,15 +93,11 @@ int main(int argc, char *argv[])
 
 //===================================================================自动更新
 
-    if (getDebugOn("autoGetNewVersion")) updater.getReleaseInfo();
+    if (debug().getDebugOn("autoGetNewVersion")) updater().getReleaseInfo();
 
 //===================================================================后续启动
 
     parser.process(app);
-
-    //链接
-    engine.rootContext()->setContextProperty("manager", &manager);
-    engine.rootContext()->setContextProperty("updater", &updater);
 
     engine.loadFromModule("com.countdown", "Main");
     if (engine.rootObjects().isEmpty())
