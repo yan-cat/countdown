@@ -32,7 +32,7 @@ CountdownUpdater::CountdownUpdater(QObject *parent) : QObject(parent) { }
 
 CountdownUpdater &updater()
 {
-    static CountdownUpdater instance;
+    static CountdownUpdater instance(nullptr);
     return instance;
 }
 CountdownUpdater *CountdownUpdater::create(QQmlEngine *, QJSEngine *)

@@ -15,7 +15,8 @@ class CountdownUpdater : public QObject
     QML_SINGLETON        // 声明为 QML 单例
 
 public:
-    explicit CountdownUpdater(QObject *parent = nullptr);
+    // QObject *parent = nullptr会直接new一个新实例然后爆炸
+    explicit CountdownUpdater(QObject *parent);
     Q_INVOKABLE void getReleaseInfo();
     Q_INVOKABLE void downloadNewVersion();
 

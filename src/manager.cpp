@@ -17,7 +17,7 @@ CountdownManager *CountdownManager::create(QQmlEngine *, QJSEngine *) {
     return m;
 }
 CountdownManager &manager() {
-    static CountdownManager instance;
+    static CountdownManager instance(nullptr);
     return instance;
 }
 CountdownManager::CountdownManager(QObject *parent) : QObject(parent) {
@@ -27,6 +27,12 @@ CountdownManager::CountdownManager(QObject *parent) : QObject(parent) {
     loadCountdowns(); // 首次加载数据
 
     push_reminder(); // 检查提醒
+
+    // 启动定时提醒
+    m_reminderTimer.setInterval(1000 * 60 * 60); // 1小时
+    connect(&m_reminderTimer, &QTimer::timeout, this, &CountdownManager::push_reminder);
+    m_reminderTimer.start();
+    qCDebug(CountdownLog) << "[ Debug ]" << "启动提醒检查";
 }
 
 // 保存倒数日
@@ -223,9 +229,12 @@ int CountdownManager::setting(const QString &key, int def) const {
 // 写设置
 void CountdownManager::setSetting(const QString &key, int value) {
     QSettings s;
-    s.setValue(key, value);
-    qCDebug(CountdownLog) << "[ Debug ]" << "修改设置键：" << key << "值：" << value;
-    emit refreshCountdowns();
+    if (s.value(key, "") != value) {
+        s.setValue(key, value);
+        qCDebug(CountdownLog) << "[ Debug ]" << "修改设置键：" << key << "值：" << value;
+        emit refreshCountdowns();
+    }
+    else qCDebug(CountdownLog) << "[ Debug ]" << "设置值未变动，拒绝修改：" << key;
 }
 
 // 按id查
@@ -260,11 +269,21 @@ void CountdownManager::run_reminder(int id) {
 
 // 首次查需要提醒的日子
 void CountdownManager::push_reminder() {
-    qCDebug(CountdownLog) << "[ Debug ]" << "查询需提醒倒数日";
-    for (const QJsonValue &v : std::as_const(m_countdowns)) {
-        QJsonObject obj = v.toObject();
-        if (getCountdownJson(obj.value("id").toInteger(), "notificationdays").value("notificationdays").toInteger() >= 0) {
-            run_reminder(obj.value("id").toInteger());
+    QSettings s;
+    QDate today = QDate::currentDate();
+    qint64 diffDay = s.value("todayDate", "1970-01-01").toDate().daysTo(today);
+    qCDebug(CountdownLog) << "[ Debug ]" << "上一次提醒在" << diffDay << "天前";
+
+    if (diffDay > 0) {
+        qCDebug(CountdownLog) << "[ Debug ]" << "开始提醒";
+        qCDebug(CountdownLog) << "[ Debug ]" << "查询需提醒倒数日";
+        for (const QJsonValue &v : std::as_const(m_countdowns)) {
+            QJsonObject obj = v.toObject();
+            if (getCountdownJson(obj.value("id").toInteger(), "notificationdays").value("notificationdays").toInteger() >= 0) {
+                run_reminder(obj.value("id").toInteger());
+            }
         }
+        s.setValue("todayDate", today.toString(Qt::ISODate));
     }
+    else qCDebug(CountdownLog) << "[ Debug ]" << "今天已提醒";
 }

@@ -102,9 +102,6 @@ int main(int argc, char *argv[]) {
     if (engine.rootObjects().isEmpty()) return -1;
 
     if (debug().getDebugOn("autoGetNewVersion")) updater().getReleaseInfo(); // 检查更新
-    QObject::connect(&updater(), &CountdownUpdater::newVersion, [](bool haveNewVer) {
-        if(haveNewVer) reminder("软件更新", "软件有新版本！");
-    });
 
 //===================================================================最小化启动
 

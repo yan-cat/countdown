@@ -67,10 +67,10 @@ Window {
             Label { text: qsTr("天标红") }
         }
 
-        // 有新版本时发送通知提醒
+        // 有新版本时弹出更新窗口
         CheckBox {
             id: autoGetNewVersion
-            text: qsTr("有新版本时发送通知提醒")
+            text: qsTr("有新版本时弹出更新窗口")
             checked: CountdownManager.setting("autoGetNewVersion", false)
             onCheckedChanged: {
                 CountdownManager.setSetting("autoGetNewVersion", checked)

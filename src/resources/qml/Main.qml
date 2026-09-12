@@ -12,6 +12,16 @@ Kirigami.ApplicationWindow {
     visible: true
     title: qsTr("倒数日")
 
+    Connections {
+        target: CountdownUpdater
+
+        // beta版提示
+        function onNewVersion(latestVersion, version , updateLog) {
+            if (latestVersion) updaterWindow.show()
+            if (!latestVersion && version !== "v" + Qt.application.version) cardPage.title = qsTr("倒数日 Beta（测试版，风险自担）")
+        }
+    }
+
     // 空项目引导
     Label {
         visible: cardsLayout.count === 0
@@ -183,6 +193,7 @@ Kirigami.ApplicationWindow {
 
     // 卡片主界面
     pageStack.initialPage: Kirigami.ScrollablePage {
+        id: cardPage
         title: qsTr("倒数日")
         MouseArea {
                 anchors.fill: parent

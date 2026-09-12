@@ -6,6 +6,7 @@
 #include <QJSEngine>
 #include <QQmlEngine>
 #include <QtQml/qqmlregistration.h>
+#include <QTimer>
 
 class CountdownManager : public QObject
 {
@@ -15,7 +16,8 @@ class CountdownManager : public QObject
     Q_PROPERTY(QVariantList countdowns READ countdowns NOTIFY refreshCountdowns)
 
 public:
-    explicit CountdownManager(QObject *parent = nullptr);
+    // QObject *parent = nullptr会直接new一个新实例然后爆炸
+    explicit CountdownManager(QObject *parent);
     QVariantList countdowns() const;
 
     Q_INVOKABLE int setting(const QString &key, int def = 0) const;
@@ -41,6 +43,7 @@ private:
 
     QJsonArray m_countdowns;
     QString m_filePath;
+    QTimer m_reminderTimer;
 };
 CountdownManager &manager();
 #endif
