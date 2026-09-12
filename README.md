@@ -58,6 +58,7 @@ countdown
 ├── android                           # 暂未使用
 │   ├── AndroidManifest.xml
 │   └── splash.xml
+├── CHANGELOG.md                      # 更新日志
 ├── CMakeLists.txt
 ├── Countdown.py                      # KDE Craft 蓝图
 ├── LICENSE
@@ -97,6 +98,10 @@ countdown
     └── yancat
         └── Countdown.conf          # 设置项
 ```
+
+## 更新日志
+
+各版本的详细变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 待完成
 

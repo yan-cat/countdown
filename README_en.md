@@ -58,6 +58,7 @@ countdown
 ├── android                           # Not used yet
 │   ├── AndroidManifest.xml
 │   └── splash.xml
+├── CHANGELOG.md                      # Changelog
 ├── CMakeLists.txt
 ├── Countdown.py                      # KDE Craft blueprint
 ├── LICENSE
@@ -98,16 +99,22 @@ Files (and folders) created by the application:
         └── Countdown.conf          # Settings
 ```
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for the detailed changes in each version.
+
 ## Planned
 
-- [ ] Optional app background
-- [ ] Android support
 - [ ] WebDAV cloud sync of items
 - [ ] Desktop tiles/widget
 - [ ] Fix dark display issues on Windows
+- [ ] Optional app background
+- [ ] Android support (too difficult, no plan for now)
 
 ## Done
 
+- [x] Update download mirror
+- [x] Red highlight for upcoming countdowns
 - [x] In-app update check with automatic checking off by default
 - [x] I18n
 - [x] Windows reminders when time is up / days remaining
