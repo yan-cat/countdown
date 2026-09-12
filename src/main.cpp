@@ -10,6 +10,7 @@
 #include <QCommandLineOption>
 #include <QLoggingCategory>
 #include <QTranslator>
+#include <QIcon>
 #include "debug.h"
 #include "updater.h"
 #include "reminder.h"
@@ -49,6 +50,11 @@ int main(int argc, char *argv[]) {
 #endif
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+
+    // 软件logo
+    app.setWindowIcon(QIcon(QStringLiteral(
+        ":/qt/qml/com/countdown/src/resources/icon/com.countdown.svg")));
+    app.setDesktopFileName(QStringLiteral("com.countdown"));
 
     //翻译
     QTranslator translator;

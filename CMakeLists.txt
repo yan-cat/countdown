@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(Countdown VERSION 1.2.3 LANGUAGES CXX)
+project(Countdown VERSION 1.2.4 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,6 +25,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Quick
     QuickControls2
     LinguistTools
+    Svg
 )
 
 find_package(KF6 REQUIRED COMPONENTS
@@ -75,6 +76,7 @@ target_link_libraries(Countdown PRIVATE
     KF6::Kirigami
     KF6::IconThemes
     KF6::Archive
+    Qt6::Svg
 )
 if (LINUX)
     target_link_libraries(Countdown PRIVATE Qt6::DBus)
@@ -83,11 +85,9 @@ endif()
 # Android 专属：安卓下需显式链接 Qt6::Svg、OpenSSL::SSL、KF6::Kirigami
 # （KDE 官方要求，否则可能缺符号/启动异常）
 if (ANDROID)
-    find_package(Qt6 COMPONENTS Svg REQUIRED)
     find_package(OpenSSL REQUIRED)
     find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Kirigami)
     target_link_libraries(Countdown PRIVATE
-        Qt6::Svg
         OpenSSL::SSL
         KF6::Kirigami
     )
@@ -109,6 +109,9 @@ qt_add_qml_module(Countdown
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/UpdaterWindow.qml
         src/resources/qml/DetailsWindow.qml
+    RESOURCES
+          src/resources/icon/com.countdown.svg
+          src/resources/icon/Countdown_tray.svg
 )
 
 # 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，

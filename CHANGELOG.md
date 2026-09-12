@@ -3,6 +3,25 @@
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
 ## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.2.3...main)
+# 更新日志 (Changelog)
+
+### 新增 (Added) 
+- 软件logo与desktop文件
+
+### 变更 (Changed) 
+- 对现有功能的改动描述
+
+### 弃用 (Deprecated) 
+- 即将移除的功能预告（给用户缓冲期）
+
+### 移除 (Removed) 
+- 已移除的功能
+
+### 修复 (Fixed) 
+- Bug 修复描述
+
+### 安全 (Security) 
+- 修复的安全漏洞
 
 ## [1.2.3](https://github.com/yan-cat/countdown/compare/v1.2.2...v1.2.3) - 2026-09-11
 

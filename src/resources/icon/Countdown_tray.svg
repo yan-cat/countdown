@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- 1. 倒计时圆环背景轨道（使用 currentColor 配合透明度实现浅色底） -->
+  <circle cx="128" cy="128" r="76" fill="none" stroke="currentColor" stroke-width="20" stroke-opacity="0.2" />
+
+  <!-- 2. 倒计时圆环进度（约 75% 进度，顺时针旋转 90 度从正上方开始） -->
+  <circle cx="128" cy="128" r="76" fill="none" stroke="currentColor" stroke-width="20" stroke-dasharray="358 500" stroke-linecap="round" transform="rotate(-90 128 128)" />
+
+  <!-- 3. 极简猫爪（居中对齐） -->
+  <!-- 主掌垫 -->
+  <ellipse cx="128" cy="150" rx="26" ry="20" fill="currentColor" />
+  <!-- 三个脚趾（呈弧形排列） -->
+  <circle cx="128" cy="102" r="14" fill="currentColor" />
+  <circle cx="98" cy="118" r="14" fill="currentColor" />
+  <circle cx="158" cy="118" r="14" fill="currentColor" />
+</svg>

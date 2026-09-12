@@ -1,0 +1,14 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Name=Countdown
+Name[zh_CN]=倒数日
+GenericName=Countdown Day Tracker
+Comment=Record and track important days
+Comment[zh_CN]=记录和追踪重要的日子
+Exec=Countdown
+Icon=com.countdown
+Terminal=false
+Categories=Utility;Qt;KDE;
+StartupWMClass=Countdown
+Keywords=day;countdown

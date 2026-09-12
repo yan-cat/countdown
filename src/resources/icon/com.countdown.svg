@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <!-- 桌面图标背景渐变，层次更丰富 -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4CB8F0" />
+      <stop offset="100%" stop-color="#1E6DA8" />
+    </linearGradient>
+  </defs>
+
+  <!-- 1. 基础底板：圆角方形，充满整个画布，像普通的桌面应用一样 -->
+  <rect width="256" height="256" rx="56" fill="url(#bgGradient)" />
+
+  <!-- 2. 倒计时圆环背景轨道（白色带透明度，体现柔和的底托） -->
+  <circle cx="128" cy="128" r="68" fill="none" stroke="#FFFFFF" stroke-opacity="0.25" stroke-width="16" />
+
+  <!-- 3. 倒计时圆环进度（约 75% 进度，亮橙色，末端圆润） -->
+  <!-- 2*pi*68 ≈ 427，0.75*427 ≈ 320 -->
+  <circle cx="128" cy="128" r="68" fill="none" stroke="#F5A623" stroke-width="16" stroke-dasharray="320 427" stroke-linecap="round" transform="rotate(-90 128 128)" />
+
+  <!-- 4. 中心猫爪（纯白，视觉中心，比极简版略大且稳重） -->
+  <!-- 主掌垫 -->
+  <ellipse cx="128" cy="150" rx="22" ry="18" fill="#FFFFFF" />
+  <!-- 三个脚趾 -->
+  <circle cx="128" cy="104" r="12" fill="#FFFFFF" />
+  <circle cx="99" cy="118" r="12" fill="#FFFFFF" />
+  <circle cx="157" cy="118" r="12" fill="#FFFFFF" />
+</svg>
