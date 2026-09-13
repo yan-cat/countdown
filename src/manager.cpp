@@ -222,7 +222,7 @@ void CountdownManager::removeCountdown(int id) {
 // 读设置
 int CountdownManager::setting(const QString &key, int def) const {
     QSettings s;
-    qCDebug(CountdownLog) << "[ Debug ]" << "查询设置：" << key;
+    // qCDebug(CountdownLog) << "[ Debug ]" << "查询设置：" << key;
     return s.value(key, def).toInt();
 }
 

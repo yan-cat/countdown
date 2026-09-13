@@ -116,6 +116,17 @@ Window {
             onActivated: CountdownManager.setSetting("outputDebuglog", currentIndex)
             Layout.alignment: Qt.AlignHCenter
         }
+        CheckBox {
+            id: disableQmlWarn
+            text: qsTr("禁用 QML 引擎警告")
+            visible: debugMode.checked
+            checked: CountdownManager.setting("disableQmlWarn", false)
+            onCheckedChanged: {
+                CountdownManager.setSetting("disableQmlWarn", checked)
+            }
+            Layout.alignment: Qt.AlignHCenter
+        }
+
 
         CheckBox {
             id: useWindowsReminderType

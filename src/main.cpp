@@ -94,6 +94,9 @@ int main(int argc, char *argv[]) {
         qInfo() << "[ Info ]" << "debug日志为开";
     }
 
+    if (debug().getDebugOn("disableQmlWarn")) QLoggingCategory::setFilterRules("*.warning=false");
+    else QLoggingCategory::setFilterRules("*.warning=true");
+
 //===================================================================后续启动
 
     parser.process(app);
@@ -112,6 +115,12 @@ int main(int argc, char *argv[]) {
             window->showMinimized();
         }
     }
+
+//===================================================================APP退出
+
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
+        qCDebug(CountdownLog) << "[ Debug ]" << "正常退出";
+    });
 
     return app.exec();
 }

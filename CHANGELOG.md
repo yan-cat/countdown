@@ -3,14 +3,14 @@
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
 ## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.2.3...main)
-# 更新日志 (Changelog)
 
 ### 新增 (Added) 
 - 软件logo与desktop文件
 - 运行在beta版时的提示
+- 禁用日志内的qml引擎警告开关
 
 ### 变更 (Changed) 
-- 对现有功能的改动描述
+- 有新版本时自动发送通知提醒变更为有新版本时打开更新窗口
 
 ### 弃用 (Deprecated) 
 - 即将移除的功能预告（给用户缓冲期）

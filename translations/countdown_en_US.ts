@@ -143,33 +143,38 @@
     </message>
     <message>
         <location filename="../src/resources/qml/DetailsWindow.qml" line="20"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="49"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="59"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="69"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="79"/>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="121"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="50"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="60"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="70"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="80"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="123"/>
         <source>无数据</source>
         <translation>No data</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="49"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="50"/>
         <source>日期：</source>
         <translation>Date:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="59"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="60"/>
         <source>天数：</source>
         <translation>Total days:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="69"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="70"/>
         <source>重复：</source>
         <translation>Repeat:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/DetailsWindow.qml" line="79"/>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="80"/>
         <source>提醒时间：</source>
         <translation>Reminder time:</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/DetailsWindow.qml" line="93"/>
+        <source>Debug信息</source>
+        <translation>Debug Info</translation>
     </message>
 </context>
 <context>
@@ -398,22 +403,27 @@ Right-click on blank area to create a new countdown</translation>
         <translation>Full debug logging (may slow down the software!)</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="122"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="121"/>
+        <source>禁用 QML 引擎警告</source>
+        <translation>Disable QML engine warnings</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="133"/>
         <source>强制使用windows通知窗口而非当前系统默认</source>
         <translation>Force using Windows notifications instead of system default</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="133"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="144"/>
         <source>强制软件语言为英语</source>
         <translation>Force software language to English</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="144"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="155"/>
         <source>强制下载最新版本即使当前版本为最新</source>
         <translation>Force download the latest version even when current version is up-to-date</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="155"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="166"/>
         <source>在倒数日详情显示调试信息</source>
         <translation>Show debug info in countdown details</translation>
     </message>

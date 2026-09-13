@@ -42,6 +42,7 @@ Window {
         ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
         ColumnLayout {
+            id: mainDetails
             anchors.fill: parent
             spacing: 10
 
@@ -87,12 +88,13 @@ Window {
             }
 
             // Debug
+            property var showDebugDetails: CountdownDebug.getDebugOn("showDebugDetails")
             Text {
-                text: "\nDebug信息"
+                text: "\n" + qsTr("Debug信息")
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                visible: CountdownDebug.getDebugOn("showDebugDetails")
+                visible: mainDetails.showDebugDetails
 
                 Layout.fillWidth: true
                 Layout.leftMargin: 10
@@ -105,7 +107,7 @@ Window {
                     Layout.leftMargin: 10
                     Layout.rightMargin: 10
                     spacing: 5
-                    visible: CountdownDebug.getDebugOn("showDebugDetails")
+                    visible: mainDetails.showDebugDetails
 
                     Label {
                         text: modelData + "："
