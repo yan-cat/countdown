@@ -27,6 +27,8 @@ class subinfo(info.infoclass):
         self.runtimeDependencies["kde/unreleased/kirigami-addons"] = None
         self.runtimeDependencies["kde/frameworks/tier1/breeze-icons"] = None
         self.runtimeDependencies["kde/frameworks/tier3/kiconthemes"] = None
+        self.runtimeDependencies["kde/plasma/breeze"] = None
+        self.runtimeDependencies["kde/frameworks/tier3/qqc2-desktop-style"] = None
 
 
 class Package(CMakePackageBase):

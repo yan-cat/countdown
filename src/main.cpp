@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QLockFile>
@@ -11,6 +11,7 @@
 #include <QLoggingCategory>
 #include <QTranslator>
 #include <QIcon>
+#include <QQuickStyle>
 #include "debug.h"
 #include "updater.h"
 #include "reminder.h"
@@ -45,10 +46,16 @@ int main(int argc, char *argv[]) {
 //===================================================================后续启动
 
     // 安卓不要初始化主题
-#ifndef Q_OS_ANDROID
+    #ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
-#endif
-    QGuiApplication app(argc, argv);
+    #endif
+    QApplication app(argc, argv);
+
+    #ifdef Q_OS_WIN
+    QApplication::setStyle("breeze");                        // QStyle 用 Breeze
+    QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
+    #endif
+
     QQmlApplicationEngine engine;
 
     // 软件logo
@@ -104,7 +111,7 @@ int main(int argc, char *argv[]) {
     engine.loadFromModule("com.countdown", "Main");
     if (engine.rootObjects().isEmpty()) return -1;
 
-    if (debug().getDebugOn("autoGetNewVersion")) updater().getReleaseInfo(); // 检查更新
+    updater().getReleaseInfo(); // 检查更新
 
 //===================================================================最小化启动
 

@@ -22,6 +22,7 @@ set(ANDROID_APK_DIR "${CMAKE_SOURCE_DIR}/android")
 # 查找 Qt6 和 Kirigami
 find_package(Qt6 REQUIRED COMPONENTS
     Core
+    Widgets
     Quick
     QuickControls2
     LinguistTools
@@ -70,6 +71,7 @@ target_include_directories(Countdown PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/inc
 # 链接库
 target_link_libraries(Countdown PRIVATE
     Qt6::Core
+    Qt6::Widgets
     Qt6::Quick
     Qt6::QuickControls2
     KF6::CoreAddons
