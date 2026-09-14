@@ -12,7 +12,7 @@ class subinfo(info.infoclass):
         self.svnTargets["main"] = "[git]https://github.com/yan-cat/countdown.git|main"
         self.defaultTarget = "main"
 
-        self.buildType = "Release"
+        self.buildType = "MinSizeRel"
 
     def setDependencies(self):
         # 构建依赖

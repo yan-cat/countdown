@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.25)
 project(Countdown VERSION 1.2.4 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -38,8 +38,16 @@ find_package(KF6 REQUIRED COMPONENTS
 
 qt_policy(SET QTP0001 NEW)
 
+# win可执行图标
+if(WIN32)
+    set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/src/resources/icon/com.countdown.rc")
+else()
+    set(app_icon_resource_windows "")
+endif()
+
 # 添加可执行文件
-qt6_add_executable(Countdown
+qt_add_executable(Countdown WIN32
+    ${app_icon_resource_windows}
     src/main.cpp
     src/manager.cpp
     src/countdowndata.cpp
@@ -51,11 +59,19 @@ qt6_add_executable(Countdown
     src/include/updater.h
     src/include/countdowndata.h
     src/include/debug.h
-
 )
 # 桌面/非安卓才编译的提醒实现（依赖 D-Bus、桌面弹窗；安卓不编译）
 if (NOT ANDROID)
     target_sources(Countdown PRIVATE src/reminder.cpp)
+endif()
+
+# 优化大小：针对 Release 或 MinSizeRel 构建启用 LTO
+if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT result)
+    if (result)
+        set_property(TARGET Countdown PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
 endif()
 
 # Qt 部署用的 QML 搜索路径 target 属性；在 craft 的 ecm_add_android_apk 流程里并不生效，
@@ -149,19 +165,13 @@ qt_add_translations(Countdown
             translations/countdown_en_US.ts
 )
 
-# win的不知道什么编译参数
-if (WIN32)
-    if (CMAKE_BUILD_TYPE STREQUAL "Release" OR
-        CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR
-        CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
-        set_target_properties(Countdown PROPERTIES WIN32_EXECUTABLE TRUE)
-    endif()
-endif()
-
 install(TARGETS Countdown
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-
-    # 没用的安卓安装  现在有用了😋  哦不不不你又没用了
-    LIBRARY DESTINATION lib/${ANDROID_ABI}
-    ARCHIVE DESTINATION lib/${ANDROID_ABI}
 )
+if(ANDROID)
+    install(TARGETS Countdown
+        # 没用的安卓安装  现在有用了😋  哦不不不你又没用了
+        LIBRARY DESTINATION lib/${ANDROID_ABI}
+        ARCHIVE DESTINATION lib/${ANDROID_ABI}
+    )
+endif()
