@@ -1,0 +1,3 @@
+bin/data/icons/.*
+bin/data/locale/(?!(?:en_US|zh_CN)/)[^/]+/.*$
+share/locale/(?!(?:en_US|zh_CN)/)[^/]+/.*$

@@ -1,8 +1,8 @@
 import info
-import os
 from Package.CMakePackageBase import *
 from CraftCore import CraftCore
-
+import os
+import re
 
 class subinfo(info.infoclass):
     def setTargets(self):
@@ -37,6 +37,25 @@ class Package(CMakePackageBase):
         super().__init__(**kwargs)
 
     def createPackage(self):
+        # 版本号
+        cmake_file = os.path.join(self.sourceDir(), "CMakeLists.txt")
+        version = "0.0.0"
+        with open(cmake_file, encoding="utf-8") as f:
+            content = f.read()
+        # 匹配 project(Countdown VERSION 1.2.4.0 ...) 或 project(Countdown VERSION 1.2.4)
+        m = re.search(r"project\s*\(\s*\S+\s+VERSION\s+([0-9.]+)", content)
+        if m:
+            version = m.group(1)
+            # 补齐 4 段，NSIS 通常需要 x.x.x.x 格式
+            parts = version.split(".")
+            while len(parts) < 4:
+                parts.append("0")
+            version = ".".join(parts[:4])
+
+        self.defines["version"] = version
+        self.defines["icon"] = os.path.join(self.sourceDir(), "src", "resources", "icon", "com.countdown.ico")
+        self.defines["company"] = "yancat"
+
         self.defines["shortcuts"] = [
             {
                 "name": "Countdown",
@@ -44,6 +63,6 @@ class Package(CMakePackageBase):
                 "description": self.subinfo.description,
             }
         ]
+        self.blacklist_file.append(os.path.join(self.blueprintDir(), "exclude_list.txt"))
         self.defines["strip"] = True
-        self.blacklist_file.append(os.path.join(self.packageDir(), "exclude_list.txt"))
         return super().createPackage()
