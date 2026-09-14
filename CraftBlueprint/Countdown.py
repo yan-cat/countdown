@@ -1,4 +1,5 @@
 import info
+import os
 from Package.CMakePackageBase import *
 from CraftCore import CraftCore
 
@@ -44,4 +45,5 @@ class Package(CMakePackageBase):
             }
         ]
         self.defines["strip"] = True
+        self.blacklist_file.append(os.path.join(self.packageDir(), "exclude_list.txt"))
         return super().createPackage()
