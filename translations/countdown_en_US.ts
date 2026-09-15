@@ -104,32 +104,32 @@
 <context>
     <name>CountdownUpdater</name>
     <message>
-        <location filename="../src/updater.cpp" line="130"/>
+        <location filename="../src/updater.cpp" line="142"/>
         <source>无法写入文件：</source>
         <translation>Cannot write file: </translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="198"/>
+        <location filename="../src/updater.cpp" line="210"/>
         <source>无法打开更新包：%1</source>
         <translation>Cannot open update package: %1</translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="210"/>
+        <location filename="../src/updater.cpp" line="222"/>
         <source>更新包内容不完整</source>
         <translation>Update package is incomplete</translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="216"/>
+        <location filename="../src/updater.cpp" line="228"/>
         <source>替换可执行文件失败</source>
         <translation>Failed to replace executable file</translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="238"/>
+        <location filename="../src/updater.cpp" line="250"/>
         <source>启动安装包失败（错误码 %1）</source>
         <translation>Failed to start installer (error code %1)</translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="244"/>
+        <location filename="../src/updater.cpp" line="256"/>
         <source>启动安装包失败：%1</source>
         <translation>Failed to start installer: %1</translation>
     </message>
@@ -333,97 +333,97 @@ Right-click on blank area to create a new countdown</translation>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="21"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="26"/>
         <source>日期显示格式：</source>
         <translation>Date format:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="28"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="33"/>
         <source>456 天</source>
         <translation>456 days</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="28"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="33"/>
         <source>1 年 3 个月 1 天</source>
         <translation>1y 3m 1d</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="32"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="37"/>
         <source>注：年月日显示模式为估算仅作参考，具体以单天数显示为准</source>
         <translation>Year/month/day display is an estimate for reference; actual count is based on total days.</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="39"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="44"/>
         <source>临近日期卡片红色描边</source>
         <translation>Red border for upcoming date cards</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="52"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="57"/>
         <source>距离</source>
         <translation>Highlight in red when within</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="67"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="72"/>
         <source>天标红</source>
         <translation>days</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="73"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="78"/>
         <source>有新版本时弹出更新窗口</source>
         <translation>Show update window when new version is available</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="82"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="87"/>
         <source>使用加速源快速下载</source>
         <translation>Use accelerated source for faster download</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="98"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="103"/>
         <source>调试模式</source>
         <translation>Debug Mode</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="106"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="111"/>
         <source>调试选项需要重启才能生效！</source>
         <translation>Debug options require a restart to take effect! Debug logs are not yet localized.</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="115"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="120"/>
         <source>关闭调试日志</source>
         <translation>Disable debug logging</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="115"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="120"/>
         <source>仅APP调试日志</source>
         <translation>App debug logs only</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="115"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="120"/>
         <source>调试日志全开（此设置会拖慢软件速度！！！）</source>
         <translation>Full debug logging (may slow down the software!)</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="121"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="126"/>
         <source>禁用 QML 引擎警告</source>
         <translation>Disable QML engine warnings</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="133"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="138"/>
         <source>强制使用windows通知窗口而非当前系统默认</source>
         <translation>Force using Windows notifications instead of system default</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="144"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="149"/>
         <source>强制软件语言为英语</source>
         <translation>Force software language to English</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="155"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="160"/>
         <source>强制下载最新版本即使当前版本为最新</source>
         <translation>Force download the latest version even when current version is up-to-date</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="166"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="171"/>
         <source>在倒数日详情显示调试信息</source>
         <translation>Show debug info in countdown details</translation>
     </message>
@@ -431,7 +431,7 @@ Right-click on blank area to create a new countdown</translation>
 <context>
     <name>UpdaterWindow</name>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="117"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="128"/>
         <source>检查更新</source>
         <translation>Check for Updates</translation>
     </message>
@@ -446,44 +446,62 @@ Right-click on blank area to create a new countdown</translation>
         <translation>Update</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="49"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="42"/>
+        <source>检查更新失败：</source>
+        <translation>Update check failed:</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="60"/>
         <source>正在安装更新...</source>
         <translation>Installing update...</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="55"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="66"/>
         <source>下载失败：</source>
         <translation>Download failed: </translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="63"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="74"/>
         <source>安装成功，请手动重启程序</source>
         <translation>Installation successful. Please restart the program manually.</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="75"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="86"/>
         <source>未知版本</source>
         <translation>Unknown version</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="98"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="109"/>
         <source>未知更新日志</source>
         <translation>Unknown changelog</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="127"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="138"/>
         <source>下载更新</source>
         <translation>Download Update</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="162"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="173"/>
         <source>正在检查更新...</source>
         <translation>Checking for updates...</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="193"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="204"/>
         <source>正在下载更新...</source>
         <translation>Downloading update...</translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
+    <message>
+        <location filename="../src/main.cpp" line="91"/>
+        <source>倒数日</source>
+        <translation>Countdown</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="94"/>
+        <source>已经有一个倒数日在运行</source>
+        <translation>A countdown is already running.</translation>
     </message>
 </context>
 </TS>
