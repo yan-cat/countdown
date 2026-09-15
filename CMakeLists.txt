@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(Countdown VERSION 1.2.4 LANGUAGES CXX)
+project(Countdown VERSION 1.3.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

@@ -2,7 +2,7 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.2.3...main)
+## [1.3.0](https://github.com/yan-cat/countdown/compare/v1.2.3...v1.3.0)
 
 ### 新增 (Added) 
 - 软件logo与desktop文件
@@ -15,18 +15,9 @@
 ### 变更 (Changed) 
 - 有新版本时自动发送通知提醒变更为有新版本时打开更新窗口
 
-### 弃用 (Deprecated) 
-- 即将移除的功能预告（给用户缓冲期）
-
-### 移除 (Removed) 
-- 已移除的功能
-
 ### 修复 (Fixed) 
 - 不重启软件的情况下到第二天不会正确提醒日程
 - Windows 下深色模式渲染错误
-
-### 安全 (Security) 
-- 修复的安全漏洞
 
 ## [1.2.3](https://github.com/yan-cat/countdown/compare/v1.2.2...v1.2.3) - 2026-09-11
 
