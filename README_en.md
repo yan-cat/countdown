@@ -55,14 +55,18 @@ Project structure:
 
 ```plaintext
 countdown
+├── .github
+├── .gitignore
 ├── android                           # Not used yet
-│   ├── AndroidManifest.xml
-│   └── splash.xml
 ├── CHANGELOG.md                      # Changelog
 ├── CMakeLists.txt
+├── com.countdown.desktop             # Linux desktop file
 ├── Countdown.py                      # KDE Craft blueprint
+├── exclude_list.txt                  # Packaging blacklist
 ├── LICENSE
 ├── README.md
+├── README_en.md
+├── readme_img
 ├── src
 │   ├── countdowndata.cpp             # Handles the data to be displayed
 │   ├── datediff.cpp                  # Computes years/months/days from days
@@ -70,19 +74,18 @@ countdown
 │   ├── main.cpp                      # Main program
 │   ├── manager.cpp                   # Manages data
 │   ├── reminder.cpp                  # Countdown reminders
-│   └── updater.cpp                   # Checks and applies updates
+│   ├── updater.cpp                   # Checks and applies updates
 │   ├── include                       # Header files
-│   ├── resources
-│   │   └── qml
-│   │       ├── AboutPageWindow.qml   # About page
-│   │       ├── Main.qml              # Main page
-│   │       ├── ReminderWindow.qml    # Standalone reminder popup for Windows
-│   │       ├── SettingsWindow.qml    # Settings page
-│   │       └── UpdaterWindow.qml     # Update page
+│   └── resources
+│       ├── icon                      # Icons
+│       └── qml
+│           ├── AboutPageWindow.qml   # About window
+│           ├── DetailsWindow.qml     # Details window
+│           ├── Main.qml              # Main page
+│           ├── ReminderWindow.qml    # Standalone reminder popup for Windows
+│           ├── SettingsWindow.qml    # Settings window
+│           └── UpdaterWindow.qml     # Update window
 └── translations                      # I18n
-    ├── countdown_en.ts
-    ├── countdown_en_US.ts
-    └── countdown_zh_CN.ts
 ```
 
 Files (and folders) created by the application:
@@ -107,22 +110,8 @@ See [CHANGELOG.md](CHANGELOG.md) for the detailed changes in each version.
 
 - [ ] WebDAV cloud sync of items
 - [ ] Desktop tiles/widget
-- [ ] Fix dark display issues on Windows
 - [ ] Optional app background
 - [ ] Android support (too difficult, no plan for now)
-
-## Done
-
-- [x] Update download mirror
-- [x] Red highlight for upcoming countdowns
-- [x] In-app update check with automatic checking off by default
-- [x] I18n
-- [x] Windows reminders when time is up / days remaining
-- [x] Data migration from old versions to the new format
-- [x] Debug switch
-- [x] Linux reminders when time is up / days remaining
-- [x] Silent launch parameter
-- [x] Edit existing items
 
 This program was developed with AI assistance.
 

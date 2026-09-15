@@ -55,14 +55,18 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
 
 ```plaintext
 countdown
+├── .github
+├── .gitignore
 ├── android                           # 暂未使用
-│   ├── AndroidManifest.xml
-│   └── splash.xml
 ├── CHANGELOG.md                      # 更新日志
 ├── CMakeLists.txt
+├── com.countdown.desktop             # Linux desktop文件
 ├── Countdown.py                      # KDE Craft 蓝图
+├── exclude_list.txt                  # 打包文件黑名单
 ├── LICENSE
 ├── README.md
+├── README_en.md
+├── readme_img
 ├── src
 │   ├── countdowndata.cpp             # 处理需要显示的数据
 │   ├── datediff.cpp                  # 从天计算年月日
@@ -70,19 +74,18 @@ countdown
 │   ├── main.cpp                      # 主程序
 │   ├── manager.cpp                   # 管理数据
 │   ├── reminder.cpp                  # 倒数日提醒
-│   └── updater.cpp                   # 检查并更新
+│   ├── updater.cpp                   # 检查并更新
 │   ├── include                       # 头文件
-│   ├── resources
-│   │   └── qml
-│   │       ├── AboutPageWindow.qml   # 关于页面
-│   │       ├── Main.qml              # 主页
-│   │       ├── ReminderWindow.qml    # Windows的独立提醒弹窗
-│   │       ├── SettingsWindow.qml    # 设置页面
-│   │       └── UpdaterWindow.qml     # 更新页面
+│   └── resources
+│       ├── icon                      # 图标
+│       └── qml
+│           ├── AboutPageWindow.qml   # 关于窗口
+│           ├── DetailsWindow.qml     # 详情窗口
+│           ├── Main.qml              # 主页
+│           ├── ReminderWindow.qml    # Windows的独立提醒弹窗
+│           ├── SettingsWindow.qml    # 设置窗口
+│           └── UpdaterWindow.qml     # 更新窗口
 └── translations                      # I18n
-    ├── countdown_en.ts
-    ├── countdown_en_US.ts
-    └── countdown_zh_CN.ts
 ```
 
 软件创建的文件（夹）：
