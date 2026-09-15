@@ -37,6 +37,17 @@ Window {
             loadingOverlay.visible = false // 转圈圈
         }
 
+        // 检查更新失败
+        function onNewVersionError(errorString) {
+            inlineMessage.text = qsTr("检查更新失败：") + errorString
+            inlineMessage.type = Kirigami.MessageType.Error
+            inlineMessage.visible = true
+
+            versionShow.visible = true
+            versionUpdateLogScroll.visible = true
+            loadingOverlay.visible = false // 转圈圈
+        }
+
         // 下载进度
         function onDownloadProgress(bytesReceived, bytesTotal) {
             downloadProgressBar.indeterminate = false

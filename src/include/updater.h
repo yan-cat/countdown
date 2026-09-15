@@ -31,6 +31,7 @@ private:
 
 signals:
     void newVersion(bool latestVersion,QString version ,QString updateLog);
+    void newVersionError(QString errorString);
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     void downloadFinished();
     void downloadError(const QString &errorString);

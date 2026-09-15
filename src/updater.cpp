@@ -45,25 +45,35 @@ CountdownUpdater *CountdownUpdater::create(QQmlEngine *, QJSEngine *)
 // 获取更新
 void CountdownUpdater::getReleaseInfo()
 {
+    if (reply && reply->isRunning()) {
+        qCDebug(CountdownLog) << "[ Debug ]" << "已有检查在进行中，忽略本次请求";
+        return;
+    }
     qCDebug(CountdownLog) << "[ Debug ]" << "开始检查更新";
-
+    // 构造请求
     QUrl url("https://api.github.com/repos/yan-cat/countdown/releases/latest");
     QNetworkRequest request(url);
     request.setRawHeader("Accept", "application/vnd.github+json");
     request.setRawHeader("X-GitHub-Api-Version", "2026-03-10");
 
+    // 发送请求
     QNetworkReply *reply = m_updater.get(request);
 
+    // 处理请求
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
-        if (reply->error() != QNetworkReply::NoError) {
-            qWarning() << "网络请求错误:" << reply->errorString();
-            reply->deleteLater();
-            return;
-        }
-
+        // 读返回
         QByteArray data = reply->readAll();
         QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
         QJsonObject jsonObj = jsonDoc.object();
+
+        // 网络错误
+        if (reply->error() != QNetworkReply::NoError) {
+            qWarning() << "网络请求错误:" << reply->errorString();
+            emit newVersionError(reply->errorString());
+            reply->close();
+            reply->deleteLater();
+            return;
+        }
 
         // 要的信息
         QString latestVersion = jsonObj["tag_name"].toString(); // 最新版本
@@ -79,6 +89,7 @@ void CountdownUpdater::getReleaseInfo()
         qCDebug(CountdownLog) << "[ Debug ]" << "当前版本:" << currentVersion;
         qCDebug(CountdownLog) << "[ Debug ]" << "最新版本:" << latestVersion;
 
+        // 返回信号
         auto stripV = [](QString v) {
             return v.startsWith(QLatin1Char('v')) ? v.mid(1) : v;
         };
@@ -96,6 +107,7 @@ void CountdownUpdater::getReleaseInfo()
             emit newVersion(false, latestVersion, latestVersionLog);
         }
 
+        reply->close();
         reply->deleteLater();
     });
 }

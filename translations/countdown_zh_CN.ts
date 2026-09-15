@@ -187,7 +187,7 @@
     </message>
     <message>
         <location filename="../src/resources/qml/Main.qml" line="21"/>
-        <source>倒数日 Beta（测试版，风险自担）</source>
+        <source>倒数日 Beta</source>
         <translation></translation>
     </message>
     <message>

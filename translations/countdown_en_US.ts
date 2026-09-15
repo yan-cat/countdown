@@ -187,8 +187,8 @@
     </message>
     <message>
         <location filename="../src/resources/qml/Main.qml" line="21"/>
-        <source>倒数日 Beta（测试版，风险自担）</source>
-        <translation>Countdown Beta (Use at your own risk)</translation>
+        <source>倒数日 Beta</source>
+        <translation>Countdown Beta</translation>
     </message>
     <message>
         <location filename="../src/resources/qml/Main.qml" line="28"/>
