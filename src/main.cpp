@@ -12,6 +12,10 @@
 #include <QTranslator>
 #include <QIcon>
 #include <QQuickStyle>
+#include <QDialog>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QPushButton>
 #include "debug.h"
 #include "updater.h"
 #include "reminder.h"
@@ -30,6 +34,16 @@ int main(int argc, char *argv[]) {
     QLockFile lock(lockDir + "/single.lock");
     if (!lock.tryLock(100)) {
         qWarning() << "已经有一个实例在运行";
+        QApplication app(argc, argv);
+        QDialog dialog;
+        dialog.setWindowTitle("提示");
+        dialog.resize(200, 100);
+        auto *layout = new QVBoxLayout(&dialog);
+        layout->addWidget(new QLabel("已经有一个实例在运行", &dialog));
+        auto *btn = new QPushButton("确定", &dialog);
+        layout->addWidget(btn);
+        QObject::connect(btn, &QPushButton::clicked, &dialog, &QDialog::accept);
+        dialog.exec();
         return 0;
     }
 //===================================================================参数
