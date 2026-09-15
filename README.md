@@ -31,7 +31,7 @@
 
 ## 安装帮助
 
-Release 内提供linux的二进制
+Release 内提供 Linux 的二进制与 Windows 安装包
 
 通常需要这些包以供运行：
 
