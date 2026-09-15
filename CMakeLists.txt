@@ -83,6 +83,9 @@ if (ANDROID)
 endif()
 
 target_include_directories(Countdown PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include)
+if (LINUX)
+    target_compile_options(Countdown PRIVATE -Wall -Wextra -Werror)
+endif()
 
 # 链接库
 target_link_libraries(Countdown PRIVATE

@@ -65,8 +65,6 @@ void windows_reminder(QString body) {
         return;
     }
     QObject *root = view->rootObject();
-    int mvx;
-    int mvy;
     if (root) {
         root->setProperty("message", body);
         QObject::connect(root, SIGNAL(closeRequested()),
