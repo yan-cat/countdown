@@ -1,6 +1,4 @@
-#ifndef MANAGER_H
-#define MANAGER_H
-
+#pragma once
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJSEngine>
@@ -46,4 +44,3 @@ private:
     QTimer m_reminderTimer;
 };
 CountdownManager &manager();
-#endif

@@ -16,9 +16,9 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-#include "debug.h"
-#include "updater.h"
-#include "reminder.h"
+#include "debug.hpp"
+#include "updater.hpp"
+#include "reminder.hpp"
 
 int main(int argc, char *argv[]) {
 //===================================================================信息

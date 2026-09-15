@@ -5,10 +5,10 @@
 #include <QCoreApplication>
 #include <QJSEngine>
 #include <QQmlEngine>
-#include "manager.h"
-#include "countdowndata.h"
-#include "reminder.h"
-#include "debug.h"
+#include "manager.hpp"
+#include "countdowndata.hpp"
+#include "reminder.hpp"
+#include "debug.hpp"
 
 // 初始化函数与统一实例
 CountdownManager *CountdownManager::create(QQmlEngine *, QJSEngine *) {

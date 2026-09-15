@@ -15,9 +15,9 @@
 #include <QProcess>
 #include <QDesktopServices>
 #include <QVersionNumber>
-#include "updater.h"
-#include "debug.h"
-#include "manager.h"
+#include "updater.hpp"
+#include "debug.hpp"
+#include "manager.hpp"
 
 #ifdef Q_OS_WIN
 #include <windows.h>

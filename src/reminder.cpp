@@ -2,8 +2,8 @@
 #include <QQuickView>
 #include <QUrl>
 #include <QQuickItem>
-#include "reminder.h"
-#include "debug.h"
+#include "reminder.hpp"
+#include "debug.hpp"
 
 #ifdef Q_OS_LINUX
 #include <QDBusInterface>

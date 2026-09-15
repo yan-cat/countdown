@@ -1,6 +1,4 @@
-#ifndef COUNTDOWNDATA_H
-#define COUNTDOWNDATA_H
-
+#pragma once
 #include <QJsonArray>
 #include <QJsonObject>
 
@@ -12,5 +10,3 @@ public:
     static qint64 getnotificationdays(const QJsonObject &obj);
     static QVariantList buildCountdownViewData(const QJsonArray &rawCountdowns);
 };
-
-#endif // COUNTDOWNDATA_H

@@ -1,9 +1,9 @@
 #include <QJsonObject>
 #include <QString>
-#include "countdowndata.h"
-#include "datediff.h"
-#include "debug.h"
-#include "manager.h"
+#include "countdowndata.hpp"
+#include "datediff.hpp"
+#include "debug.hpp"
+#include "manager.hpp"
 
 // 按id查
 QJsonObject CountdownData::getCountdownJson(QJsonArray m_countdowns, int id, QString key) {

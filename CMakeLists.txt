@@ -55,10 +55,10 @@ qt_add_executable(Countdown WIN32
     src/debug.cpp
     src/updater.cpp
 
-    src/include/manager.h
-    src/include/updater.h
-    src/include/countdowndata.h
-    src/include/debug.h
+    src/include/manager.hpp
+    src/include/updater.hpp
+    src/include/countdowndata.hpp
+    src/include/debug.hpp
 )
 # 桌面/非安卓才编译的提醒实现（依赖 D-Bus、桌面弹窗；安卓不编译）
 if (NOT ANDROID)

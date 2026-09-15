@@ -1,6 +1,4 @@
-#ifndef UPDATER_H
-#define UPDATER_H
-
+#pragma once
 #include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QFile>
@@ -41,4 +39,3 @@ private:
     void installNewVersion(QString path);
 };
 CountdownUpdater &updater();
-#endif // UPDATER_H

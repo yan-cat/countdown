@@ -1,6 +1,4 @@
-#ifndef DATEDIFF_H
-#define DATEDIFF_H
-
+#pragma once
 #include <QDate>
 
 struct DateDiff {
@@ -11,5 +9,3 @@ struct DateDiff {
 
 DateDiff dateDiff(const QDate &from, const QDate &to);
 QString dateDiffText(const QDate &from, const QDate &to);
-
-#endif // DATEDIFF_H

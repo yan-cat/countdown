@@ -1,12 +1,10 @@
+#pragma once
 #include <QLoggingCategory>
-Q_DECLARE_LOGGING_CATEGORY(CountdownLog)
-
-#ifndef DEBUG_H
-#define DEBUG_H
-
 #include <QString>
 #include <QQmlEngine>
 #include <QtQml/qqmlregistration.h>
+
+Q_DECLARE_LOGGING_CATEGORY(CountdownLog)
 
 class CountdownDebug : public QObject
 {
@@ -24,4 +22,3 @@ public:
     static CountdownDebug *create(QQmlEngine *, QJSEngine *);
 };
 CountdownDebug &debug();
-#endif

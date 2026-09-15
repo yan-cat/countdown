@@ -1,5 +1,5 @@
 // debug.cpp
-#include "debug.h"
+#include "debug.hpp"
 #include <QSettings>
 
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
