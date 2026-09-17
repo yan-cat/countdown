@@ -1,112 +1,93 @@
-; 自定义 Countdown 安装器脚本 - 强制卸载旧版
-; 基于 Craft 官方 NullsoftInstaller.nsi 修改
-
-; registry stuff
-!define regkey "Software\${company}\${productname}"
-!define uninstkey "Software\Microsoft\Windows\CurrentVersion\Uninstall\${productname}"
-!define startmenu "$SMPROGRAMS\${productname}"
-!define uninstaller "uninstall.exe"
-
-;--------------------------------
-XPStyle on
-ShowInstDetails hide
-ShowUninstDetails hide
-
-Name "${productname}"
-Caption "${productname} ${version}"
-OutFile "${setupname}"
-
-!include "MUI2.nsh"
+﻿!include "MUI2.nsh"
 !include "LogicLib.nsh"
-!include "x64.nsh"
 
-!insertmacro MUI_PAGE_WELCOME
+; ============ 配置 ============
+!define REGKEY "Software\@{company}\@{productname}"
+!define UNINSTKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@{productname}"
+
+Name "@{productname}"
+Caption "@{productname} @{version}"
+OutFile "@{setupname}"
+InstallDir "$PROGRAMFILES64\@{productname}"
+RequestExecutionLevel admin
+
+; 安装器和卸载器的图标
+!define MUI_ICON "@{icon}"
+!define MUI_UNICON "@{unicon}"
+
+; ============ 界面 ============
 !insertmacro MUI_PAGE_DIRECTORY
+
+Var StartMenuFolder
+
+!define MUI_STARTMENUPAGE_REGISTRY_ROOT "HKLM"
+!define MUI_STARTMENUPAGE_REGISTRY_KEY "${REGKEY}"
+!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME "Start Menu Folder"
+
+!insertmacro MUI_PAGE_STARTMENU Application $StartMenuFolder
+
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
-!insertmacro MUI_PAGE_FINISH
-!insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "English"   ; 默认语言
+!insertmacro MUI_LANGUAGE "SimpChinese"
 
-SetDateSave on
-SetDatablockOptimize on
-CRCCheck on
-SilentInstall normal
-
-InstallDir "${defaultinstdir}\${productname}"
-InstallDirRegKey HKLM "${regkey}" "Install_Dir"
-
-Var /global ExistingInstallation
+Var OldInstallDir
 
 Function .onInit
-    !if ${architecture} == "x64"
-        ${IfNot} ${RunningX64}
-            MessageBox MB_OK|MB_ICONEXCLAMATION "This installer can only be run on 64-bit Windows."
-            Abort
-        ${EndIf}
-    !endif
+  System::Call "kernel32::GetUserDefaultUILanguage() i .r0"
+  StrCpy $LANGUAGE $0
 
-    ; 读取旧版安装路径
-    ReadRegStr $R0 HKLM "${regkey}" "Install_Dir"
-    ${IfNot} $R0 == ""
-        StrCpy $ExistingInstallation $R0
-    ${EndIf}
+  SetRegView 32
+  ReadRegStr $OldInstallDir HKLM "${REGKEY}" "Install_Dir"
 FunctionEnd
 
-;--------------------------------
-AutoCloseWindow false
-
-; 安装前先强制删除旧版安装目录
+; ============ 安装 ============
 Section
-    ; 如果检测到旧版安装路径，直接删除整个文件夹
-    ${IfNot} $ExistingInstallation == ""
-        DetailPrint "检测到旧版安装路径: $ExistingInstallation"
-        ; 先尝试正常卸载（如果卸载器存在）
-        IfFileExists "$ExistingInstallation\${uninstaller}" 0 +4
-            ExecWait '"$ExistingInstallation\${uninstaller}" /S _?=$ExistingInstallation' $0
-            DetailPrint "卸载器退出码: $0"
-            Sleep 2000
-        ${EndIf}
-        ; 无论卸载是否成功，强制删除整个安装目录
-        DetailPrint "强制删除旧版安装目录: $ExistingInstallation"
-        RMDir /r "$ExistingInstallation"
-    ${Else}
-        DetailPrint "未检测到旧版安装，跳过卸载步骤"
-    ${EndIf}
+  SetRegView 32
+  SetShellVarContext all
 
-    ; 写入注册表
-    WriteRegStr HKLM "${regkey}" "Install_Dir" "$INSTDIR"
-    WriteRegStr HKLM "${uninstkey}" "DisplayName" "${productname}"
-    WriteRegStr HKLM "${uninstkey}" "UninstallString" '"$INSTDIR\${uninstaller}"'
-    WriteRegStr HKLM "${uninstkey}" "DisplayIcon" "$INSTDIR\${executable}"
-    WriteRegStr HKLM "${uninstkey}" "URLInfoAbout" "${website}"
-    WriteRegStr HKLM "${uninstkey}" "Publisher" "${company}"
-    WriteRegStr HKLM "${uninstkey}" "DisplayVersion" "${version}"
+  ${If} $OldInstallDir != ""
+    RMDir /r "$OldInstallDir"
+    DeleteRegKey HKLM "${UNINSTKEY}"
+    DeleteRegKey HKLM "${REGKEY}"
+  ${EndIf}
 
-    SetOutPath $INSTDIR
+  SetOutPath $INSTDIR
+  File /a "@{dataPath}"
+  File /a "@{7za}"
+  File /a "@{icon}"
+  nsExec::ExecToLog '"$INSTDIR\7za.exe" x -r -y "$INSTDIR\@{dataName}" -o"$INSTDIR"'
+  Delete "$INSTDIR\7za.exe"
+  Delete "$INSTDIR\@{dataName}"
 
-    ; 打包所有文件
-    File /a /r /x "*.nsi" /x "${setupname}" "${srcdir}\*.*"
+  WriteRegStr HKLM "${REGKEY}" "Install_Dir" "$INSTDIR"
+  WriteRegStr HKLM "${UNINSTKEY}" "DisplayName" "@{productname}"
+  WriteRegStr HKLM "${UNINSTKEY}" "DisplayVersion" "@{version}"
+  WriteRegStr HKLM "${UNINSTKEY}" "Publisher" "@{company}"
+  WriteRegStr HKLM "${UNINSTKEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegStr HKLM "${UNINSTKEY}" "DisplayIcon" "$INSTDIR\@{iconname}"
+  WriteRegDWORD HKLM "${UNINSTKEY}" "EstimatedSize" "@{estimated_size}"
 
-    WriteUninstaller "${uninstaller}"
+  WriteUninstaller "$INSTDIR\uninstall.exe"
+
+  CreateShortCut "$DESKTOP\@{productname}.lnk" "$INSTDIR\bin\@{productname}.exe"
 SectionEnd
 
-; 创建快捷方式
-Section
-    SetShellVarContext all
-    CreateDirectory "${startmenu}"
-    SetOutPath $INSTDIR
-    CreateShortCut "${startmenu}\${productname}.lnk" "$INSTDIR\${executable}"
-    CreateShortCut "${startmenu}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-SectionEnd
+; 快捷方式由 Craft 宏生成
+@{shortcuts}
 
-; 卸载器
+; ============ 卸载 ============
 Section "Uninstall"
-    SetShellVarContext all
-    DeleteRegKey HKLM "${uninstkey}"
-    DeleteRegKey HKLM "${regkey}"
-    RMDir /r "$INSTDIR"
-    Delete "${startmenu}\${productname}.lnk"
-    Delete "${startmenu}\Uninstall.lnk"
-    RMDir "${startmenu}"
+  SetRegView 32
+  SetShellVarContext all
+
+  DeleteRegKey HKLM "${UNINSTKEY}"
+  DeleteRegKey HKLM "${REGKEY}"
+
+!insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
+  RMDir /r "$SMPROGRAMS\$StartMenuFolder"
+  Delete "$DESKTOP\@{productname}.lnk"
+
+  RMDir /r "$INSTDIR"
 SectionEnd

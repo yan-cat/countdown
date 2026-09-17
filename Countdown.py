@@ -37,6 +37,8 @@ class Package(CMakePackageBase):
         super().__init__(**kwargs)
 
     def createPackage(self):
+        self.scriptname = os.path.join(self.sourceDir(), "Countdown.nsi") # 使用自定义的 NSIS 脚本
+
         # 版本号
         cmake_file = os.path.join(self.sourceDir(), "CMakeLists.txt")
         version = "0.0.0"
@@ -54,6 +56,7 @@ class Package(CMakePackageBase):
 
         self.defines["version"] = version
         self.defines["icon"] = os.path.join(self.sourceDir(), "src", "resources", "icon", "com.countdown.ico")
+        self.defines["unicon"] = os.path.join(self.sourceDir(), "src", "resources", "icon", "com.countdown.uninstall.ico")
         self.defines["company"] = "yancat"
 
         self.defines["shortcuts"] = [
@@ -63,6 +66,6 @@ class Package(CMakePackageBase):
                 "description": self.subinfo.description,
             }
         ]
-        self.blacklist_file.append(os.path.join(self.blueprintDir(), "exclude_list.txt"))
+        self.blacklist_file.append(os.path.join(self.sourceDir(), "exclude_list.txt"))
         self.defines["strip"] = True
         return super().createPackage()
