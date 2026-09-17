@@ -19,7 +19,7 @@ void linux_reminder(QString title, QString body) {
 
     // 2. 检查接口是否有效
     if (!iface.isValid()) {
-        qWarning() << "D-Bus 通知接口无效";
+        qCritical() << "D-Bus 通知接口无效";
         return;
     }
 
@@ -40,16 +40,16 @@ void linux_reminder(QString title, QString body) {
     // (可选) 等待并处理回复
     QDBusPendingReply<uint> reply = call;
     reply.waitForFinished();
-    if (reply.isError()) qWarning() << "发送通知失败:" << reply.error().message();
-    else qCDebug(CountdownLog) << "[ Debug ]" << "已成功发送通知";
+    if (reply.isError()) qCritical() << "发送通知失败:" << reply.error().message();
+    else qCDebug(CountdownLog) << "已成功发送通知";
 
-    qCDebug(CountdownLog) << "[ Debug ]" << "通知id:" << reply.value();
-    qCDebug(CountdownLog) << "[ Debug ]" << "通知内容:" << body;
+    qCDebug(CountdownLog) << "通知id:" << reply.value();
+    qCDebug(CountdownLog) << "通知内容:" << body;
 }
 #endif
 
 void windows_reminder(QString body) {
-    qCDebug(CountdownLog) << "[ Debug ]" << "准备显示弹窗";
+    qCDebug(CountdownLog) << "准备显示弹窗";
 
     QQuickView *view = new QQuickView;
 
@@ -60,7 +60,7 @@ void windows_reminder(QString body) {
     view->setColor(Qt::transparent);
     view->setSource(QUrl("qrc:/qt/qml/com/countdown/src/resources/qml/ReminderWindow.qml"));
     if (view->status() != QQuickView::Ready) {
-        qWarning() << "加载弹窗失败:" << view->errors();
+        qCritical() << "加载弹窗失败:" << view->errors();
         delete view;
         return;
     }
@@ -86,24 +86,24 @@ void windows_reminder(QString body) {
 void reminder(QString title, QString body) {
     QString os = QSysInfo::kernelType();
 
-    qCDebug(CountdownLog) << "[ Debug ]" << "准备发送通知";
-    qCDebug(CountdownLog) << "[ Debug ]" << "当前系统为：" << os;
+    qCDebug(CountdownLog) << "准备发送通知";
+    qCDebug(CountdownLog) << "当前系统为：" << os;
 
     if (debug().getDebugOn("useWindowsReminderType")) {
         os = "winnt";
-        qCDebug(CountdownLog) << "[ Debug ]" << "强制win通知模式为开启";
+        qCDebug(CountdownLog) << "强制win通知模式为开启";
     }
 
     if (os == "linux") {
-        qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：通知";
+        qCDebug(CountdownLog) << "通知发送模式：通知";
 
         #ifdef Q_OS_LINUX
         linux_reminder(title, body);
         #endif
     }
     else if (os == "winnt") {
-        qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：弹窗";
+        qCDebug(CountdownLog) << "通知发送模式：弹窗";
         windows_reminder(body);
     }
-    else qCDebug(CountdownLog) << "[ Debug ]" << "通知发送模式：无";
+    else qCDebug(CountdownLog) << "通知发送模式：无";
 }

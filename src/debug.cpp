@@ -1,6 +1,9 @@
-// debug.cpp
-#include "debug.hpp"
 #include <QSettings>
+#include <QFile>
+#include <QMutex>
+#include <QStandardPaths>
+#include <QDir>
+#include "debug.hpp"
 
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
 
@@ -21,8 +24,83 @@ qint64 CountdownDebug::getDebugOn(const QString &key) {
     QSettings settings;
     if (settings.value("debugMode", false).toBool()){
         qint64 s = settings.value(key, false).toInt();
-        qCDebug(CountdownLog) << "[ Debug ]" << "获取debug状态值：" << key << "，值：" << s;
+        qCDebug(CountdownLog) << "获取debug状态值：" << key << "，值：" << s;
         return s;
     }
     else return false;
+}
+
+// 日志写文件
+static QFile &logFile() {
+    static QFile file;
+    return file;
+}
+static QMutex &logMutex() {
+    static QMutex mutex;
+    return mutex;
+}
+// 自定义消息处理器
+static void fileMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+    Q_UNUSED(context) // 不要还不让删
+
+    QMutexLocker locker(&logMutex());
+
+    // 时间戳
+    QString time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+
+    // 类型标签
+    QString typeStr;
+    switch (type) {
+    case QtDebugMsg:    typeStr = "DEBUG";    break;
+    case QtInfoMsg:     typeStr = "INFO";     break;
+    case QtWarningMsg:  typeStr = "WARNING";  break;
+    case QtCriticalMsg: typeStr = "CRITICAL"; break;
+    case QtFatalMsg:    typeStr = "FATAL";    break;
+    }
+
+    // 分类（如果有）
+    QString line = QString("[%1] [%2] %3\n")
+                       .arg(time, typeStr, msg);
+
+    // 写文件
+    if (logFile().isOpen()) {
+        QTextStream out(&logFile());
+        out << line;
+        out.flush();   // 立即落盘，崩溃时也能保留
+    }
+
+    // 同时保留控制台输出
+    fprintf(stderr, "%s", line.toLocal8Bit().constData());
+    fflush(stderr);
+
+    // fatal 时终止
+    if (type == QtFatalMsg) {
+        abort();
+    }
+}
+
+// 安装消息处理器
+void CountdownDebug::installFileLogger() {
+    QString logDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/logs";
+    QDir().mkpath(logDir);
+
+    QString logPath = logDir + "/Countdown.log";
+    logFile().setFileName(logPath);
+
+    if (getDebugOn("outputLogFile")) {
+        if (!logFile().open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
+            qWarning() << "无法打开日志文件：" << logPath;
+            return;
+        }
+    }
+
+    qInstallMessageHandler(fileMessageHandler);
+}
+
+// 关闭日志
+void CountdownDebug::closeFileLogger() {
+    qInstallMessageHandler(nullptr);
+    if (logFile().isOpen()) {
+        logFile().close();
+    }
 }

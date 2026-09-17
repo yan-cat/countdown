@@ -57,7 +57,7 @@ qint64 CountdownData::getnotificationdays(const QJsonObject &obj){return obj.val
 
 // 构建显示的数据
 QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdowns) {
-    qCDebug(CountdownLog) << "[ Debug ]" << "查询数据";
+    qCDebug(CountdownLog) << "查询数据";
     QVariantList list;
     QDate today = QDate::currentDate();
 
@@ -124,7 +124,7 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
         bool upcoming = upcomingset && days >= 0 && days <= upcomingdays;
         obj.insert("upcoming", upcoming);
 
-        // qCDebug(CountdownLog) << "[ Debug ]" << "卡片数据：" << obj;
+        // qCDebug(CountdownLog) << "卡片数据：" << obj;
         list.append(obj.toVariantMap());
     }
     return list;

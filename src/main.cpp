@@ -18,7 +18,6 @@
 #include <QPushButton>
 #include "debug.hpp"
 #include "updater.hpp"
-#include "reminder.hpp"
 
 int main(int argc, char *argv[]) {
 //===================================================================信息
@@ -36,6 +35,33 @@ int main(int argc, char *argv[]) {
     QCommandLineOption minimized({"start-minimized", "minimized", "m"}, "静默启动（最小化窗口启动）");
     parser.addOption(minimized);
 
+
+//===================================================================Debug
+
+    //显示日志吗
+    QString rules;
+
+    qint64 outputDebuglog = debug().getDebugOn("outputDebuglog");
+    if (outputDebuglog == 0) {
+        rules += "*.debug=false\n";
+        qInfo() << "debug日志为关";
+    }
+    else if (outputDebuglog == 1) {
+        rules += "Countdown.app.debug=true\n";
+        qInfo() << "debug日志为仅app";
+    }
+    else if (outputDebuglog == 2) {
+        QLoggingCategory::setFilterRules("*.debug=true");
+        rules += "*.debug=true\n";
+        qInfo() << "debug日志为开";
+    }
+
+    if (debug().getDebugOn("disableQmlWarn")) rules += "*.warning=false\n";
+    else rules += "*.warning=true\n";
+
+    QLoggingCategory::setFilterRules(rules); // 设置日志规则
+
+    debug().installFileLogger(); // 启动文件日志
 
 //===================================================================后续启动
 
@@ -62,11 +88,11 @@ int main(int argc, char *argv[]) {
     QString locale;
     if (debug().getDebugOn("useEnLang")) {
         locale = "en_US"; // 强制英语
-        qCDebug(CountdownLog) << "[ Debug ]" << "强制语言为英语";
+        qCDebug(CountdownLog) << "强制语言为英语";
     }
     else {
         locale = QLocale::system().name(); // 按照系统
-        qCDebug(CountdownLog) << "[ Debug ]" << "使用系统语言";
+        qCDebug(CountdownLog) << "使用系统语言";
     }
     // 尝试加载对应的翻译文件
     if (translator.load(QString(":/i18n/countdown_%1.qm").arg(locale))) {
@@ -99,25 +125,6 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-//===================================================================Debug
-
-    //显示日志吗
-    if (debug().getDebugOn("outputDebuglog") == 0) {
-        QLoggingCategory::setFilterRules("*.debug=false");
-        qInfo() << "[ Info ]" << "debug日志为关";
-    }
-    else if (debug().getDebugOn("outputDebuglog") == 1) {
-        QLoggingCategory::setFilterRules("Countdown.app.debug=true");
-        qInfo() << "[ Info ]" << "debug日志为仅app";
-    }
-    else if (debug().getDebugOn("outputDebuglog") == 2) {
-        QLoggingCategory::setFilterRules("*.debug=true");
-        qInfo() << "[ Info ]" << "debug日志为开";
-    }
-
-    if (debug().getDebugOn("disableQmlWarn")) QLoggingCategory::setFilterRules("*.warning=false");
-    else QLoggingCategory::setFilterRules("*.warning=true");
-
 //===================================================================后续启动
 
     parser.process(app);
@@ -130,7 +137,7 @@ int main(int argc, char *argv[]) {
 //===================================================================最小化启动
 
     if (parser.isSet(minimized)) {
-        qCDebug(CountdownLog) << "[ Debug ]" << "静默启动";
+        qInfo() << "静默启动";
         QObject *root = engine.rootObjects().constFirst();
         if (auto *window = qobject_cast<QQuickWindow*>(root)) {
             window->showMinimized();
@@ -140,7 +147,7 @@ int main(int argc, char *argv[]) {
 //===================================================================APP退出
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
-        qCDebug(CountdownLog) << "[ Debug ]" << "正常退出";
+        qInfo() << "正常退出";
     });
 
     return app.exec();

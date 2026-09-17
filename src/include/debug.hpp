@@ -20,5 +20,8 @@ public:
 
     // 让 QML 单例复用 C++ 的同一个实例
     static CountdownDebug *create(QQmlEngine *, QJSEngine *);
+
+    void installFileLogger();
+    void closeFileLogger();
 };
 CountdownDebug &debug();

@@ -19,7 +19,7 @@ CountdownAutoStart &autostart() {
 
 // 获取自启状态
 bool CountdownAutoStart::getAutoStart() {
-    qCDebug(CountdownLog) << "[ Debug ]" << "检查开机自启状态";
+    qCDebug(CountdownLog) << "检查开机自启状态";
     bool autostart = false;
     QString os = "未知";
     #ifdef Q_OS_WIN
@@ -49,13 +49,13 @@ bool CountdownAutoStart::getAutoStart() {
     autostart = QFile::exists(desktopPath);
     os = "Linux";
     #endif
-    qCDebug(CountdownLog) << "[ Debug ]" << os << "开机自启为：" << autostart;
+    qCDebug(CountdownLog) << os << "开机自启为：" << autostart;
     return autostart;
 }
 
 // 设定自启
 void CountdownAutoStart::setAutoStart(bool enable) {
-    qCDebug(CountdownLog) << "[ Debug ]" << "设定开机自启为：" << enable;
+    qCDebug(CountdownLog) << "设定开机自启为：" << enable;
     #ifdef Q_OS_WIN
     // Windows
     QSettings settings(
@@ -67,10 +67,10 @@ void CountdownAutoStart::setAutoStart(bool enable) {
         // 路径带空格要加引号，否则 Windows 会解析错
         QString path = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
         settings.setValue(appName, "\"" + path + "\"");
-        qCDebug(CountdownLog) << "[ Debug ]" << "已写入注册表：" << path;
+        qCDebug(CountdownLog) << "已写入注册表：" << path;
     } else {
         settings.remove(appName);
-        qCDebug(CountdownLog) << "[ Debug ]" << "已移除注册表项";
+        qCDebug(CountdownLog) << "已移除注册表项";
     }
     settings.sync();  // 立即落盘，避免延迟写入
     #elif defined(Q_OS_LINUX)

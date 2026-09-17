@@ -46,10 +46,10 @@ CountdownUpdater *CountdownUpdater::create(QQmlEngine *, QJSEngine *)
 void CountdownUpdater::getReleaseInfo()
 {
     if (reply && reply->isRunning()) {
-        qCDebug(CountdownLog) << "[ Debug ]" << "已有检查在进行中，忽略本次请求";
+        qWarning() << "已有检查在进行中，忽略本次请求";
         return;
     }
-    qCDebug(CountdownLog) << "[ Debug ]" << "开始检查更新";
+    qCDebug(CountdownLog) << "开始检查更新";
     // 构造请求
     QUrl url("https://api.github.com/repos/yan-cat/countdown/releases/latest");
     QNetworkRequest request(url);
@@ -68,7 +68,7 @@ void CountdownUpdater::getReleaseInfo()
 
         // 网络错误
         if (reply->error() != QNetworkReply::NoError) {
-            qWarning() << "网络请求错误:" << reply->errorString();
+            qCritical() << "网络请求错误:" << reply->errorString();
             emit newVersionError(reply->errorString());
             reply->close();
             reply->deleteLater();
@@ -82,12 +82,12 @@ void CountdownUpdater::getReleaseInfo()
         QUrl fsUrl;
         if (manager().setting("fastDownload", 0)) fsUrl = fastUrl;
         downloadUrl = fsUrl.toString() + "https://github.com/yan-cat/countdown/releases/download/" + latestVersion;
-        qCDebug(CountdownLog) << "[ Debug ]" << "获取到的下载地址：" << downloadUrl;
+        qCDebug(CountdownLog) << "获取到的下载地址：" << downloadUrl;
 
         QString currentVersion = "v" APP_VERSION;
 
-        qCDebug(CountdownLog) << "[ Debug ]" << "当前版本:" << currentVersion;
-        qCDebug(CountdownLog) << "[ Debug ]" << "最新版本:" << latestVersion;
+        qCDebug(CountdownLog) << "当前版本:" << currentVersion;
+        qCDebug(CountdownLog) << "最新版本:" << latestVersion;
 
         // 返回信号
         auto stripV = [](QString v) {
@@ -97,13 +97,13 @@ void CountdownUpdater::getReleaseInfo()
         if (debug().getDebugOn("forceDownloadLatest"))
         {
             haveNewVersion = true;
-            qCDebug(CountdownLog) << "[ Debug ]" << "强制下载最新版本";
+            qCDebug(CountdownLog) << "强制下载最新版本";
         }
         if (haveNewVersion) {
-            qCDebug(CountdownLog) << "[ Debug ]" << "发现新版本" << latestVersion;
+            qCDebug(CountdownLog) << "发现新版本" << latestVersion;
             emit newVersion(true, latestVersion, latestVersionLog);
         } else {
-            qCDebug(CountdownLog) << "[ Debug ]" << "已是最新版本" << latestVersion;
+            qCDebug(CountdownLog) << "已是最新版本" << latestVersion;
             emit newVersion(false, latestVersion, latestVersionLog);
         }
 
@@ -116,20 +116,20 @@ void CountdownUpdater::getReleaseInfo()
 void CountdownUpdater::downloadNewVersion()
 {
     os = QSysInfo::kernelType();
-    qCDebug(CountdownLog) << "[ Debug ]" << "当前系统为：" << os;
+    qCDebug(CountdownLog) << "当前系统为：" << os;
     QString filename;
 
     if (os == "linux")
     {
-        qCDebug(CountdownLog) << "[ Debug ]" << "准备下载linux版本";
+        qCDebug(CountdownLog) << "准备下载linux版本";
         filename = "Countdown-linux-x86_64.tar.gz";
     }
     else if (os == "winnt")
     {
-        qCDebug(CountdownLog) << "[ Debug ]" << "准备下载windows版本";
+        qCDebug(CountdownLog) << "准备下载windows版本";
         filename = "Countdown-windows-x86_64.exe";
     }
-    else qCDebug(CountdownLog) << "[ Debug ]" << "未知系统";
+    else qCDebug(CountdownLog) << "未知系统";
 
     QString savePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + filename; // 下载路径
     QDir().mkpath(QFileInfo(savePath).absolutePath());
@@ -138,7 +138,7 @@ void CountdownUpdater::downloadNewVersion()
     downloadFile.setFileName(savePath);
     if (!downloadFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
-        qCDebug(CountdownLog) << "[ Debug ]" << "无法写入文件：" << savePath;
+        qCritical() << "无法写入文件：" << savePath;
         emit downloadError(tr("无法写入文件：").arg(savePath));
         return;
     }
@@ -195,10 +195,10 @@ void CountdownUpdater::downloadNewVersion()
 // 安装更新
 void CountdownUpdater::installNewVersion(QString path)
 {
-    qCDebug(CountdownLog) << "[ Debug ]" << "下载完成：" << path;
+    qCDebug(CountdownLog) << "下载完成：" << path;
     if (os == "linux")
     {
-        qCDebug(CountdownLog) << "[ Debug ]" << "进入linux安装流程";
+        qCDebug(CountdownLog) << "进入linux安装流程";
 
         QString extractDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation)
                              + "/countdown-update";
@@ -206,7 +206,7 @@ void CountdownUpdater::installNewVersion(QString path)
 
         KTar archive(path);
         if (!archive.open(QIODevice::ReadOnly)) {
-            qWarning() << "无法打开更新包:" << path;
+            qCritical() << "无法打开更新包:" << path;
             emit downloadError(tr("无法打开更新包：%1").arg(path));
             return;
         }
@@ -214,17 +214,19 @@ void CountdownUpdater::installNewVersion(QString path)
         archive.close();
 
         QString exePath = QFileInfo(QStringLiteral("/proc/self/exe")).canonicalFilePath();
-        qCDebug(CountdownLog) << "[ Debug ]" << "当前程序路径:" << exePath;
+        qCDebug(CountdownLog) << "当前程序路径:" << exePath;
 
         // 3. 确认解压出了新程序
         QString newExe = extractDir + "/Countdown";
         if (!QFile::exists(newExe)) {
+            qCritical() << "更新包内容不完整";
             emit downloadError(tr("更新包内容不完整"));
             return;
         }
 
         QFile::remove(exePath);
         if (!QFile::rename(newExe, exePath)) {
+            qCritical() << "替换可执行文件失败";
             emit downloadError(tr("替换可执行文件失败"));
             return;
         }
@@ -245,20 +247,18 @@ void CountdownUpdater::installNewVersion(QString path)
                                 nullptr, nullptr, SW_SHOWNORMAL);
         }
         if ((intptr_t)ret <= 32) {
-            qWarning() << "启动安装包失败，ShellExecute 返回:" << (intptr_t)ret
+            qCritical() << "启动安装包失败，ShellExecute 返回:" << (intptr_t)ret
                        << "路径:" << nativePath;
             emit downloadError(tr("启动安装包失败（错误码 %1）").arg((intptr_t)ret));
             return;
         }
         #else
-        if (!QProcess::startDetached(path, {})) {
-            qWarning() << "启动安装包失败:" << path;
-            emit downloadError(tr("启动安装包失败：%1").arg(path));
-            return;
-        }
+        // 我没绷住
+        qFatal() << "什么叫你在winnt内核下原生运行了其他平台的程序";
+        qFatal() << "兄弟兄弟你的编译工具链好像爆了";
         #endif
         QCoreApplication::quit();
         return;
     }
-    else qCDebug(CountdownLog) << "[ Debug ]" << "未知系统";
+    else qWarning() << "未知系统";
 }

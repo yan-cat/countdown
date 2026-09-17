@@ -142,6 +142,16 @@ Window {
                 }
                 Layout.alignment: Qt.AlignHCenter
             }
+            CheckBox {
+                id: outputLogFile
+                text: qsTr("启用日志文件")
+                visible: debugMode.checked
+                checked: CountdownManager.setting("outputLogFile", false)
+                onCheckedChanged: {
+                    CountdownManager.setSetting("outputLogFile", checked)
+                }
+                Layout.alignment: Qt.AlignHCenter
+            }
 
 
             CheckBox {
