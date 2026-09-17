@@ -70,12 +70,13 @@ Countdown
 │   │       ├── AboutPageWindow.qml   # 关于窗口
 │   │       ├── DetailsWindow.qml     # 详情窗口
 │   │       ├── Main.qml              # 主页
-│   │       ├── ReminderWindow.qml    # Windows的独立提醒弹窗
+│   │       ├── ReminderWindow.qml    # Windows 的独立提醒弹窗
 │   │       ├── SettingsWindow.qml    # 设置窗口
 │   │       └── UpdaterWindow.qml     # 更新窗口
+│   ├── autostart.cpp                 # 开机自启处理
 │   ├── countdowndata.cpp             # 处理需要显示的数据
 │   ├── datediff.cpp                  # 从天计算年月日
-│   ├── debug.cpp                     # Debug相关
+│   ├── debug.cpp                     # Debug 相关
 │   ├── main.cpp                      # 主程序
 │   ├── manager.cpp                   # 管理数据
 │   ├── reminder.cpp                  # 倒数日提醒
@@ -84,6 +85,7 @@ Countdown
 ├── CHANGELOG.md                      # 更新日志
 ├── CMakeLists.txt
 ├── com.countdown.desktop             # Linux Desktop 文件
+├── Countdown.nsi                     # 安装器脚本
 ├── Countdown.py                      # KDE Craft 蓝图
 ├── exclude_list.txt                  # 打包文件黑名单
 ├── LICENSE
