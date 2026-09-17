@@ -54,11 +54,14 @@ qt_add_executable(Countdown WIN32
     src/datediff.cpp
     src/debug.cpp
     src/updater.cpp
+    src/autostart.cpp
 
     src/include/manager.hpp
     src/include/updater.hpp
     src/include/countdowndata.hpp
     src/include/debug.hpp
+    src/include/autostart.hpp
+
 )
 # 桌面/非安卓才编译的提醒实现（依赖 D-Bus、桌面弹窗；安卓不编译）
 if (NOT ANDROID)
@@ -130,9 +133,12 @@ qt_add_qml_module(Countdown
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/UpdaterWindow.qml
         src/resources/qml/DetailsWindow.qml
+
     RESOURCES
-          src/resources/icon/com.countdown.svg
-          src/resources/icon/Countdown_tray.svg
+        src/resources/icon/com.countdown.svg
+        src/resources/icon/Countdown_tray.svg
+        com.countdown.desktop
+
 )
 
 # 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，

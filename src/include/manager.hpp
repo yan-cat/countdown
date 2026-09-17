@@ -16,22 +16,22 @@ class CountdownManager : public QObject
 public:
     // QObject *parent = nullptr会直接new一个新实例然后爆炸
     explicit CountdownManager(QObject *parent);
+
+    // 让 QML 单例复用 C++ 的同一个实例
+    static CountdownManager *create(QQmlEngine *, QJSEngine *);
+
     QVariantList countdowns() const;
 
     Q_INVOKABLE int setting(const QString &key, int def = 0) const;
     Q_INVOKABLE void setSetting(const QString &key, int value);
     void push_reminder();
+    Q_INVOKABLE void editCountdown(const QString &dateString);
+    Q_INVOKABLE void removeCountdown(int id);
+    void run_reminder(int id);
 
-    // 让 QML 单例复用 C++ 的同一个实例
-    static CountdownManager *create(QQmlEngine *, QJSEngine *);
 
 signals:
     void refreshCountdowns();
-
-public slots:
-    void editCountdown(const QString &dateString);
-    void removeCountdown(int id);
-    void run_reminder(int id);
 
 private:
     void saveCountdowns();

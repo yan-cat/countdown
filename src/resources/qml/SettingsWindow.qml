@@ -72,7 +72,18 @@ Window {
                 Label { text: qsTr("天标红") }
             }
 
-            // 有新版本时弹出更新窗口
+            // 开机自启
+            CheckBox {
+                id: autoRun
+                text: qsTr("开机自启")
+                checked: CountdownAutoStart.getAutoStart()
+                onCheckedChanged: {
+                    CountdownAutoStart.setAutoStart(checked)
+                }
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            // 更新
             CheckBox {
                 id: autoGetNewVersion
                 text: qsTr("有新版本时弹出更新窗口")

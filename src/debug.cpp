@@ -4,9 +4,8 @@
 
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
 
-CountdownDebug::CountdownDebug(QObject *parent) : QObject(parent) { }
-
 // 初始化函数与统一实例
+CountdownDebug::CountdownDebug(QObject *parent) : QObject(parent) { }
 CountdownDebug *CountdownDebug::create(QQmlEngine *, QJSEngine *) {
     CountdownDebug *m = &debug();                      // 复用同一个实例
     QJSEngine::setObjectOwnership(m, QJSEngine::CppOwnership);  // 别让引擎删它
