@@ -31,7 +31,10 @@ Data is saved locally as JSON; settings are stored in `~/.config/yancat/Countdow
 
 ## Installation
 
-Linux binaries are provided in the Releases.
+Linux binaries and a Windows installer are provided in the Releases.
+
+>This program requires the Qt6/KF6/Kirigami/QML runtime.\
+>If you already have a full KDE Plasma 6 desktop environment installed (Arch: plasma-meta; Debian/Ubuntu: kde-plasma-desktop with recommended packages not disabled), these dependencies are usually already installed along with the desktop and do not need to be installed manually.
 
 The following packages are usually required at runtime:
 
@@ -43,7 +46,7 @@ sudo pacman -S qt6-base qt6-declarative kirigami kcoreaddons kiconthemes breeze 
 Ubuntu / Debian:
 ```bash
 sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
-  libkf6coreaddons6 libkf6iconthemes6 libkf6kirigami6 \
+  libkf6coreaddons6 libkf6iconthemes6 libkirigami6 \
   breeze qml6-module-qtquick-controls qml6-module-qt-labs-platform \
   qml6-module-qtquick-layouts qt6-wayland
 ```
@@ -53,39 +56,39 @@ Only **Ubuntu 24.10 (Oracular) or newer** is supported.
 
 Project structure:
 
+>Folders that are not expanded need no comments.
+
 ```plaintext
-countdown
-├── .github
-├── .gitignore
+Countdown
 ├── android                           # Not used yet
-├── CHANGELOG.md                      # Changelog
-├── CMakeLists.txt
-├── com.countdown.desktop             # Linux desktop file
-├── Countdown.py                      # KDE Craft blueprint
-├── exclude_list.txt                  # Packaging blacklist
-├── LICENSE
-├── README.md
-├── README_en.md
 ├── readme_img
 ├── src
+│   ├── include                       # Header files
+│   ├── resources
+│   │   ├── icon                      # Icons
+│   │   └── qml
+│   │       ├── AboutPageWindow.qml   # About window
+│   │       ├── DetailsWindow.qml     # Details window
+│   │       ├── Main.qml              # Main page
+│   │       ├── ReminderWindow.qml    # Standalone reminder popup for Windows
+│   │       ├── SettingsWindow.qml    # Settings window
+│   │       └── UpdaterWindow.qml     # Update window
 │   ├── countdowndata.cpp             # Handles the data to be displayed
 │   ├── datediff.cpp                  # Computes years/months/days from days
 │   ├── debug.cpp                     # Debug related
 │   ├── main.cpp                      # Main program
 │   ├── manager.cpp                   # Manages data
 │   ├── reminder.cpp                  # Countdown reminders
-│   ├── updater.cpp                   # Checks and applies updates
-│   ├── include                       # Header files
-│   └── resources
-│       ├── icon                      # Icons
-│       └── qml
-│           ├── AboutPageWindow.qml   # About window
-│           ├── DetailsWindow.qml     # Details window
-│           ├── Main.qml              # Main page
-│           ├── ReminderWindow.qml    # Standalone reminder popup for Windows
-│           ├── SettingsWindow.qml    # Settings window
-│           └── UpdaterWindow.qml     # Update window
-└── translations                      # I18n
+│   └── updater.cpp                   # Checks and updates the program
+├── translations                      # I18n
+├── CHANGELOG.md                      # Changelog
+├── CMakeLists.txt
+├── com.countdown.desktop             # Linux Desktop file
+├── Countdown.py                      # KDE Craft blueprint
+├── exclude_list.txt                  # Packaging blacklist
+├── LICENSE
+├── README_en.md
+└── README.md
 ```
 
 Files (and folders) created by the application:

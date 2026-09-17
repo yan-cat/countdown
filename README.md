@@ -33,6 +33,9 @@
 
 Release 内提供 Linux 的二进制与 Windows 安装包
 
+>本程序需要 Qt6/KF6/Kirigami/QML 运行时\
+>如果你已安装完整的 KDE Plasma 6 桌面环境（Arch：plasma-meta；Debian/Ubuntu：kde-plasma-desktop 且未禁用推荐依赖），这些依赖通常已随桌面安装，无需手动补装
+
 通常需要这些包以供运行：
 
 ArchLinux:
@@ -43,7 +46,7 @@ sudo pacman -S qt6-base qt6-declarative kirigami kcoreaddons kiconthemes breeze 
 Ubuntu / Debian:
 ```bash
 sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
-  libkf6coreaddons6 libkf6iconthemes6 libkf6kirigami6 \
+  libkf6coreaddons6 libkf6iconthemes6 libkirigami6 \
   breeze qml6-module-qtquick-controls qml6-module-qt-labs-platform \
   qml6-module-qtquick-layouts qt6-wayland
 ```
@@ -53,39 +56,39 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
 
 项目目录：
 
+>未展开部分无需注释的文件夹
+
 ```plaintext
-countdown
-├── .github
-├── .gitignore
+Countdown
 ├── android                           # 暂未使用
-├── CHANGELOG.md                      # 更新日志
-├── CMakeLists.txt
-├── com.countdown.desktop             # Linux desktop文件
-├── Countdown.py                      # KDE Craft 蓝图
-├── exclude_list.txt                  # 打包文件黑名单
-├── LICENSE
-├── README.md
-├── README_en.md
 ├── readme_img
 ├── src
+│   ├── include                       # 头文件
+│   ├── resources
+│   │   ├── icon                      # 图标
+│   │   └── qml
+│   │       ├── AboutPageWindow.qml   # 关于窗口
+│   │       ├── DetailsWindow.qml     # 详情窗口
+│   │       ├── Main.qml              # 主页
+│   │       ├── ReminderWindow.qml    # Windows的独立提醒弹窗
+│   │       ├── SettingsWindow.qml    # 设置窗口
+│   │       └── UpdaterWindow.qml     # 更新窗口
 │   ├── countdowndata.cpp             # 处理需要显示的数据
 │   ├── datediff.cpp                  # 从天计算年月日
 │   ├── debug.cpp                     # Debug相关
 │   ├── main.cpp                      # 主程序
 │   ├── manager.cpp                   # 管理数据
 │   ├── reminder.cpp                  # 倒数日提醒
-│   ├── updater.cpp                   # 检查并更新
-│   ├── include                       # 头文件
-│   └── resources
-│       ├── icon                      # 图标
-│       └── qml
-│           ├── AboutPageWindow.qml   # 关于窗口
-│           ├── DetailsWindow.qml     # 详情窗口
-│           ├── Main.qml              # 主页
-│           ├── ReminderWindow.qml    # Windows的独立提醒弹窗
-│           ├── SettingsWindow.qml    # 设置窗口
-│           └── UpdaterWindow.qml     # 更新窗口
-└── translations                      # I18n
+│   └── updater.cpp                   # 检查并更新程序
+├── translations                      # I18n
+├── CHANGELOG.md                      # 更新日志
+├── CMakeLists.txt
+├── com.countdown.desktop             # Linux Desktop 文件
+├── Countdown.py                      # KDE Craft 蓝图
+├── exclude_list.txt                  # 打包文件黑名单
+├── LICENSE
+├── README_en.md
+└── README.md
 ```
 
 软件创建的文件（夹）：
