@@ -21,6 +21,14 @@ Window {
         ColumnLayout {
             width: parent.width
 
+//=====================================显示
+
+            Label {
+                text: qsTr("显示")
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+            }
+
             // 日期显示格式
             Label {
                 text: qsTr("日期显示格式：")
@@ -43,7 +51,7 @@ Window {
                 id: upcoming
                 text: qsTr("临近日期卡片红色描边")
                 checked: CountdownManager.setting("upcoming", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("upcoming", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -72,23 +80,24 @@ Window {
                 Label { text: qsTr("天标红") }
             }
 
-            // 开机自启
-            CheckBox {
-                id: autoRun
-                text: qsTr("开机自启")
-                checked: CountdownAutoStart.getAutoStart()
-                onCheckedChanged: {
-                    CountdownAutoStart.setAutoStart(checked)
-                }
-                Layout.alignment: Qt.AlignHCenter
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
             }
 
-            // 更新
+//=====================================更新设置
+
+            Label {
+                text: qsTr("更新")
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+            }
+
             CheckBox {
                 id: autoGetNewVersion
                 text: qsTr("有新版本时弹出更新窗口")
                 checked: CountdownManager.setting("autoGetNewVersion", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("autoGetNewVersion", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -97,23 +106,44 @@ Window {
                 id: fastDownload
                 text: qsTr("使用加速源快速下载")
                 checked: CountdownManager.setting("fastDownload", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("fastDownload", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
             }
 
-            // 调试
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
+            }
+
+//=====================================软件设置
+
             Label {
-                text: "============================================="
-                visible: debugMode.checked
+                text: qsTr("其他")
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+            }
+
+            // 开机自启
+            CheckBox {
+                id: autoStart
+                text: qsTr("开机自启")
+                checked: CountdownAutoStart.getAutoStart()
+                onClicked: {
+                    CountdownAutoStart.setAutoStart(checked)
+                }
                 Layout.alignment: Qt.AlignHCenter
             }
+
+//=====================================调试
+
+            // 调试
             CheckBox {
                 id: debugMode
                 text: qsTr("调试模式")
                 checked: CountdownManager.setting("debugMode", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("debugMode", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -122,6 +152,26 @@ Window {
                 text: qsTr("调试选项需要重启才能生效！")
                 visible: debugMode.checked
                 Layout.alignment: Qt.AlignHCenter
+            }
+
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
+            }
+
+            Label {
+                text: qsTr("调试选项")
+                visible: debugMode.checked
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.8
+            }
+//=====================================日志
+
+            Label {
+                text: qsTr("日志")
+                visible: debugMode.checked
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
             }
 
             ComboBox {
@@ -137,7 +187,7 @@ Window {
                 text: qsTr("禁用 QML 引擎警告")
                 visible: debugMode.checked
                 checked: CountdownManager.setting("disableQmlWarn", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("disableQmlWarn", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -147,19 +197,32 @@ Window {
                 text: qsTr("启用日志文件")
                 visible: debugMode.checked
                 checked: CountdownManager.setting("outputLogFile", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("outputLogFile", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
             }
 
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
+            }
+
+//=====================================其他
+
+            Label {
+                text: qsTr("其他")
+                visible: debugMode.checked
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+            }
 
             CheckBox {
                 id: useWindowsReminderType
                 text: qsTr("强制使用windows通知窗口而非当前系统默认")
                 visible: debugMode.checked
                 checked: CountdownManager.setting("useWindowsReminderType", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("useWindowsReminderType", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -170,7 +233,7 @@ Window {
                 text: qsTr("强制软件语言为英语")
                 visible: debugMode.checked
                 checked: CountdownManager.setting("useEnLang", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("useEnLang", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -181,7 +244,7 @@ Window {
                 text: qsTr("强制下载最新版本即使当前版本为最新")
                 visible: debugMode.checked
                 checked: CountdownManager.setting("forceDownloadLatest", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("forceDownloadLatest", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
@@ -192,7 +255,7 @@ Window {
                 text: qsTr("在倒数日详情显示调试信息")
                 visible: debugMode.checked
                 checked: CountdownManager.setting("showDebugDetails", false)
-                onCheckedChanged: {
+                onClicked: {
                     CountdownManager.setSetting("showDebugDetails", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
