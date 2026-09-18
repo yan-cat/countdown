@@ -75,6 +75,7 @@ cmake --build build -j$(nproc)
 > 已实验性支持 Android，可自行构建。
 
 ```bash
+# 拷贝蓝图至蓝图目录
 craft Countdown
 craft --package Countdown # Android 无需此步骤
 ```
