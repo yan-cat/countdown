@@ -108,10 +108,23 @@ Window {
                 id: versionUpdateLog
                 text: qsTr("未知更新日志")
                 wrapMode: TextArea.Wrap
-                textFormat: TextArea.MarkdownText
+                textFormat: TextArea.RichText
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
                 readOnly: true
+                onLinkActivated: (link) => {
+                    if (link.startsWith("https://github.com/"))
+                        Qt.openUrlExternally(link)
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    acceptedButtons: Qt.NoButton
+
+                    cursorShape: parent.linkAt(mouseX, mouseY) !== ""
+                                 ? Qt.PointingHandCursor
+                                 : Qt.ArrowCursor
+                }
             }
         }
 

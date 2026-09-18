@@ -15,6 +15,8 @@
 #include <QProcess>
 #include <QDesktopServices>
 #include <QVersionNumber>
+#include <QTextDocument>
+#include <QRegularExpression>
 #include "updater.hpp"
 #include "debug.hpp"
 #include "manager.hpp"
@@ -78,6 +80,11 @@ void CountdownUpdater::getReleaseInfo()
         // 要的信息
         QString latestVersion = jsonObj["tag_name"].toString(); // 最新版本
         QString latestVersionLog = jsonObj["body"].toString(); // 更新日志
+
+        // md转html
+        QTextDocument doc;
+        doc.setMarkdown(latestVersionLog);
+        latestVersionLog = doc.toHtml();
 
         QUrl fsUrl;
         if (manager().setting("fastDownload", 0)) fsUrl = fastUrl;
