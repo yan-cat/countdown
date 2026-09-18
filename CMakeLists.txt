@@ -86,6 +86,16 @@ if (ANDROID)
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
         QT_DEPLOY_QML_DIR "${CMAKE_INSTALL_PREFIX}"
     )
+
+    # apk版本号
+    math(EXPR ANDROID_VERSION_CODE
+            "${PROJECT_VERSION_MAJOR} * 10000 + ${PROJECT_VERSION_MINOR} * 100 + ${PROJECT_VERSION_PATCH}")
+
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/android/AndroidManifest.xml.in"
+        "${CMAKE_CURRENT_SOURCE_DIR}/android/AndroidManifest.xml"
+        @ONLY
+    )
 endif()
 
 target_include_directories(Countdown PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/include)

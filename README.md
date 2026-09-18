@@ -1,16 +1,18 @@
 # 倒数日
+
 [English](README_en.md) | 中文
+
 ## 简介
 
 一个基于 Kirigami / Qt 6 的倒数日桌面应用，用来记录和追踪生日、纪念日、截止日期等重要日子。
 
-界面使用 KDE Frameworks 6 的 Kirigami 组件与 QML 构建，简洁现代，支持 Linux 与 Windows，并预留了 Android 支持。
+界面使用 KDE Frameworks 6 的 Kirigami 组件与 QML 构建，简洁现代，支持 Linux 与 Windows；Android 目前为实验性支持。
 
 主要功能：
 
 - 新建、编辑、删除倒计时事项，直观显示距目标日期的剩余天数（或已过天数）
 - 支持无重复、月重复、年重复三种倒计时模式
-- 到设定日期提醒，可选当天、前一天或自定义天数提醒
+- 在设定日期提醒，可选当天、前一天或自定义天数提醒
 - 软件内检查更新（自动检查默认关闭）
 - 支持中英文界面（i18n）
 - 支持静默（最小化）启动参数与 Debug 日志开关
@@ -31,14 +33,15 @@
 
 ## 安装帮助
 
-Release 内提供 Linux 的二进制与 Windows 安装包
+Release 中提供 Linux 二进制与 Windows 安装包。
+Android 暂无预编译安装包，如需体验请参考 [构建帮助](#构建帮助) 自行构建。
 
->本程序需要 Qt6/KF6/Kirigami/QML 运行时\
->如果你已安装完整的 KDE Plasma 6 桌面环境（Arch：plasma-meta；Debian/Ubuntu：kde-plasma-desktop 且未禁用推荐依赖），这些依赖通常已随桌面安装，无需手动补装
+> 本程序需要 Qt6/KF6/Kirigami/QML 运行时\
+> 如果你已安装完整的 KDE Plasma 6 桌面环境（Arch：plasma-meta；Debian/Ubuntu：kde-plasma-desktop 且未禁用推荐依赖），这些依赖通常已随桌面安装，无需手动补装。
 
 通常需要这些包以供运行：
 
-ArchLinux:
+Arch Linux:
 ```bash
 sudo pacman -S qt6-base qt6-declarative kirigami kcoreaddons kiconthemes breeze qqc2-desktop-style qt6-wayland
 ```
@@ -50,11 +53,13 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
   breeze qml6-module-qtquick-controls qml6-module-qt-labs-platform \
   qml6-module-qtquick-layouts qt6-wayland
 ```
-只支持 **Ubuntu 24.10 (Oracular) 或更高版本**
+> Ubuntu 最低支持 24.10；建议使用 26.04 LTS 或仍受支持的版本。Debian 请按实际仓库调整包名。
 
 ## 构建帮助
 
->请安装 [安装帮助](#安装帮助) 内的包与对应的开发包
+### CMake
+
+> 请安装 [安装帮助](#安装帮助) 内的包与对应的开发包。
 
 ```bash
 git clone https://github.com/yan-cat/countdown.git
@@ -62,17 +67,27 @@ cd countdown
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j$(nproc)
 ```
-可执行文件位于 `build/Countdown`
+
+可执行文件位于 `build/Countdown`。
+
+### KDE Craft
+
+> 已实验性支持 Android，可自行构建。
+
+```bash
+craft Countdown
+craft --package Countdown # Android 无需此步骤
+```
 
 ## 技术细节
 
 项目目录：
 
->未展开部分无需注释的文件夹
+> 未展开部分为无需注释的文件夹。
 
 ```plaintext
 Countdown
-├── android                           # 暂未使用
+├── android                           # Android 实验性支持
 ├── readme_img
 ├── src
 │   ├── include                       # 头文件
@@ -82,7 +97,7 @@ Countdown
 │   │       ├── AboutPageWindow.qml   # 关于窗口
 │   │       ├── DetailsWindow.qml     # 详情窗口
 │   │       ├── Main.qml              # 主页
-│   │       ├── ReminderWindow.qml    # Windows 的独立提醒弹窗
+│   │       ├── ReminderWindow.qml    # Windows 平台独立提醒弹窗
 │   │       ├── SettingsWindow.qml    # 设置窗口
 │   │       └── UpdaterWindow.qml     # 更新窗口
 │   ├── autostart.cpp                 # 开机自启处理
@@ -113,12 +128,12 @@ Countdown
 │   └── share
 │       └── yancat
 │           └── Countdown
-│               └── countdowns.json       # 倒数日数据
-│                   └── logs
-│                       └── Countdown.log # 软件日志（开启日志写文件时）
+│               ├── countdowns.json   # 倒数日数据
+│               └── logs
+│                   └── Countdown.log # 软件日志（开启日志写文件时）
 └── .config
     └── yancat
-        └── Countdown.conf                # 设置项
+        └── Countdown.conf            # 设置项
 ```
 
 ## 更新日志
@@ -128,9 +143,8 @@ Countdown
 ## 待完成
 
 - [ ] 提醒时间
-- [ ] Webdav云同步事项
+- [ ] WebDAV 云同步事项
 - [ ] 桌面磁贴
 - [ ] 可选软件背景
-- [ ] 安卓支持（难度过大，暂时无计划）
 
-此程序由 AI 辅助
+开发过程由 AI 辅助。

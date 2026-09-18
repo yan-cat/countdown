@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <manifest package="com.countdown"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionName="1.0"
-          android:versionCode="1">
+          android:versionName="@PROJECT_VERSION@"
+          android:versionCode="@ANDROID_VERSION_CODE@">
 
           <uses-permission android:name="android.permission.INTERNET" />
 

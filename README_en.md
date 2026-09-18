@@ -1,10 +1,12 @@
 # Countdown
+
 English | [中文](README.md)
+
 ## Introduction
 
 A countdown desktop application built with Kirigami / Qt 6, used to record and track important days such as birthdays, anniversaries, and deadlines.
 
-The UI is built with KDE Frameworks 6 Kirigami components and QML. It's simple and modern, supports Linux and Windows, and has Android support reserved.
+The UI is built with KDE Frameworks 6 Kirigami components and QML. It's simple and modern, supports Linux and Windows; Android is currently experimental.
 
 Main features:
 
@@ -32,13 +34,14 @@ Data is saved locally as JSON; settings are stored in `~/.config/yancat/Countdow
 ## Installation
 
 Linux binaries and a Windows installer are provided in the Releases.
+There is no prebuilt Android package yet; to try it, refer to [Build Help](#build-help) and build it yourself.
 
->This program requires the Qt6/KF6/Kirigami/QML runtime.\
->If you already have a full KDE Plasma 6 desktop environment installed (Arch: plasma-meta; Debian/Ubuntu: kde-plasma-desktop with recommended packages not disabled), these dependencies are usually already installed along with the desktop and do not need to be installed manually.
+> This program requires the Qt6/KF6/Kirigami/QML runtime.\
+> If you already have a full KDE Plasma 6 desktop environment installed (Arch: plasma-meta; Debian/Ubuntu: kde-plasma-desktop with recommended packages not disabled), these dependencies are usually already installed along with the desktop and do not need to be installed manually.
 
 The following packages are usually required at runtime:
 
-ArchLinux:
+Arch Linux:
 ```bash
 sudo pacman -S qt6-base qt6-declarative kirigami kcoreaddons kiconthemes breeze qqc2-desktop-style qt6-wayland
 ```
@@ -50,17 +53,41 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
   breeze qml6-module-qtquick-controls qml6-module-qt-labs-platform \
   qml6-module-qtquick-layouts qt6-wayland
 ```
-Only **Ubuntu 24.10 (Oracular) or newer** is supported.
+> Ubuntu 24.10 is the minimum supported version; 26.04 LTS or another still-supported release is recommended. For Debian, adjust the package names to match your actual repositories.
+
+## Build Help
+
+### CMake
+
+> Please install the packages listed in [Installation](#installation) together with the corresponding development packages.
+
+```bash
+git clone https://github.com/yan-cat/countdown.git
+cd countdown
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+```
+
+The executable is located at `build/Countdown`.
+
+### KDE Craft
+
+> Android is experimentally supported and can be built by yourself.
+
+```bash
+craft Countdown
+craft --package Countdown # Not needed for Android
+```
 
 ## Technical Details
 
 Project structure:
 
->Folders that are not expanded need no comments.
+> Folders that are not expanded need no comments.
 
 ```plaintext
 Countdown
-├── android                           # Not used yet
+├── android                           # Experimental Android support
 ├── readme_img
 ├── src
 │   ├── include                       # Header files
@@ -73,6 +100,7 @@ Countdown
 │   │       ├── ReminderWindow.qml    # Standalone reminder popup for Windows
 │   │       ├── SettingsWindow.qml    # Settings window
 │   │       └── UpdaterWindow.qml     # Update window
+│   ├── autostart.cpp                 # Autostart handling
 │   ├── countdowndata.cpp             # Handles the data to be displayed
 │   ├── datediff.cpp                  # Computes years/months/days from days
 │   ├── debug.cpp                     # Debug related
@@ -84,6 +112,7 @@ Countdown
 ├── CHANGELOG.md                      # Changelog
 ├── CMakeLists.txt
 ├── com.countdown.desktop             # Linux Desktop file
+├── Countdown.nsi                     # Installer script
 ├── Countdown.py                      # KDE Craft blueprint
 ├── exclude_list.txt                  # Packaging blacklist
 ├── LICENSE
@@ -99,10 +128,12 @@ Files (and folders) created by the application:
 │   └── share
 │       └── yancat
 │           └── Countdown
-│               └── countdowns.json # Countdown data
+│               ├── countdowns.json   # Countdown data
+│               └── logs
+│                   └── Countdown.log # Application log (when file logging is enabled)
 └── .config
     └── yancat
-        └── Countdown.conf          # Settings
+        └── Countdown.conf            # Settings
 ```
 
 ## Changelog
@@ -111,11 +142,11 @@ See [CHANGELOG.md](CHANGELOG.md) for the detailed changes in each version.
 
 ## Planned
 
+- [ ] Reminder time
 - [ ] WebDAV cloud sync of items
 - [ ] Desktop tiles/widget
 - [ ] Optional app background
-- [ ] Android support (too difficult, no plan for now)
 
-This program was developed with AI assistance.
+The development process was assisted by AI.
 
 > **Note:** This English README may not be the latest version. Please refer to the [Chinese README](README.md) (or the source code) for the most up-to-date information.
