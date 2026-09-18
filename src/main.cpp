@@ -65,10 +65,20 @@ int main(int argc, char *argv[]) {
 
 //===================================================================后续启动
 
-    // 安卓不要初始化主题
+    // 安卓不要初始化主题，直接加入列表
     #ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
     #endif
+    #ifdef Q_OS_ANDROID
+    QIcon::setThemeSearchPaths({
+        QStringLiteral("assets:/qml/org/kde/kirigami/breeze-internal"),
+        QStringLiteral(":/qt/qml/org/kde/kirigami/breeze-internal"),
+        QStringLiteral("assets:/qml/org/kde/kirigami"),
+        QStringLiteral(":/qt/qml/org/kde/kirigami")
+    });
+    QIcon::setThemeName(QStringLiteral("breeze-internal"));
+    #endif
+
     QApplication app(argc, argv);
 
     #ifdef Q_OS_WIN

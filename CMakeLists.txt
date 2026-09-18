@@ -16,6 +16,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
 
 # Android APK 打包配置（基于 ECM / androiddeployqt）
 include(ECMAddAndroidApk)
+include(GNUInstallDirs)
 ecm_add_android_apk(Countdown ANDROID_DIR ${CMAKE_CURRENT_SOURCE_DIR}/android)
 set(ANDROID_APK_DIR "${CMAKE_SOURCE_DIR}/android")
 
@@ -82,6 +83,8 @@ endif()
 if (ANDROID)
     set_target_properties(Countdown PROPERTIES
         QT_QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/lib/qml;${CMAKE_INSTALL_PREFIX}/qml"
+        QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
+        QT_DEPLOY_QML_DIR "${CMAKE_INSTALL_PREFIX}"
     )
 endif()
 
@@ -106,8 +109,6 @@ if (LINUX)
     target_link_libraries(Countdown PRIVATE Qt6::DBus)
 endif()
 
-# Android 专属：安卓下需显式链接 Qt6::Svg、OpenSSL::SSL、KF6::Kirigami
-# （KDE 官方要求，否则可能缺符号/启动异常）
 if (ANDROID)
     find_package(OpenSSL REQUIRED)
     find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Kirigami)
@@ -150,9 +151,8 @@ if (ANDROID)
             "${CMAKE_INSTALL_PREFIX}/lib/qml/org/kde"
             "${CMAKE_BINARY_DIR}/org/kde"
         COMMENT "Copying KDE QML modules into build dir for deployment")
-endif()
-# Android 专属：打包应用用到的 Breeze 图标（安卓没有系统图标主题，必须自带）
-if (ANDROID)
+
+    # Android 图标
     kirigami_package_breeze_icons(ICONS
         settings-configure
         update-none
@@ -174,13 +174,14 @@ qt_add_translations(Countdown
             translations/countdown_en_US.ts
 )
 
-install(TARGETS Countdown
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
 if(ANDROID)
     install(TARGETS Countdown
         # 没用的安卓安装  现在有用了😋  哦不不不你又没用了
         LIBRARY DESTINATION lib/${ANDROID_ABI}
         ARCHIVE DESTINATION lib/${ANDROID_ABI}
+    )
+else()
+    install(TARGETS Countdown
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 endif()
