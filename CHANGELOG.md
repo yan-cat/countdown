@@ -2,7 +2,7 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.3.0...main) - YYYY-MM-DD
+## [1.4.0](https://github.com/yan-cat/countdown/compare/v1.3.0...1.4.0) - 2026-09-18
 
 ### 新增 (Added) 
 - 单实例锁弹窗
@@ -14,18 +14,6 @@
 - 对现有功能的改动描述
 - Windows 安装逻辑
 - 设置ui优化
-
-### 弃用 (Deprecated) 
-- 即将移除的功能预告（给用户缓冲期）
-
-### 移除 (Removed) 
-- 已移除的功能
-
-### 修复 (Fixed) 
-- Bug 修复描述
-
-### 安全 (Security) 
-- 修复的安全漏洞
 
 ## [1.3.0](https://github.com/yan-cat/countdown/compare/v1.2.3...v1.3.0) - 2026-09-15
 
