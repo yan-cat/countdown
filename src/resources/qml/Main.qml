@@ -25,7 +25,9 @@ Kirigami.ApplicationWindow {
     // 空项目引导
     Label {
         visible: cardsLayout.count === 0
-        text: qsTr("还没有倒数日\n右键空白处新建倒数日")
+        text: Qt.platform.os === "android"
+            ? qsTr("还没有倒数日\n长按空白处新建倒数日")
+            : qsTr("还没有倒数日\n右键空白处新建倒数日")
         anchors.centerIn: parent
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
@@ -62,13 +64,17 @@ Kirigami.ApplicationWindow {
         title: editingId >= 0 ? qsTr("编辑倒数日") : qsTr("新建倒数日")
         modal: true
         height: root.height
+        preferredWidth: Qt.platform.os === "android"
+                        ? Math.min(root.width, Kirigami.Units.gridUnit * 40)
+                        : implicitWidth   // 桌面平台用默认宽度
+
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
 
         property int editingId: -1
         property var editingData: ({})
 
         ColumnLayout {
-            anchors.fill: parent
+            width: adddate.availableWidth
             spacing: 10
 
             // 名字
@@ -79,7 +85,9 @@ Kirigami.ApplicationWindow {
             TextField {
                 id: nameField
                 placeholderText: qsTr("例如：生日、纪念日")
-                Layout.fillWidth: true
+                Layout.preferredWidth: Qt.platform.os === "android"
+                                       ? Math.min(adddate.width, 350)
+                                       : implicitWidth   // 桌面平台用默认宽度
                 Layout.alignment: Qt.AlignCenter
             }
 
@@ -137,6 +145,9 @@ Kirigami.ApplicationWindow {
             }
             KA.DatePicker {
                 id: dateField
+                Layout.preferredWidth: Qt.platform.os === "android"
+                                       ? Math.min(adddate.width, 350)
+                                       : implicitWidth   // 桌面平台用默认宽度
                 Layout.alignment: Qt.AlignCenter
             }
         }
@@ -196,30 +207,30 @@ Kirigami.ApplicationWindow {
         id: cardPage
         title: qsTr("倒数日")
         MouseArea {
-                anchors.fill: parent
-                z: 0
-                acceptedButtons: Qt.RightButton
-                onClicked: (mouse) => {
-                    if (mouse.button === Qt.RightButton) {
-                        blankMenu.popup(mouse.x, mouse.y)
-                    }
-                }
-                onPressAndHold: (mouse) => {
+            anchors.fill: parent
+            z: 0
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onClicked: (mouse) => {
+                if (mouse.button === Qt.RightButton) {
                     blankMenu.popup(mouse.x, mouse.y)
                 }
             }
+            onPressAndHold: (mouse) => {
+                blankMenu.popup(mouse.x, mouse.y)
+            }
+        }
 
-            Menu {
-                id: blankMenu
-                MenuItem {
-                    text: qsTr("新建倒数日")
-                    icon.name: "document-new"
-                    onTriggered: {
-                        adddate.editingId = -1
-                        adddate.open()
-                    }
+        Menu {
+            id: blankMenu
+            MenuItem {
+                text: qsTr("新建倒数日")
+                icon.name: "document-new"
+                onTriggered: {
+                    adddate.editingId = -1
+                    adddate.open()
                 }
             }
+        }
         ColumnLayout {
             Kirigami.CardsLayout {
                 maximumColumns: 8

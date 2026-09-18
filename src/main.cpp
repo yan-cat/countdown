@@ -135,12 +135,49 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+//===================================================================安卓返回关窗口
+
+#ifdef Q_OS_ANDROID
+    class BackKeyFilter : public QObject {
+    public:
+        explicit BackKeyFilter(QWindow *mainWindow, QObject *parent = nullptr)
+            : QObject(parent), m_mainWindow(mainWindow) {}
+
+    protected:
+        bool eventFilter(QObject *obj, QEvent *event) override {
+            if (event->type() == QEvent::KeyRelease) {
+                auto *ke = static_cast<QKeyEvent*>(event);
+                if (ke->key() == Qt::Key_Back) {
+                    for (QWindow *w : QGuiApplication::topLevelWindows()) {
+                        if (w != m_mainWindow && w->isVisible()) {
+                            qCDebug(CountdownLog) << "检测到返回键，隐藏子窗口：" << w;
+                            w->hide();
+                            return true;
+                        }
+                    }
+                }
+            }
+            return QObject::eventFilter(obj, event);
+        }
+
+    private:
+        QWindow *m_mainWindow = nullptr;
+    };
+#endif
+
 //===================================================================后续启动
 
     parser.process(app);
 
     engine.loadFromModule("com.countdown", "Main");
     if (engine.rootObjects().isEmpty()) return -1;
+    else {
+        #ifdef Q_OS_ANDROID
+        QWindow *mainWindow = qobject_cast<QWindow*>(engine.rootObjects().constFirst());
+        auto *backFilter = new BackKeyFilter(mainWindow, &app);
+        app.installEventFilter(backFilter);
+        #endif
+    }
 
     updater().getReleaseInfo(); // 检查更新
 

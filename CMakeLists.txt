@@ -176,7 +176,7 @@ qt_add_translations(Countdown
 
 if(ANDROID)
     install(TARGETS Countdown
-        # 没用的安卓安装  现在有用了😋  哦不不不你又没用了
+        # 没用的安卓安装  现在有用了😋  哦不不不你又没用了   完美了，就差ui主题了，我们要有安卓版倒数日咯～
         LIBRARY DESTINATION lib/${ANDROID_ABI}
         ARCHIVE DESTINATION lib/${ANDROID_ABI}
     )
