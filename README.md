@@ -52,6 +52,18 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
 ```
 只支持 **Ubuntu 24.10 (Oracular) 或更高版本**
 
+## 构建帮助
+
+>请安装 [安装帮助](#安装帮助) 内的包与对应的开发包
+
+```bash
+git clone https://github.com/yan-cat/countdown.git
+cd countdown
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
+```
+可执行文件位于 `build/Countdown`
+
 ## 技术细节
 
 项目目录：
@@ -101,10 +113,12 @@ Countdown
 │   └── share
 │       └── yancat
 │           └── Countdown
-│               └── countdowns.json # 倒数日数据
+│               └── countdowns.json       # 倒数日数据
+│                   └── logs
+│                       └── Countdown.log # 软件日志（开启日志写文件时）
 └── .config
     └── yancat
-        └── Countdown.conf          # 设置项
+        └── Countdown.conf                # 设置项
 ```
 
 ## 更新日志
