@@ -399,7 +399,7 @@ Kirigami.ApplicationWindow {
         id: aboutPageWindow
     }
     DetailsWindow {
-            id: detailsWindow
+        id: detailsWindow
     }
 
     // 提醒土司

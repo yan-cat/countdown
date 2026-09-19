@@ -144,6 +144,7 @@ qt_add_qml_module(Countdown
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/UpdaterWindow.qml
         src/resources/qml/DetailsWindow.qml
+        src/resources/qml/LogsWindow.qml
 
     RESOURCES
         src/resources/icon/com.countdown.svg

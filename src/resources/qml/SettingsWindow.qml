@@ -312,6 +312,12 @@ Window {
                 }
                 Layout.alignment: Qt.AlignHCenter
             }
+            Button {
+                text: qsTr("查看软件日志")
+                visible: debugMode.checked && outputLogFile.checked
+                onClicked: logsWindow.show()
+                Layout.alignment: Qt.AlignHCenter
+            }
 
             Item {
                 Layout.preferredHeight: 20
@@ -377,5 +383,9 @@ Window {
                 Layout.fillWidth: true
             }
         }
+    }
+
+    LogsWindow {
+        id: logsWindow
     }
 }

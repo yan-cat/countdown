@@ -12,6 +12,10 @@
 
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
 
+namespace {
+QString logPath;
+}
+
 // 初始化函数与统一实例
 CountdownDebug::CountdownDebug(QObject *parent) : QObject(parent) { }
 CountdownDebug *CountdownDebug::create(QQmlEngine *, QJSEngine *) {
@@ -107,7 +111,7 @@ void CountdownDebug::installFileLogger() {
 
     QDir().mkpath(logDir);
 
-    QString logPath = logDir + "/Countdown.log";
+    logPath = logDir + "/Countdown.log";
     logFile().setFileName(logPath);
 
     if (getDebugOn("outputLogFile")) {
@@ -126,4 +130,11 @@ void CountdownDebug::closeFileLogger() {
     if (logFile().isOpen()) {
         logFile().close();
     }
+}
+
+QString CountdownDebug::getLogs() {
+    QFile file(logPath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QString();
+    return QString::fromUtf8(file.readAll());
 }
