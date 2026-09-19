@@ -3,7 +3,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import org.kde.kirigami as Kirigami
-import org.kde.kirigamiaddons.dateandtime 1.0 as KA
+import org.kde.kirigamiaddons.dateandtime 1.0 as DateAndTime
 
 Kirigami.ApplicationWindow {
     id: root
@@ -143,7 +143,7 @@ Kirigami.ApplicationWindow {
                 text: qsTr("请选择目标日期：")
                 Layout.alignment: Qt.AlignCenter
             }
-            KA.DatePicker {
+            DateAndTime.DatePicker {
                 id: dateField
                 Layout.preferredWidth: Qt.platform.os === "android"
                                        ? Math.min(adddate.width, 350)

@@ -109,11 +109,11 @@ target_link_libraries(Countdown PRIVATE
     Qt6::Widgets
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Svg
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes
     KF6::Archive
-    Qt6::Svg
 )
 if (LINUX)
     target_link_libraries(Countdown PRIVATE Qt6::DBus)

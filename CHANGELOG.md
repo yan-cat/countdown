@@ -5,7 +5,7 @@
 ## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.4.0...main) - YYYY-MM-DD
 
 ### 新增 (Added) 
-- 新功能描述
+- 自定义提醒时间而非默认的00:00
 
 ### 变更 (Changed) 
 - 对现有功能的改动描述

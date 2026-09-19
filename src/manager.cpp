@@ -29,7 +29,7 @@ CountdownManager::CountdownManager(QObject *parent) : QObject(parent) {
     push_reminder(); // 检查提醒
 
     // 启动定时提醒
-    m_reminderTimer.setInterval(1000 * 60 * 60); // 1小时
+    m_reminderTimer.setInterval(60 * 1000); // 1 分钟
     connect(&m_reminderTimer, &QTimer::timeout, this, &CountdownManager::push_reminder);
     m_reminderTimer.start();
     qCDebug(CountdownLog) << "启动提醒检查";
@@ -269,21 +269,35 @@ void CountdownManager::run_reminder(int id) {
 
 // 首次查需要提醒的日子
 void CountdownManager::push_reminder() {
-    QSettings s;
     QDate today = QDate::currentDate();
-    qint64 diffDay = s.value("todayDate", "1970-01-01").toDate().daysTo(today);
+    QTime now = QTime::currentTime();
+
+    QSettings s; // 不算设置所以放这里
+    s.beginGroup("Data");
+    qint64 diffDay = s.value("lastReminder", "1970-01-01").toDate().daysTo(today);
     qCDebug(CountdownLog) << "上一次提醒在" << diffDay << "天前";
 
-    if (diffDay > 0) {
-        qCDebug(CountdownLog) << "开始提醒";
-        qCDebug(CountdownLog) << "查询需提醒倒数日";
-        for (const QJsonValue &v : std::as_const(m_countdowns)) {
-            QJsonObject obj = v.toObject();
-            if (getCountdownJson(obj.value("id").toInteger(), "notificationdays").value("notificationdays").toInteger() >= 0) {
-                run_reminder(obj.value("id").toInteger());
-            }
-        }
-        s.setValue("todayDate", today.toString(Qt::ISODate));
+    if (diffDay <= 0) {
+        qCDebug(CountdownLog) << "今日已提醒";
+        return;
     }
-    else qCDebug(CountdownLog) << "今天已提醒";
+
+    qint64 reminderHour = setting("reminderHour", 6);
+    qint64 reminderMinute = setting("reminderMinute", 30);
+    QTime reminderTime(reminderHour, reminderMinute);
+
+    if (now < reminderTime) {
+        qCDebug(CountdownLog) << "提醒时间未到";
+        return;
+    }
+
+    qCDebug(CountdownLog) << "开始提醒";
+    qCDebug(CountdownLog) << "查询需提醒倒数日";
+    for (const QJsonValue &v : std::as_const(m_countdowns)) {
+        QJsonObject obj = v.toObject();
+        if (getCountdownJson(obj.value("id").toInteger(), "notificationdays").value("notificationdays").toInteger() >= 0) {
+            run_reminder(obj.value("id").toInteger());
+        }
+    }
+    s.setValue("lastReminder", today.toString(Qt::ISODate));
 }

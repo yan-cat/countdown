@@ -19,6 +19,7 @@ Window {
         contentWidth: availableWidth
 
         ColumnLayout {
+            id: layout
             width: parent.width
 
 //=====================================显示
@@ -78,6 +79,115 @@ Window {
                     }
                 }
                 Label { text: qsTr("天标红") }
+            }
+
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
+            }
+
+//=====================================提醒设置
+
+            Label {
+                text: qsTr("提醒")
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+            }
+
+            Label {
+                text: qsTr("倒数日提醒时间：")
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            property int reminderHour: CountdownManager.setting("reminderHour", 06)
+            property int reminderMinute: CountdownManager.setting("reminderMinute", 30)
+
+            Button {
+                icon.name: "clock"
+                text: layout.reminderHour + ":" + layout.reminderMinute
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: timeDialog.open()
+            }
+
+            Label {
+                text: qsTr("（在每天的几点提醒当天的倒数日）")
+                Layout.alignment: Qt.AlignHCenter
+            }
+
+            // 弹出时间选择框
+            Kirigami.Dialog {
+                id: timeDialog
+                parent: settingsWindow.contentItem
+                title: qsTr("选择提醒时间")
+                preferredWidth: Kirigami.Units.gridUnit * 18
+                standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+
+                // 临时变量，确认后才写回
+                property int tempHour: layout.reminderHour
+                property int tempMinute: layout.reminderMinute
+
+                onOpened: {
+                    tempHour = layout.reminderHour
+                    tempMinute = layout.reminderMinute
+                    hourTumbler.currentIndex = tempHour
+                    minuteTumbler.currentIndex = tempMinute
+                }
+
+                onAccepted: {
+                    layout.reminderHour = tempHour
+                    layout.reminderMinute = tempMinute
+                    CountdownManager.setSetting("reminderHour", tempHour)
+                    CountdownManager.setSetting("reminderMinute", tempMinute)
+                }
+
+                contentItem: Item {
+                    implicitHeight: tumblerRow.implicitHeight
+                    RowLayout {
+                        spacing: Kirigami.Units.largeSpacing
+                        Layout.alignment: Qt.AlignHCenter
+                        anchors.centerIn: parent
+
+                        Tumbler {
+                            id: hourTumbler
+                            model: 24
+                            visibleItemCount: 3
+                            Layout.preferredWidth: Kirigami.Units.gridUnit * 3
+
+                            delegate: Text {
+                                text: String(modelData).padStart(2, '0')
+                                color: Kirigami.Theme.textColor
+                                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
+                            }
+                            onCurrentIndexChanged: timeDialog.tempHour = currentIndex
+                        }
+                        Label {
+                            text: ":"
+                            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+                            color: Kirigami.Theme.textColor
+                            Layout.alignment: Qt.AlignVCenter
+                        }
+                        Tumbler {
+                            id: minuteTumbler
+                            model: 60
+                            visibleItemCount: 3
+                            Layout.preferredWidth: Kirigami.Units.gridUnit * 3
+
+                            delegate: Text {
+                                text: String(modelData).padStart(2, '0')
+                                color: Kirigami.Theme.textColor
+                                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
+                            }
+                            onCurrentIndexChanged: timeDialog.tempMinute = currentIndex
+                        }
+                    }
+                }
             }
 
             Item {
