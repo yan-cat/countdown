@@ -6,5 +6,5 @@
             android:layout_height="fill_parent"
             android:scaleType="fitXY"
             android:src="@drawable/alligator"/>
-        </item>
-    </layer-list>
+    </item>
+</layer-list>

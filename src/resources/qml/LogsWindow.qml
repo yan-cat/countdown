@@ -16,13 +16,26 @@ Window {
     property bool pause: false
 
     Button {
-        id: button
+        id: pauseButton
         text: pause ? qsTr("继续刷新日志") : qsTr("暂停刷新日志")
 
         onClicked: pause = !pause
 
         z: 100
         anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.leftMargin: 10
+        anchors.topMargin: 10
+    }
+
+    Button {
+        id: clearButton
+        text: qsTr("清空日志")
+
+        onClicked: CountdownDebug.clearLogs()
+
+        z: 100
+        anchors.right: parent.right
         anchors.top: parent.top
         anchors.leftMargin: 10
         anchors.topMargin: 10

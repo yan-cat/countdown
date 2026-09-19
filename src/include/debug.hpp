@@ -25,5 +25,6 @@ public:
     void closeFileLogger();
 
     Q_INVOKABLE QString getLogs();
+    Q_INVOKABLE void clearLogs();
 };
 CountdownDebug &debug();

@@ -138,3 +138,12 @@ QString CountdownDebug::getLogs() {
         return QString();
     return QString::fromUtf8(file.readAll());
 }
+
+void CountdownDebug::clearLogs() {
+    QFile file(logPath);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        qWarning() << "清空日志失败:" << file.errorString();
+    } else {
+        file.close();
+    }
+}
