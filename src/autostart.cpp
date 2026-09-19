@@ -41,7 +41,7 @@ bool CountdownAutoStart::getAutoStart() {
         autostart = (stored == current);
     }
     os = "Windows";
-    #elif defined(Q_OS_LINUX)
+    #elif defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     // Linux
     QString autostartPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/autostart";
     QString desktopPath = autostartPath + "/" + "com.countdown.desktop";
@@ -73,7 +73,7 @@ void CountdownAutoStart::setAutoStart(bool enable) {
         qCDebug(CountdownLog) << "已移除注册表项";
     }
     settings.sync();  // 立即落盘，避免延迟写入
-    #elif defined(Q_OS_LINUX)
+    #elif defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     // Linux
     QFile src(":/qt/qml/com/countdown/com.countdown.desktop");
     if (!src.open(QIODevice::ReadOnly | QIODevice::Text)) {

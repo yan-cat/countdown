@@ -4,6 +4,7 @@
 #include <QQuickItem>
 #include "reminder.hpp"
 #include "debug.hpp"
+#include "main.hpp"
 
 #ifdef Q_OS_LINUX
 #include <QDBusInterface>
@@ -84,24 +85,18 @@ void windows_reminder(QString body) {
 }
 
 void reminder(QString title, QString body) {
-    QString os = QSysInfo::kernelType();
-
-    qCDebug(CountdownLog) << "准备发送通知";
     qCDebug(CountdownLog) << "当前系统为：" << os;
 
     if (debug().getDebugOn("useWindowsReminderType")) {
-        os = "winnt";
+        os = "win";
         qCDebug(CountdownLog) << "强制win通知模式为开启";
     }
 
     if (os == "linux") {
         qCDebug(CountdownLog) << "通知发送模式：通知";
-
-        #ifdef Q_OS_LINUX
         linux_reminder(title, body);
-        #endif
     }
-    else if (os == "winnt") {
+    else if (os == "windows") {
         qCDebug(CountdownLog) << "通知发送模式：弹窗";
         windows_reminder(body);
     }

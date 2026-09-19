@@ -18,6 +18,9 @@
 #include <QPushButton>
 #include "debug.hpp"
 #include "updater.hpp"
+#include "main.hpp"
+
+QString os;
 
 int main(int argc, char *argv[]) {
 //===================================================================信息
@@ -25,6 +28,16 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("Countdown");
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
+    // 定义系统
+    #ifdef Q_OS_WIN
+    os = "win";
+    #elif defined(Q_OS_ANDROID)
+    os = "android";
+    #elif defined(Q_OS_LINUX)
+    os = "linux";
+    #else
+    os = "unknow";
+    #endif
 //===================================================================参数
 
     QCommandLineParser parser;
@@ -69,19 +82,10 @@ int main(int argc, char *argv[]) {
     #ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
     #endif
-    #ifdef Q_OS_ANDROID
-    QIcon::setThemeSearchPaths({
-        QStringLiteral("assets:/qml/org/kde/kirigami/breeze-internal"),
-        QStringLiteral(":/qt/qml/org/kde/kirigami/breeze-internal"),
-        QStringLiteral("assets:/qml/org/kde/kirigami"),
-        QStringLiteral(":/qt/qml/org/kde/kirigami")
-    });
-    QIcon::setThemeName(QStringLiteral("breeze-internal"));
-    #endif
 
     QApplication app(argc, argv);
 
-    #ifdef Q_OS_WIN
+    #if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
     #endif
@@ -141,15 +145,24 @@ int main(int argc, char *argv[]) {
     class BackKeyFilter : public QObject {
     public:
         explicit BackKeyFilter(QWindow *mainWindow, QObject *parent = nullptr)
-            : QObject(parent), m_mainWindow(mainWindow) {}
+            : QObject(parent), m_mainWindow(mainWindow) {
+            // 监听窗口显示/隐藏，维护栈
+            connect(qApp, &QGuiApplication::focusWindowChanged, this, [this](QWindow *w) {
+                if (!w || w == m_mainWindow) return;
+                if (!m_windowStack.contains(w))
+                    m_windowStack.append(w);
+            });
+        }
 
     protected:
         bool eventFilter(QObject *obj, QEvent *event) override {
             if (event->type() == QEvent::KeyRelease) {
                 auto *ke = static_cast<QKeyEvent*>(event);
                 if (ke->key() == Qt::Key_Back) {
-                    for (QWindow *w : QGuiApplication::topLevelWindows()) {
-                        if (w != m_mainWindow && w->isVisible()) {
+                    // 从栈顶往下找第一个可见的窗口
+                    while (!m_windowStack.isEmpty()) {
+                        QWindow *w = m_windowStack.takeLast();
+                        if (w->isVisible()) {
                             qCDebug(CountdownLog) << "检测到返回键，隐藏子窗口：" << w;
                             w->hide();
                             return true;
@@ -162,6 +175,7 @@ int main(int argc, char *argv[]) {
 
     private:
         QWindow *m_mainWindow = nullptr;
+        QList<QWindow*> m_windowStack;
     };
 #endif
 

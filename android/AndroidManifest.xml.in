@@ -7,6 +7,7 @@
           <uses-permission android:name="android.permission.INTERNET" />
 
           <application android:name="org.qtproject.qt.android.bindings.QtApplication"
+                    android:theme="@style/AppTheme"
                     android:label="倒数日"
                     android:icon="@mipmap/ic_launcher"
                     android:enableOnBackInvokedCallback="false">>

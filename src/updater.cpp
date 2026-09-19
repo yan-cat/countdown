@@ -20,6 +20,7 @@
 #include "updater.hpp"
 #include "debug.hpp"
 #include "manager.hpp"
+#include "main.hpp"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -28,7 +29,6 @@
 
 QUrl downloadUrl;
 QUrl fastUrl("https://gh-proxy.org/");
-QString os;
 
 CountdownUpdater::CountdownUpdater(QObject *parent) : QObject(parent) { }
 
@@ -122,7 +122,6 @@ void CountdownUpdater::getReleaseInfo()
 // 下载更新 这个函数我看不懂，出bug找AI
 void CountdownUpdater::downloadNewVersion()
 {
-    os = QSysInfo::kernelType();
     qCDebug(CountdownLog) << "当前系统为：" << os;
     QString filename;
 
@@ -131,12 +130,15 @@ void CountdownUpdater::downloadNewVersion()
         qCDebug(CountdownLog) << "准备下载linux版本";
         filename = "Countdown-linux-x86_64.tar.gz";
     }
-    else if (os == "winnt")
+    else if (os == "win")
     {
         qCDebug(CountdownLog) << "准备下载windows版本";
         filename = "Countdown-windows-x86_64.exe";
     }
-    else qCDebug(CountdownLog) << "未知系统";
+    else {
+        qCDebug(CountdownLog) << "未知系统";
+        return;
+    }
 
     QString savePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + filename; // 下载路径
     QDir().mkpath(QFileInfo(savePath).absolutePath());
