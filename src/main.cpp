@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
-    #if defined(Q_OS_WIN) || defined(Q_OS_ANDROID)
+    #if defined(Q_OS_WIN) //|| defined(Q_OS_ANDROID)
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
     #endif
@@ -121,6 +121,7 @@ int main(int argc, char *argv[]) {
 
 //===================================================================单实例锁
 
+    #ifdef Q_OS_ANDROID
     const QString lockDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(lockDir);
 
@@ -138,6 +139,7 @@ int main(int argc, char *argv[]) {
         dialog.exec();
         return 0;
     }
+    #endif
 
 //===================================================================安卓返回关窗口
 
@@ -184,7 +186,9 @@ int main(int argc, char *argv[]) {
     parser.process(app);
 
     engine.loadFromModule("com.countdown", "Main");
-    if (engine.rootObjects().isEmpty()) return -1;
+    if (engine.rootObjects().isEmpty()) {
+        qFatal("QML 引擎加载失败");
+    }
     else {
         #ifdef Q_OS_ANDROID
         QWindow *mainWindow = qobject_cast<QWindow*>(engine.rootObjects().constFirst());
@@ -192,6 +196,14 @@ int main(int argc, char *argv[]) {
         app.installEventFilter(backFilter);
         #endif
     }
+
+    // 捕获报错
+    QObject::connect(&engine, &QQmlApplicationEngine::warnings,
+                     [](const QList<QQmlError> &warnings) {
+                         for (const auto &err : warnings) {
+                             qCritical() << "QML 警告：" << err.toString();
+                         }
+                     });
 
     updater().getReleaseInfo(); // 检查更新
 
