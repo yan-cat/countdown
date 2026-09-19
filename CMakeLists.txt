@@ -29,13 +29,15 @@ find_package(Qt6 REQUIRED COMPONENTS
     LinguistTools
     Svg
 )
-
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
     CoreAddons
     Archive
     IconThemes
 )
+if(ANDROID)
+    find_package(QQC2BreezeStyle REQUIRED)
+endif()
 
 qt_policy(SET QTP0001 NEW)
 
@@ -78,9 +80,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel
     endif()
 endif()
 
-# Qt 部署用的 QML 搜索路径 target 属性；在 craft 的 ecm_add_android_apk 流程里并不生效，
-# 真正让 KDE QML 模块进包的是下方 POST_BUILD 复制那步。保留无害，可留可删。
 if (ANDROID)
+    # 设置安卓文件夹位置
     set_target_properties(Countdown PROPERTIES
         QT_QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/lib/qml;${CMAKE_INSTALL_PREFIX}/qml"
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
@@ -136,7 +137,6 @@ target_compile_definitions(Countdown PRIVATE
 qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
-    NO_IMPORT_SCAN
     QML_FILES
         src/resources/qml/Main.qml
         src/resources/qml/AboutPageWindow.qml
@@ -153,10 +153,11 @@ qt_add_qml_module(Countdown
 
 )
 
-# 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，
-# 让 androiddeployqt 的 qmlimportscanner（扫描 qml-import-paths=work/build）
-# 能扫到 org.kde.kirigami、org.kde.kirigamiaddons 并把它们打进 APK。
 if (ANDROID)
+    # 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，
+    # 让 androiddeployqt 的 qmlimportscanner（扫描 qml-import-paths=work/build）
+    # 能扫到 org.kde.kirigami、org.kde.kirigamiaddons 并把它们打进 APK。
+    # 别删
     add_custom_command(TARGET Countdown POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${CMAKE_INSTALL_PREFIX}/lib/qml/org/kde"

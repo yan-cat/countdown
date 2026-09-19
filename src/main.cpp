@@ -83,13 +83,15 @@ int main(int argc, char *argv[]) {
     KIconTheme::initTheme();
     #endif
 
-    QApplication app(argc, argv);
-
     #if defined(Q_OS_WIN) //|| defined(Q_OS_ANDROID)
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
     #endif
+    #ifdef Q_OS_ANDROID
+    QQuickStyle::setStyle(QStringLiteral("org.kde.breeze"));
+    #endif
 
+    QApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
     // 软件logo
