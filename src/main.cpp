@@ -78,20 +78,22 @@ int main(int argc, char *argv[]) {
 
 //===================================================================后续启动
 
+    QApplication app(argc, argv);
+
     // 安卓不要初始化主题，直接加入列表
     #ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
     #endif
 
-    #if defined(Q_OS_WIN) //|| defined(Q_OS_ANDROID)
+    #if defined(Q_OS_WIN)
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
-    #endif
-    #ifdef Q_OS_ANDROID
+    #elif defined(Q_OS_ANDROID)
     QQuickStyle::setStyle(QStringLiteral("org.kde.breeze"));
+    QIcon::setThemeName(QStringLiteral("breeze"));
+    QIcon::setThemeSearchPaths({ QStringLiteral(":/icons") });
     #endif
 
-    QApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
     // 软件logo
@@ -123,7 +125,7 @@ int main(int argc, char *argv[]) {
 
 //===================================================================单实例锁
 
-    #ifdef Q_OS_ANDROID
+    #ifndef Q_OS_ANDROID
     const QString lockDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(lockDir);
 
@@ -198,14 +200,6 @@ int main(int argc, char *argv[]) {
         app.installEventFilter(backFilter);
         #endif
     }
-
-    // 捕获报错
-    QObject::connect(&engine, &QQmlApplicationEngine::warnings,
-                     [](const QList<QQmlError> &warnings) {
-                         for (const auto &err : warnings) {
-                             qCritical() << "QML 警告：" << err.toString();
-                         }
-                     });
 
     updater().getReleaseInfo(); // 检查更新
 

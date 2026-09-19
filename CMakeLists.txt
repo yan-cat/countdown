@@ -164,16 +164,6 @@ if (ANDROID)
             "${CMAKE_BINARY_DIR}/org/kde"
         COMMENT "Copying KDE QML modules into build dir for deployment")
 
-    # Android 图标
-    kirigami_package_breeze_icons(ICONS
-        settings-configure
-        update-none
-        help-about
-        document-new
-        document-edit
-        edit-delete
-        download
-    )
 endif()
 
 # 翻译
