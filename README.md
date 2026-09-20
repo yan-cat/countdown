@@ -95,6 +95,7 @@ Countdown
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # 关于窗口
 │   │       ├── DetailsWindow.qml     # 详情窗口
+│   │       ├── LogsWindow.qml        # 日志窗口
 │   │       ├── Main.qml              # 主页
 │   │       ├── ReminderWindow.qml    # Windows 平台独立提醒弹窗
 │   │       ├── SettingsWindow.qml    # 设置窗口
@@ -141,6 +142,7 @@ Countdown
 
 ## 待完成
 
+- [ ] 倒数日最后编辑时间和数据文件最后编辑时间
 - [ ] 卡片排序 
 - [ ] Android 检查更新
 - [ ] WebDAV 云同步事项
