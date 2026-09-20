@@ -23,6 +23,53 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    // 安卓加载转圈圈
+    Rectangle {
+        id: splashOverlay
+        anchors.fill: parent
+        color: Kirigami.Theme.backgroundColor
+        z: 99999
+        visible: Qt.platform.os === "android"
+        Column {
+            anchors.centerIn: parent
+            spacing: Kirigami.Units.largeSpacing
+            Image {
+                source: "qrc:/qt/qml/com/countdown/src/resources/icon/com.countdown.svg"
+                width: 100
+                height: 100
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            BusyIndicator {
+                anchors.horizontalCenter: parent.horizontalCenter
+                running: true
+                width: 60
+                height: 60
+            }
+            Label {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("加载中...")
+                color: Kirigami.Theme.textColor
+            }
+        }
+        // 主界面渲染完 → 转圈 1 秒 → 淡出
+        Component.onCompleted: {
+            splashTimer.start()
+        }
+        Timer {
+            id: splashTimer
+            interval: 2000          // 1 秒
+            onTriggered: fadeOutAnim.start()
+        }
+        NumberAnimation {
+            id: fadeOutAnim
+            target: splashOverlay
+            property: "opacity"
+            to: 0
+            duration: 300
+            onFinished: splashOverlay.visible = false
+        }
+    }
+
     // 空项目引导
     Label {
         visible: cardsLayout.count === 0
@@ -53,7 +100,7 @@ Kirigami.ApplicationWindow {
             },
             Kirigami.Action {
                 text: qsTr("关于")
-                icon.name: "help-about"
+                icon.name: "help-about-symbolic"
                 onTriggered: aboutPageWindow.show()
             }
         ]
@@ -153,6 +200,14 @@ Kirigami.ApplicationWindow {
             }
         }
         onOpened: {
+            // 改按钮文字
+            let okButton = standardButton(Kirigami.Dialog.Ok)
+            if (okButton) okButton.text = qsTr("保存")
+
+            let cancelButton = standardButton(Kirigami.Dialog.Cancel)
+            if (cancelButton) cancelButton.text = qsTr("放弃")
+
+
             if (editingId >= 0) { // 编辑
                 nameField.text = editingData.name
                 repeatField.currentIndex = editingData.repeatIndex
@@ -435,6 +490,14 @@ Kirigami.ApplicationWindow {
         title: qsTr("删除")
         subtitle: qsTr("确认删除 %1 吗？").arg(name)
         standardButtons: Kirigami.Dialog.Yes | Kirigami.Dialog.No
+        onOpened: {
+            // 改按钮文字
+            let yesButton = standardButton(Kirigami.Dialog.Yes)
+            if (yesButton) yesButton.text = qsTr("确定")
+
+            let noButton = standardButton(Kirigami.Dialog.No)
+            if (noButton) noButton.text = qsTr("取消")
+        }
         onAccepted: {
             CountdownManager.removeCountdown(cardid)
             inlineMessage.text = qsTr("删除成功")

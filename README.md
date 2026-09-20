@@ -33,8 +33,8 @@
 
 ## 安装帮助
 
-Release 中提供 Linux 二进制与 Windows 安装包。
-Android 暂无预编译安装包，如需体验请参考 [构建帮助](#构建帮助) 自行构建。
+Release 中提供 Linux 二进制、 Windows 安装包与 Android APK。
+Android 当前为 **测试版本**，可能存在不稳定情况。
 
 > 本程序需要 Qt6/KF6/Kirigami/QML 运行时\
 > 如果你已安装完整的 KDE Plasma 6 桌面环境（Arch：plasma-meta；Debian/Ubuntu：kde-plasma-desktop 且未禁用推荐依赖），这些依赖通常已随桌面安装，无需手动补装。
@@ -71,8 +71,6 @@ cmake --build build -j$(nproc)
 可执行文件位于 `build/Countdown`。
 
 ### KDE Craft
-
-> 已实验性支持 Android，可自行构建。
 
 ```bash
 # 拷贝蓝图至蓝图目录
@@ -144,6 +142,7 @@ Countdown
 ## 待完成
 
 - [ ] 卡片排序 
+- [ ] Android 检查更新
 - [ ] WebDAV 云同步事项
 - [ ] 桌面磁贴
 - [ ] 可选软件背景

@@ -164,6 +164,103 @@ if (ANDROID)
             "${CMAKE_BINARY_DIR}/org/kde"
         COMMENT "Copying KDE QML modules into build dir for deployment")
 
+    # 安卓图标
+    set(BREEZEICONS_DIR "/home/user/CraftRoot/tmp/breeze-icons")
+    file(REAL_PATH "${BREEZEICONS_DIR}" BREEZEICONS_DIR)
+
+    set(_theme_dir "${CMAKE_CURRENT_SOURCE_DIR}/android/assets/qml/org/kde/kirigami/breeze-internal")
+    file(REMOVE_RECURSE "${_theme_dir}")
+    file(MAKE_DIRECTORY "${_theme_dir}")
+
+    # 需要的图标
+    set(_icon_names
+        # 左上角菜单
+        application-menu
+        settings-configure
+        update-none
+        help-about-symbolic
+
+        # 确定取消
+        dialog-ok
+        dialog-cancel
+
+        # 新建 编辑 删除
+        document-new
+        document-edit
+        edit-delete
+
+        # 横幅
+        dialog-close # 关闭
+        dialog-information # 信息
+        dialog-positive # 成功
+        dialog-warning # 警告
+        dialog-error # 失败
+
+        # 其他
+        clock # 钟
+        arrow-down # 下拉箭头
+        process-working-symbolic # 加载转圈圈
+    )
+
+    set(_found_count 0)
+    foreach(_name ${_icon_names})
+        file(GLOB_RECURSE _matches
+            "${BREEZEICONS_DIR}/icons/${_name}.svg")
+        foreach(_match ${_matches})
+            get_filename_component(_match_name "${_match}" NAME)
+            get_filename_component(_real "${_match}" REALPATH)
+            if(NOT EXISTS "${_real}")
+                continue()
+            endif()
+
+            file(RELATIVE_PATH _rel_dir "${BREEZEICONS_DIR}/icons" "${_match}")
+            get_filename_component(_rel_dir "${_rel_dir}" DIRECTORY)
+            set(_dest_dir "${_theme_dir}/icons/${_rel_dir}")
+            file(MAKE_DIRECTORY "${_dest_dir}")
+
+            set(_dest_file "${_dest_dir}/${_match_name}")
+            if(NOT EXISTS "${_dest_file}")
+                file(COPY_FILE "${_real}" "${_dest_file}" ONLY_IF_DIFFERENT)
+                math(EXPR _found_count "${_found_count} + 1")
+            endif()
+        endforeach()
+    endforeach()
+
+    message(STATUS "breeze-internal: copied ${_found_count} icon files")
+
+    # 扫描实际存在的目录，生成 index.theme
+    set(_dir_list "")
+    file(GLOB _cat_dirs "${_theme_dir}/icons/*")
+    foreach(_cat ${_cat_dirs})
+        if(IS_DIRECTORY "${_cat}")
+            get_filename_component(_cat_name "${_cat}" NAME)
+            file(GLOB _size_dirs "${_cat}/*")
+            foreach(_size_dir ${_size_dirs})
+                if(IS_DIRECTORY "${_size_dir}")
+                    file(GLOB _svgs "${_size_dir}/*.svg")
+                    if(_svgs)
+                        get_filename_component(_size_name "${_size_dir}" NAME)
+                        list(APPEND _dir_list "icons/${_cat_name}/${_size_name}")
+                    endif()
+                endif()
+            endforeach()
+        endif()
+    endforeach()
+
+    list(JOIN _dir_list "," _dirs_str)
+    set(_theme_content "[Icon Theme]\nName=Breeze\nDirectories=${_dirs_str}\nFollowsColorScheme=true\n")
+    foreach(_dir ${_dir_list})
+        get_filename_component(_size "${_dir}" NAME)
+        if(_size STREQUAL "scalable")
+            string(APPEND _theme_content "\n[${_dir}]\nSize=48\nType=Scalable\nMinSize=8\nMaxSize=512\n")
+        else()
+            string(APPEND _theme_content "\n[${_dir}]\nSize=${_size}\nType=Fixed\n")
+        endif()
+    endforeach()
+    file(WRITE "${_theme_dir}/index.theme" "${_theme_content}")
+
+    list(LENGTH _dir_list _dir_count)
+    message(STATUS "breeze-internal theme: ${_dir_count} dirs, ready at ${_theme_dir}")
 endif()
 
 # 翻译

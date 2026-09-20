@@ -104,7 +104,8 @@ Window {
 
             Button {
                 icon.name: "clock"
-                text: layout.reminderHour + ":" + layout.reminderMinute
+                text: String(layout.reminderHour).padStart(2, '0') + ":" +
+                      String(layout.reminderMinute).padStart(2, '0')
                 Layout.alignment: Qt.AlignHCenter
 
                 onClicked: timeDialog.open()
@@ -128,6 +129,13 @@ Window {
                 property int tempMinute: layout.reminderMinute
 
                 onOpened: {
+                    // 改按钮文字
+                    let okButton = standardButton(Kirigami.Dialog.Ok)
+                    if (okButton) okButton.text = qsTr("保存")
+
+                    let cancelButton = standardButton(Kirigami.Dialog.Cancel)
+                    if (cancelButton) cancelButton.text = qsTr("放弃")
+
                     tempHour = layout.reminderHour
                     tempMinute = layout.reminderMinute
                     hourTumbler.currentIndex = tempHour

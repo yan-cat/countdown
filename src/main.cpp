@@ -90,8 +90,10 @@ int main(int argc, char *argv[]) {
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
     #elif defined(Q_OS_ANDROID)
     QQuickStyle::setStyle(QStringLiteral("org.kde.breeze"));
-    QIcon::setThemeName(QStringLiteral("breeze"));
-    QIcon::setThemeSearchPaths({ QStringLiteral(":/icons") });
+    // 不设 themeName！让 Kirigami 自己选 "breeze-internal"
+    QIcon::setThemeSearchPaths(QIcon::themeSearchPaths()
+                               << QStringLiteral("assets:/qml/org/kde/kirigami"));
+    // 不要写 setFallbackSearchPaths，会干扰
     #endif
 
     QQmlApplicationEngine engine;
