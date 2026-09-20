@@ -37,7 +37,7 @@ Window {
         z: 100
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.leftMargin: 10
+        anchors.rightMargin: 10
         anchors.topMargin: 10
     }
 

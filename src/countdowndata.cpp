@@ -104,7 +104,7 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
                 daysText = tr("今天");
             }
         } else {
-            DateDiff ymd = dateDiff(today, nextDue);
+            DateDiff ymd = exactDateDiff(today, nextDue);
             QString ymdtext;
             if (ymd.years != 0) ymdtext += tr("%1 年 ").arg(ymd.years);
             if (ymd.months != 0) ymdtext += tr("%1 个月 ").arg(ymd.months);

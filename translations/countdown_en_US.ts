@@ -96,7 +96,7 @@
         <translation>%1 days left until </translation>
     </message>
     <message>
-        <location filename="../src/manager.cpp" line="266"/>
+        <location filename="../src/manager.cpp" line="265"/>
         <source>倒数日提醒</source>
         <translation>Countdown Reminder</translation>
     </message>
@@ -104,33 +104,29 @@
 <context>
     <name>CountdownUpdater</name>
     <message>
-        <location filename="../src/updater.cpp" line="142"/>
+        <location filename="../src/updater.cpp" line="151"/>
         <source>无法写入文件：</source>
         <translation>Cannot write file: </translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="210"/>
+        <location filename="../src/updater.cpp" line="219"/>
         <source>无法打开更新包：%1</source>
         <translation>Cannot open update package: %1</translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="223"/>
+        <location filename="../src/updater.cpp" line="232"/>
         <source>更新包内容不完整</source>
         <translation>Update package is incomplete</translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="230"/>
+        <location filename="../src/updater.cpp" line="239"/>
         <source>替换可执行文件失败</source>
         <translation>Failed to replace executable file</translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="252"/>
+        <location filename="../src/updater.cpp" line="261"/>
         <source>启动安装包失败（错误码 %1）</source>
         <translation>Failed to start installer (error code %1)</translation>
-    </message>
-    <message>
-        <source>启动安装包失败：%1</source>
-        <translation type="vanished">Failed to start installer: %1</translation>
     </message>
 </context>
 <context>
@@ -177,149 +173,204 @@
     </message>
 </context>
 <context>
+    <name>LogsWindow</name>
+    <message>
+        <location filename="../src/resources/qml/LogsWindow.qml" line="10"/>
+        <source>软件日志</source>
+        <translation>Software Logs</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/LogsWindow.qml" line="20"/>
+        <source>继续刷新日志</source>
+        <translation>Resume Log Refresh</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/LogsWindow.qml" line="20"/>
+        <source>暂停刷新日志</source>
+        <translation>Pause Log Refresh</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/LogsWindow.qml" line="33"/>
+        <source>清空日志</source>
+        <translation>Clear Logs</translation>
+    </message>
+</context>
+<context>
     <name>Main</name>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="13"/>
-        <location filename="../src/resources/qml/Main.qml" line="197"/>
+        <location filename="../src/resources/qml/Main.qml" line="14"/>
+        <location filename="../src/resources/qml/Main.qml" line="264"/>
         <source>倒数日</source>
         <translation>Countdown</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="21"/>
+        <location filename="../src/resources/qml/Main.qml" line="22"/>
         <source>倒数日 Beta</source>
         <translation>Countdown Beta</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="28"/>
+        <location filename="../src/resources/qml/Main.qml" line="50"/>
+        <source>加载中...</source>
+        <translation>Loading...</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="77"/>
+        <source>还没有倒数日
+长按空白处新建倒数日</source>
+        <translation>No countdowns yet
+Long-press on blank area to create a new countdown</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="78"/>
         <source>还没有倒数日
 右键空白处新建倒数日</source>
         <translation>No countdowns yet
 Right-click on blank area to create a new countdown</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="38"/>
+        <location filename="../src/resources/qml/Main.qml" line="88"/>
         <source>菜单</source>
         <translation>Menu</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="42"/>
+        <location filename="../src/resources/qml/Main.qml" line="92"/>
         <source>设置</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="47"/>
+        <location filename="../src/resources/qml/Main.qml" line="97"/>
         <source>检查更新</source>
         <translation>Check for Updates</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="52"/>
+        <location filename="../src/resources/qml/Main.qml" line="102"/>
         <source>关于</source>
         <translation>About</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="62"/>
+        <location filename="../src/resources/qml/Main.qml" line="112"/>
         <source>编辑倒数日</source>
         <translation>Edit</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="62"/>
-        <location filename="../src/resources/qml/Main.qml" line="215"/>
+        <location filename="../src/resources/qml/Main.qml" line="112"/>
+        <location filename="../src/resources/qml/Main.qml" line="282"/>
         <source>新建倒数日</source>
         <translation>New</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="76"/>
+        <location filename="../src/resources/qml/Main.qml" line="130"/>
         <source>名称：</source>
         <translation>Name:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="81"/>
+        <location filename="../src/resources/qml/Main.qml" line="135"/>
         <source>例如：生日、纪念日</source>
         <translation>e.g., Birthday, Anniversary</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="88"/>
+        <location filename="../src/resources/qml/Main.qml" line="144"/>
         <source>重复：</source>
         <translation>Repeat:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="94"/>
+        <location filename="../src/resources/qml/Main.qml" line="150"/>
         <source>无</source>
         <translation>None</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="94"/>
+        <location filename="../src/resources/qml/Main.qml" line="150"/>
         <source>月重复</source>
         <translation>Monthly</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="94"/>
+        <location filename="../src/resources/qml/Main.qml" line="150"/>
         <source>年重复</source>
         <translation>Yearly</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="102"/>
+        <location filename="../src/resources/qml/Main.qml" line="158"/>
         <source>到设定日期时提醒</source>
         <translation>Remind on the set date</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="108"/>
+        <location filename="../src/resources/qml/Main.qml" line="164"/>
         <source>当天提醒</source>
         <translation>On the day</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="108"/>
+        <location filename="../src/resources/qml/Main.qml" line="164"/>
         <source>前一天提醒</source>
         <translation>One day before</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="108"/>
+        <location filename="../src/resources/qml/Main.qml" line="164"/>
         <source>自定义</source>
         <translation>Custom</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="128"/>
+        <location filename="../src/resources/qml/Main.qml" line="184"/>
         <source>天</source>
         <translation>days</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="135"/>
+        <location filename="../src/resources/qml/Main.qml" line="191"/>
         <source>请选择目标日期：</source>
         <translation>Select target date</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="165"/>
+        <location filename="../src/resources/qml/Main.qml" line="205"/>
+        <source>保存</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="208"/>
+        <source>放弃</source>
+        <translation>Discard</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="232"/>
         <source>未命名</source>
         <translation>Untitled</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="174"/>
+        <location filename="../src/resources/qml/Main.qml" line="241"/>
         <source>提醒天数为空，已禁用提醒</source>
         <translation>Reminder disabled (no days set)</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="188"/>
+        <location filename="../src/resources/qml/Main.qml" line="255"/>
         <source>保存成功</source>
         <translation>Saved</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="252"/>
+        <location filename="../src/resources/qml/Main.qml" line="319"/>
         <source>编辑</source>
         <translation>Edit</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="284"/>
-        <location filename="../src/resources/qml/Main.qml" line="423"/>
+        <location filename="../src/resources/qml/Main.qml" line="351"/>
+        <location filename="../src/resources/qml/Main.qml" line="490"/>
         <source>删除</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="424"/>
+        <location filename="../src/resources/qml/Main.qml" line="491"/>
         <source>确认删除 %1 吗？</source>
         <translation>Delete %1?</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="428"/>
+        <location filename="../src/resources/qml/Main.qml" line="496"/>
+        <source>确定</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="499"/>
+        <source>取消</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="503"/>
         <source>删除成功</source>
         <translation>Deleted</translation>
     </message>
@@ -332,133 +383,184 @@ Right-click on blank area to create a new countdown</translation>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="27"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="28"/>
         <source>显示</source>
         <translation>Display</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="34"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="35"/>
         <source>日期显示格式：</source>
         <translation>Date format:</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="41"/>
-        <source>456 天</source>
-        <translation>456 days</translation>
-    </message>
-    <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="41"/>
-        <source>1 年 3 个月 1 天</source>
-        <translation>1y 3m 1d</translation>
-    </message>
-    <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="45"/>
-        <source>注：年月日显示模式为估算仅作参考，具体以单天数显示为准</source>
-        <translation>Year/month/day display is an estimate for reference; actual count is based on total days.</translation>
-    </message>
-    <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="52"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="56"/>
         <source>临近日期卡片红色描边</source>
         <translation>Red border for upcoming date cards</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="65"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="69"/>
         <source>距离</source>
         <translation>Highlight in red when within</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="80"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="84"/>
         <source>天标红</source>
         <translation>days</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="131"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="270"/>
         <source>开机自启</source>
         <translation>Launch at startup</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="98"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="237"/>
         <source>有新版本时弹出更新窗口</source>
         <translation>Show update window when new version is available</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="91"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="42"/>
+        <source>按天显示</source>
+        <translation>Show by days</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="42"/>
+        <source>按年月日显示</source>
+        <translation>Show by year/month/day</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="47"/>
+        <source>预览：还有 456 天 / 已经过了 456 天</source>
+        <translation>Preview: 456 days left / 456 days ago</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="48"/>
+        <source>预览：还有 1 年 3 个月 1 天 / 已经过了 1 年 3 个月 1 天</source>
+        <translation>Preview: 1y 3m 1d left / 1y 3m 1d ago</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="95"/>
+        <source>提醒</source>
+        <translation>Reminder</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="103"/>
+        <source>倒数日提醒时间：</source>
+        <translation>Reminder time:</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="126"/>
+        <source>选择提醒时间</source>
+        <translation>Select Reminder Time</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="137"/>
+        <source>保存</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="140"/>
+        <source>放弃</source>
+        <translation>Discard</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="205"/>
+        <source>（在每天的几点提醒当天的倒数日）</source>
+        <translation>(Reminds you at a set time each day for countdowns due that day)</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="212"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="215"/>
+        <source>测试通知</source>
+        <translation>Test Notification</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="215"/>
+        <source>倒数日提醒</source>
+        <translation>Countdown Reminder</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="230"/>
         <source>更新</source>
         <translation>Update</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="107"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="246"/>
         <source>使用加速源快速下载</source>
         <translation>Use accelerated source for faster download</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="144"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="283"/>
         <source>调试模式</source>
         <translation>Debug Mode</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="152"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="291"/>
         <source>调试选项需要重启才能生效！</source>
         <translation>Debug options require a restart to take effect! Debug logs are not yet localized.</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="163"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="302"/>
         <source>调试选项</source>
         <translation>Debug Options</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="171"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="310"/>
         <source>日志</source>
         <translation>Logs</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="181"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="320"/>
         <source>关闭调试日志</source>
         <translation>Disable debug logging</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="181"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="320"/>
         <source>仅APP调试日志</source>
         <translation>App debug logs only</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="181"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="320"/>
         <source>调试日志全开（此设置会拖慢软件速度！！！）</source>
         <translation>Full debug logging (may slow down the software!)</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="187"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="326"/>
         <source>禁用 QML 引擎警告</source>
         <translation>Disable QML engine warnings</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="197"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="336"/>
         <source>启用日志文件</source>
         <translation>Enable log file</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="123"/>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="214"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="262"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="359"/>
         <source>其他</source>
         <translation>Other</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="222"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="345"/>
+        <source>查看软件日志</source>
+        <translation>View Logs</translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="367"/>
         <source>强制使用windows通知窗口而非当前系统默认</source>
         <translation>Force using Windows notifications instead of system default</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="233"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="378"/>
         <source>强制软件语言为英语</source>
         <translation>Force software language to English</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="244"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="389"/>
         <source>强制下载最新版本即使当前版本为最新</source>
         <translation>Force download the latest version even when current version is up-to-date</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/SettingsWindow.qml" line="255"/>
+        <location filename="../src/resources/qml/SettingsWindow.qml" line="400"/>
         <source>在倒数日详情显示调试信息</source>
         <translation>Show debug info in countdown details</translation>
     </message>
@@ -466,7 +568,7 @@ Right-click on blank area to create a new countdown</translation>
 <context>
     <name>UpdaterWindow</name>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="128"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="141"/>
         <source>检查更新</source>
         <translation>Check for Updates</translation>
     </message>
@@ -483,7 +585,7 @@ Right-click on blank area to create a new countdown</translation>
     <message>
         <location filename="../src/resources/qml/UpdaterWindow.qml" line="42"/>
         <source>检查更新失败：</source>
-        <translation>Update check failed:</translation>
+        <translation>Update check failed: </translation>
     </message>
     <message>
         <location filename="../src/resources/qml/UpdaterWindow.qml" line="60"/>
@@ -511,17 +613,17 @@ Right-click on blank area to create a new countdown</translation>
         <translation>Unknown changelog</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="138"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="151"/>
         <source>下载更新</source>
         <translation>Download Update</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="173"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="186"/>
         <source>正在检查更新...</source>
         <translation>Checking for updates...</translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="204"/>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="217"/>
         <source>正在下载更新...</source>
         <translation>Downloading update...</translation>
     </message>
@@ -529,12 +631,12 @@ Right-click on blank area to create a new countdown</translation>
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="117"/>
+        <location filename="../src/main.cpp" line="138"/>
         <source>倒数日</source>
         <translation>Countdown</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="120"/>
+        <location filename="../src/main.cpp" line="141"/>
         <source>已经有一个倒数日在运行</source>
         <translation>A countdown is already running.</translation>
     </message>

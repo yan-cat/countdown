@@ -39,11 +39,14 @@ Window {
                 id: dayShow
                 currentIndex: CountdownManager.setting("dayShow", 0)
                 onActivated: CountdownManager.setSetting("dayShow", currentIndex)
-                model: [qsTr("456 天"), qsTr("1 年 3 个月 1 天")]
+                model: [qsTr("按天显示"), qsTr("按年月日显示")]
                 Layout.alignment: Qt.AlignHCenter
             }
             Label {
-                text: qsTr("注：年月日显示模式为估算仅作参考，具体以单天数显示为准")
+                text: dayShow.currentIndex === 0
+                    ? qsTr("预览：还有 456 天 / 已经过了 456 天")
+                    : qsTr("预览：还有 1 年 3 个月 1 天 / 已经过了 1 年 3 个月 1 天")
+
                 Layout.alignment: Qt.AlignHCenter
             }
 
