@@ -92,11 +92,15 @@ Window {
                 text: qsTr("提醒")
                 Layout.alignment: Qt.AlignHCenter
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+
+                visible: Qt.platform.os !== "android"
             }
 
             Label {
                 text: qsTr("倒数日提醒时间：")
                 Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
             }
 
             property int reminderHour: CountdownManager.setting("reminderHour", 06)
@@ -109,13 +113,9 @@ Window {
                 Layout.alignment: Qt.AlignHCenter
 
                 onClicked: timeDialog.open()
-            }
 
-            Label {
-                text: qsTr("（在每天的几点提醒当天的倒数日）")
-                Layout.alignment: Qt.AlignHCenter
+                visible: Qt.platform.os !== "android"
             }
-
             // 弹出时间选择框
             Kirigami.Dialog {
                 id: timeDialog
@@ -198,9 +198,27 @@ Window {
                 }
             }
 
+            Label {
+                text: qsTr("（在每天的几点提醒当天的倒数日）")
+                Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+
+            Button {
+                text: qsTr("测试通知")
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: CountdownReminder.pushReminder(qsTr("倒数日提醒"), qsTr("测试通知"))
+
+                visible: Qt.platform.os !== "android"
+            }
+
             Item {
                 Layout.preferredHeight: 20
                 Layout.fillWidth: true
+
+                visible: Qt.platform.os !== "android"
             }
 
 //=====================================更新设置

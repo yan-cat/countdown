@@ -262,9 +262,7 @@ void CountdownManager::run_reminder(int id) {
     if (days == 0) out = tr("今天是");
     else out = tr("还剩 %1 天").arg(days);
 
-    #ifndef Q_OS_ANDROID
-    reminder(tr("倒数日提醒"), QString(out + data));
-    #endif
+    reminder().pushReminder(tr("倒数日提醒"), QString(out + data));
 }
 
 // 首次查需要提醒的日子

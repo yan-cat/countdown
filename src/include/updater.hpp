@@ -18,7 +18,7 @@ public:
     Q_INVOKABLE void getReleaseInfo();
     Q_INVOKABLE void downloadNewVersion();
 
-    // ★ 让 QML 单例复用 C++ 的同一个实例
+    // 让 QML 单例复用 C++ 的同一个实例
     static CountdownUpdater *create(QQmlEngine *, QJSEngine *);
 
 private:

@@ -51,25 +51,23 @@ endif()
 # 添加可执行文件
 qt_add_executable(Countdown WIN32
     ${app_icon_resource_windows}
-    src/main.cpp
-    src/manager.cpp
+    src/autostart.cpp
     src/countdowndata.cpp
     src/datediff.cpp
     src/debug.cpp
+    src/main.cpp
+    src/manager.cpp
+    src/reminder.cpp
     src/updater.cpp
-    src/autostart.cpp
 
-    src/include/manager.hpp
-    src/include/updater.hpp
+    src/include/autostart.hpp
     src/include/countdowndata.hpp
     src/include/debug.hpp
-    src/include/autostart.hpp
+    src/include/manager.hpp
+    src/include/reminder.hpp
+    src/include/updater.hpp
 
 )
-# 桌面/非安卓才编译的提醒实现（依赖 D-Bus、桌面弹窗；安卓不编译）
-if (NOT ANDROID)
-    target_sources(Countdown PRIVATE src/reminder.cpp)
-endif()
 
 # 优化大小：针对 Release 或 MinSizeRel 构建启用 LTO
 if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
@@ -138,13 +136,13 @@ qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
     QML_FILES
-        src/resources/qml/Main.qml
         src/resources/qml/AboutPageWindow.qml
-        src/resources/qml/SettingsWindow.qml
-        src/resources/qml/ReminderWindow.qml
-        src/resources/qml/UpdaterWindow.qml
         src/resources/qml/DetailsWindow.qml
         src/resources/qml/LogsWindow.qml
+        src/resources/qml/Main.qml
+        src/resources/qml/ReminderWindow.qml
+        src/resources/qml/SettingsWindow.qml
+        src/resources/qml/UpdaterWindow.qml
 
     RESOURCES
         src/resources/icon/com.countdown.svg

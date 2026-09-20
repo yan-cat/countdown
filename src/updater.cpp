@@ -242,7 +242,7 @@ void CountdownUpdater::installNewVersion(QString path)
         else emit installSuccess();
 
     }
-    else if (os == "winnt")
+    else if (os == "win")
     {
         #ifdef Q_OS_WIN
         // 先按"双击"语义打开（自动触发 UAC）；SE_ERR_ACCESSDENIED 表示被拒，再强制 runas
