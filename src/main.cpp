@@ -28,6 +28,8 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("Countdown");
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
+    debug().logStartup("启动");
+
     // 定义系统
     #ifdef Q_OS_WIN
     os = "win";
@@ -38,6 +40,7 @@ int main(int argc, char *argv[]) {
     #else
     os = "unknow";
     #endif
+    debug().logStartup("定义信息");
 //===================================================================参数
 
     QCommandLineParser parser;
@@ -48,7 +51,7 @@ int main(int argc, char *argv[]) {
     QCommandLineOption minimized({"start-minimized", "minimized", "m"}, "静默启动（最小化窗口启动）");
     parser.addOption(minimized);
 
-
+    debug().logStartup("初始化参数");
 //===================================================================Debug
 
     //显示日志吗
@@ -76,9 +79,12 @@ int main(int argc, char *argv[]) {
 
     debug().installFileLogger(); // 启动文件日志
 
+    debug().logStartup("初始化日志");
 //===================================================================后续启动
 
     QApplication app(argc, argv);
+
+    debug().logStartup("初始化 Qt 实例");
 
     // 安卓不要初始化主题，直接加入列表
     #ifndef Q_OS_ANDROID
@@ -96,7 +102,11 @@ int main(int argc, char *argv[]) {
     // 不要写 setFallbackSearchPaths，会干扰
     #endif
 
+    debug().logStartup("初始化主题");
+
     QQmlApplicationEngine engine;
+
+    debug().logStartup("初始化 QML 引擎");
 
     // 软件logo
     app.setWindowIcon(QIcon(QStringLiteral(
@@ -125,6 +135,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    debug().logStartup("初始化翻译");
+
 //===================================================================单实例锁
 
     #ifndef Q_OS_ANDROID
@@ -146,6 +158,8 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     #endif
+
+    debug().logStartup("初始化单实例锁");
 
 //===================================================================安卓返回关窗口
 
@@ -185,6 +199,8 @@ int main(int argc, char *argv[]) {
         QWindow *m_mainWindow = nullptr;
         QList<QWindow*> m_windowStack;
     };
+
+    debug().logStartup("初始化返回键关窗口");
 #endif
 
 //===================================================================后续启动
@@ -202,6 +218,8 @@ int main(int argc, char *argv[]) {
         app.installEventFilter(backFilter);
         #endif
     }
+
+    debug().logStartup("加载 QML");
 
     updater().getReleaseInfo(); // 检查更新
 

@@ -51,13 +51,12 @@ Kirigami.ApplicationWindow {
                 color: Kirigami.Theme.textColor
             }
         }
-        // 主界面渲染完 → 转圈 1 秒 → 淡出
         Component.onCompleted: {
             splashTimer.start()
         }
         Timer {
             id: splashTimer
-            interval: 2000          // 1 秒
+            interval: 500
             onTriggered: fadeOutAnim.start()
         }
         NumberAnimation {

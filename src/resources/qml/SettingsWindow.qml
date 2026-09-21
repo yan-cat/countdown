@@ -331,6 +331,16 @@ Window {
                 Layout.alignment: Qt.AlignHCenter
             }
             CheckBox {
+                id: showStartupDuration
+                text: qsTr("显示启动耗时")
+                visible: debugMode.checked
+                checked: CountdownManager.setting("showStartupDuration", false)
+                onClicked: {
+                    CountdownManager.setSetting("showStartupDuration", checked)
+                }
+                Layout.alignment: Qt.AlignHCenter
+            }
+            CheckBox {
                 id: disableQmlWarn
                 text: qsTr("禁用 QML 引擎警告")
                 visible: debugMode.checked

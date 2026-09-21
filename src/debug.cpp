@@ -3,6 +3,7 @@
 #include <QMutex>
 #include <QStandardPaths>
 #include <QDir>
+#include <QElapsedTimer>
 #include "debug.hpp"
 
 #ifdef Q_OS_ANDROID
@@ -20,6 +21,20 @@ QString &logPath() {
 bool showLogSource() {
     static bool value = debug().getDebugOn("showLogSource");
     return value;
+}
+bool showStartupDuration() {
+    static bool value = debug().getDebugOn("showStartupDuration");
+    return value;
+}
+
+// 启动计时
+QElapsedTimer &startupTimer() {
+    static QElapsedTimer t;
+    return t;
+}
+bool &startupStarted() {
+    static bool started = false;
+    return started;
 }
 }
 
@@ -149,6 +164,7 @@ QString CountdownDebug::getLogs() {
     return QString::fromUtf8(file.readAll());
 }
 
+// 清空日志
 void CountdownDebug::clearLogs() {
     QFile file(logPath());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -156,4 +172,16 @@ void CountdownDebug::clearLogs() {
     } else {
         file.close();
     }
+}
+
+void CountdownDebug::logStartup(const QString &stage) {
+    if (!showStartupDuration()) return;
+
+    if (!startupStarted()) {
+        startupTimer().start();
+        startupStarted() = true;
+        qCDebug(CountdownLog) << "[启动] 开始计时";
+        return;
+    }
+    qCDebug(CountdownLog) << "[启动]" << stage << ":" << startupTimer().restart() << "ms";
 }
