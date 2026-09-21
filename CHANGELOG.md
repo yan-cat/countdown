@@ -2,7 +2,7 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.4.0...main) - YYYY-MM-DD
+## [1.5.0](https://github.com/yan-cat/countdown/compare/v1.4.0...v1.5.0) - 2026-09-22
 
 ### 新增 (Added) 
 - 自定义提醒时间而非默认的00:00
@@ -15,17 +15,8 @@
 ### 变更 (Changed) 
 - 修改年月日计算方式为准确而非估算
 
-### 弃用 (Deprecated) 
-- 即将移除的功能预告（给用户缓冲期）
-
-### 移除 (Removed) 
-- 已移除的功能
-
 ### 修复 (Fixed) 
 - 更新日志页面渲染标题大小错误
-
-### 安全 (Security) 
-- 修复的安全漏洞
 
 ## [1.4.0](https://github.com/yan-cat/countdown/compare/v1.3.0...v1.4.0) - 2026-09-18
 
