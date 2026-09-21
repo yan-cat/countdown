@@ -6,7 +6,7 @@
 !define UNINSTKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\@{productname}"
 
 Name "@{productname}"
-Caption "@{productname} @{version}"
+Caption "@{productname} @{appVersion}"
 OutFile "@{setupname}"
 InstallDir "$PROGRAMFILES64\@{productname}"
 RequestExecutionLevel admin
@@ -63,7 +63,7 @@ Section
 
   WriteRegStr HKLM "${REGKEY}" "Install_Dir" "$INSTDIR"
   WriteRegStr HKLM "${UNINSTKEY}" "DisplayName" "@{productname}"
-  WriteRegStr HKLM "${UNINSTKEY}" "DisplayVersion" "@{version}"
+  WriteRegStr HKLM "${UNINSTKEY}" "DisplayVersion" "@{appVersion}"
   WriteRegStr HKLM "${UNINSTKEY}" "Publisher" "@{company}"
   WriteRegStr HKLM "${UNINSTKEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteRegStr HKLM "${UNINSTKEY}" "DisplayIcon" "$INSTDIR\@{iconname}"

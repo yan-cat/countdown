@@ -55,7 +55,7 @@ class Package(CMakePackageBase):
                 parts.append("0")
             version = ".".join(parts[:4])
 
-        self.defines["version"] = version
+        self.defines["appVersion"] = version
         self.defines["icon"] = os.path.join(self.sourceDir(), "src", "resources", "icon", "com.countdown.ico")
         self.defines["unicon"] = os.path.join(self.sourceDir(), "src", "resources", "icon", "com.countdown.uninstall.ico")
         self.defines["company"] = "yancat"
@@ -69,4 +69,5 @@ class Package(CMakePackageBase):
         ]
         self.blacklist_file.append(os.path.join(self.sourceDir(), "exclude_list.txt"))
         self.defines["strip"] = True
+        self.subinfo.options.package.disableStriping=True
         return super().createPackage()
