@@ -72,9 +72,8 @@ The executable is located at `build/Countdown`.
 
 ### KDE Craft
 
-> Android is experimentally supported and can be built by yourself.
-
 ```bash
+# Copy the blueprint to the blueprint directory
 craft Countdown
 craft --package Countdown # Not needed for Android
 ```
@@ -96,6 +95,7 @@ Countdown
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # About window
 │   │       ├── DetailsWindow.qml     # Details window
+│   │       ├── LogsWindow.qml        # Logs window
 │   │       ├── Main.qml              # Main page
 │   │       ├── ReminderWindow.qml    # Standalone reminder popup for Windows
 │   │       ├── SettingsWindow.qml    # Settings window
@@ -142,7 +142,9 @@ See [CHANGELOG.md](CHANGELOG.md) for the detailed changes in each version.
 
 ## Planned
 
-- [ ] Reminder time
+- [ ] Last edit time of countdowns and of the data file
+- [ ] Card sorting
+- [ ] Update check on Android
 - [ ] WebDAV cloud sync of items
 - [ ] Desktop tiles/widget
 - [ ] Optional app background
