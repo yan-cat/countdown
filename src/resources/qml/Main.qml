@@ -56,7 +56,7 @@ Kirigami.ApplicationWindow {
         }
         Timer {
             id: splashTimer
-            interval: 500
+            interval: 300
             onTriggered: fadeOutAnim.start()
         }
         NumberAnimation {
@@ -90,17 +90,32 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: qsTr("设置")
                 icon.name: "settings-configure"
-                onTriggered: settingsWindow.show()
+                onTriggered: {
+                    if (!settingsLoader.active) {
+                        settingsLoader.active = true
+                    }
+                    settingsLoader.item.show()
+                }
             },
             Kirigami.Action {
                 text: qsTr("检查更新")
                 icon.name: "update-none"
-                onTriggered: updaterWindow.show()
+                onTriggered: {
+                    if (!updaterLoader.active) {
+                        updaterLoader.active = true
+                    }
+                    updaterLoader.item.show()
+                }
             },
             Kirigami.Action {
                 text: qsTr("关于")
                 icon.name: "help-about-symbolic"
-                onTriggered: aboutPageWindow.show()
+                onTriggered: {
+                    if (!aboutPageLoader.active) {
+                        aboutPageLoader.active = true
+                    }
+                    aboutPageLoader.item.show()
+                }
             }
         ]
     }
@@ -156,6 +171,8 @@ Kirigami.ApplicationWindow {
                 checked: false
                 text: qsTr("到设定日期时提醒")
                 Layout.alignment: Qt.AlignCenter
+
+                visible: Qt.platform.os !== "android"
             }
             ComboBox {
                 id: notificationtypeField
@@ -416,7 +433,7 @@ Kirigami.ApplicationWindow {
                             }
                         }
 
-                        // 鼠标右键
+                        // 鼠标
                         MouseArea {
                             anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -424,8 +441,13 @@ Kirigami.ApplicationWindow {
                             onClicked: (mouse) => {
                                 if (mouse.button === Qt.LeftButton) {
                                     pulseAnim.start()
-                                    detailsWindow.modelData = modelData
-                                    detailsWindow.show()
+                                    if (!detailsLoader.active) {
+                                        detailsLoader.active = true
+                                    }
+                                    if (detailsLoader.item) {
+                                        detailsLoader.item.modelData = modelData
+                                        detailsLoader.item.show()
+                                    }
                                 }
                                 if (mouse.button === Qt.RightButton) {
                                     cardMenu.popup(mouse.x, mouse.y)
@@ -444,17 +466,26 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    SettingsWindow {
-        id: settingsWindow
+    // 懒加载子窗口
+    Loader {
+        id: settingsLoader
+        active: false
+        sourceComponent: Component { SettingsWindow { } }
     }
-    UpdaterWindow {
-        id: updaterWindow
+    Loader {
+        id: updaterLoader
+        active: false
+        sourceComponent: Component { UpdaterWindow { } }
     }
-    AboutPageWindow {
-        id: aboutPageWindow
+    Loader {
+        id: aboutPageLoader
+        active: false
+        sourceComponent: Component { AboutPageWindow { } }
     }
-    DetailsWindow {
-        id: detailsWindow
+    Loader {
+        id: detailsLoader
+        active: false
+        sourceComponent: Component { DetailsWindow { } }
     }
 
     // 提醒土司

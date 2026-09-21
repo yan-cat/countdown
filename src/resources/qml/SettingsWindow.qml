@@ -363,7 +363,13 @@ Window {
             Button {
                 text: qsTr("查看软件日志")
                 visible: debugMode.checked && outputLogFile.checked
-                onClicked: logsWindow.show()
+                onClicked: {
+                    if (!logsLoader.active) {
+                        logsLoader.active = true
+                    }
+                    logsLoader.item.show()
+                }
+
                 Layout.alignment: Qt.AlignHCenter
             }
 
@@ -433,7 +439,9 @@ Window {
         }
     }
 
-    LogsWindow {
-        id: logsWindow
+    Loader {
+        id: logsLoader
+        active: false
+        sourceComponent: Component { LogsWindow { } }
     }
 }
