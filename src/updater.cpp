@@ -100,6 +100,7 @@ void CountdownUpdater::getReleaseInfo()
         auto stripV = [](QString v) {
             return v.startsWith(QLatin1Char('v')) ? v.mid(1) : v;
         };
+        if (QVersionNumber::fromString(stripV(latestVersion)) <  QVersionNumber::fromString(stripV(currentVersion))) qCDebug(CountdownLog) << "当前为 Beta 版";
         bool haveNewVersion =  QVersionNumber::fromString(stripV(latestVersion)) >  QVersionNumber::fromString(stripV(currentVersion));
         if (debug().getDebugOn("forceDownloadLatest"))
         {

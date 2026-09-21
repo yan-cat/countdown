@@ -153,7 +153,6 @@ Window {
                 }
 
                 contentItem: Item {
-                    implicitHeight: tumblerRow.implicitHeight
                     RowLayout {
                         spacing: Kirigami.Units.largeSpacing
                         Layout.alignment: Qt.AlignHCenter
@@ -319,6 +318,16 @@ Window {
                 currentIndex: CountdownManager.setting("outputDebuglog", 0)
                 model: [qsTr("关闭调试日志"), qsTr("仅APP调试日志"), qsTr("调试日志全开（此设置会拖慢软件速度！！！）")]
                 onActivated: CountdownManager.setSetting("outputDebuglog", currentIndex)
+                Layout.alignment: Qt.AlignHCenter
+            }
+            CheckBox {
+                id: showLogSource
+                text: qsTr("显示日志来源")
+                visible: debugMode.checked
+                checked: CountdownManager.setting("showLogSource", false)
+                onClicked: {
+                    CountdownManager.setSetting("showLogSource", checked)
+                }
                 Layout.alignment: Qt.AlignHCenter
             }
             CheckBox {

@@ -13,7 +13,14 @@
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
 
 namespace {
-QString logPath;
+QString &logPath() {
+    static QString path;
+    return path;
+}
+bool showLogSource() {
+    static bool value = debug().getDebugOn("showLogSource");
+    return value;
+}
 }
 
 // 初始化函数与统一实例
@@ -67,9 +74,12 @@ static void fileMessageHandler(QtMsgType type, const QMessageLogContext &context
     case QtFatalMsg:    typeStr = "FATAL";    break;
     }
 
-    // 分类（如果有）
-    QString line = QString("[%1] [%2] %3\n")
-                       .arg(time, typeStr, msg);
+    QString file = context.file ? QString::fromUtf8(context.file) : "unknown";
+    if (showLogSource()) file = "[" + QFileInfo(file).fileName() + "] ";
+    else file = "";
+
+    QString line = QString("[%1] [%2] %3%4\n")
+                       .arg(time, typeStr, file ,msg);
 
     // 写文件
     if (logFile().isOpen()) {
@@ -111,12 +121,12 @@ void CountdownDebug::installFileLogger() {
 
     QDir().mkpath(logDir);
 
-    logPath = logDir + "/Countdown.log";
-    logFile().setFileName(logPath);
+    logPath() = logDir + "/Countdown.log";
+    logFile().setFileName(logPath());
 
     if (getDebugOn("outputLogFile")) {
         if (!logFile().open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-            qWarning() << "无法打开日志文件：" << logPath;
+            qWarning() << "无法打开日志文件：" << logPath();
             return;
         }
     }
@@ -133,14 +143,14 @@ void CountdownDebug::closeFileLogger() {
 }
 
 QString CountdownDebug::getLogs() {
-    QFile file(logPath);
+    QFile file(logPath());
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return QString();
     return QString::fromUtf8(file.readAll());
 }
 
 void CountdownDebug::clearLogs() {
-    QFile file(logPath);
+    QFile file(logPath());
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         qWarning() << "清空日志失败:" << file.errorString();
     } else {
