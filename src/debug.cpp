@@ -3,6 +3,7 @@
 #include <QMutex>
 #include <QStandardPaths>
 #include <QDir>
+#include <QElapsedTimer>
 #include "debug.hpp"
 
 #ifdef Q_OS_ANDROID
@@ -11,6 +12,31 @@
 #endif
 
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
+
+namespace {
+QString &logPath() {
+    static QString path;
+    return path;
+}
+bool showLogSource() {
+    static bool value = debug().getDebugOn("showLogSource");
+    return value;
+}
+bool showStartupDuration() {
+    static bool value = debug().getDebugOn("showStartupDuration");
+    return value;
+}
+
+// 启动计时
+QElapsedTimer &startupTimer() {
+    static QElapsedTimer t;
+    return t;
+}
+bool &startupStarted() {
+    static bool started = false;
+    return started;
+}
+}
 
 // 初始化函数与统一实例
 CountdownDebug::CountdownDebug(QObject *parent) : QObject(parent) { }
@@ -63,9 +89,12 @@ static void fileMessageHandler(QtMsgType type, const QMessageLogContext &context
     case QtFatalMsg:    typeStr = "FATAL";    break;
     }
 
-    // 分类（如果有）
-    QString line = QString("[%1] [%2] %3\n")
-                       .arg(time, typeStr, msg);
+    QString file = context.file ? QString::fromUtf8(context.file) : "unknown";
+    if (showLogSource()) file = "[" + QFileInfo(file).fileName() + "] ";
+    else file = "";
+
+    QString line = QString("[%1] [%2] %3%4\n")
+                       .arg(time, typeStr, file ,msg);
 
     // 写文件
     if (logFile().isOpen()) {
@@ -107,12 +136,12 @@ void CountdownDebug::installFileLogger() {
 
     QDir().mkpath(logDir);
 
-    QString logPath = logDir + "/Countdown.log";
-    logFile().setFileName(logPath);
+    logPath() = logDir + "/Countdown.log";
+    logFile().setFileName(logPath());
 
     if (getDebugOn("outputLogFile")) {
         if (!logFile().open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
-            qWarning() << "无法打开日志文件：" << logPath;
+            qWarning() << "无法打开日志文件：" << logPath();
             return;
         }
     }
@@ -126,4 +155,33 @@ void CountdownDebug::closeFileLogger() {
     if (logFile().isOpen()) {
         logFile().close();
     }
+}
+
+QString CountdownDebug::getLogs() {
+    QFile file(logPath());
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QString();
+    return QString::fromUtf8(file.readAll());
+}
+
+// 清空日志
+void CountdownDebug::clearLogs() {
+    QFile file(logPath());
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        qWarning() << "清空日志失败:" << file.errorString();
+    } else {
+        file.close();
+    }
+}
+
+void CountdownDebug::logStartup(const QString &stage) {
+    if (!showStartupDuration()) return;
+
+    if (!startupStarted()) {
+        startupTimer().start();
+        startupStarted() = true;
+        qCDebug(CountdownLog) << "[启动] 开始计时";
+        return;
+    }
+    qCDebug(CountdownLog) << "[启动]" << stage << ":" << startupTimer().restart() << "ms";
 }

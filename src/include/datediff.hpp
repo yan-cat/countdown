@@ -7,5 +7,5 @@ struct DateDiff {
     int days = 0;
 };
 
-DateDiff dateDiff(const QDate &from, const QDate &to);
-QString dateDiffText(const QDate &from, const QDate &to);
+DateDiff approxDateDiff(const QDate &from, const QDate &to);
+DateDiff exactDateDiff(const QDate &from, const QDate &to);

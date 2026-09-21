@@ -11,6 +11,7 @@ class subinfo(info.infoclass):
         self.webpage = "https://github.com/yan-cat/countdown"
 
         self.svnTargets["main"] = "[git]https://github.com/yan-cat/countdown.git|main"
+        self.svnTargets["dev"] = "[git]https://github.com/yan-cat/countdown.git|dev"
         self.defaultTarget = "main"
 
         self.buildType = "MinSizeRel"

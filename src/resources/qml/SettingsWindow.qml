@@ -19,6 +19,7 @@ Window {
         contentWidth: availableWidth
 
         ColumnLayout {
+            id: layout
             width: parent.width
 
 //=====================================显示
@@ -38,11 +39,14 @@ Window {
                 id: dayShow
                 currentIndex: CountdownManager.setting("dayShow", 0)
                 onActivated: CountdownManager.setSetting("dayShow", currentIndex)
-                model: [qsTr("456 天"), qsTr("1 年 3 个月 1 天")]
+                model: [qsTr("按天显示"), qsTr("按年月日显示")]
                 Layout.alignment: Qt.AlignHCenter
             }
             Label {
-                text: qsTr("注：年月日显示模式为估算仅作参考，具体以单天数显示为准")
+                text: dayShow.currentIndex === 0
+                    ? qsTr("预览：还有 456 天 / 已经过了 456 天")
+                    : qsTr("预览：还有 1 年 3 个月 1 天 / 已经过了 1 年 3 个月 1 天")
+
                 Layout.alignment: Qt.AlignHCenter
             }
 
@@ -83,6 +87,140 @@ Window {
             Item {
                 Layout.preferredHeight: 20
                 Layout.fillWidth: true
+            }
+
+//=====================================提醒设置
+
+            Label {
+                text: qsTr("提醒")
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+
+                visible: Qt.platform.os !== "android"
+            }
+
+            Label {
+                text: qsTr("倒数日提醒时间：")
+                Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+
+            property int reminderHour: CountdownManager.setting("reminderHour", 06)
+            property int reminderMinute: CountdownManager.setting("reminderMinute", 30)
+
+            Button {
+                icon.name: "clock"
+                text: String(layout.reminderHour).padStart(2, '0') + ":" +
+                      String(layout.reminderMinute).padStart(2, '0')
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: timeDialog.open()
+
+                visible: Qt.platform.os !== "android"
+            }
+            // 弹出时间选择框
+            Kirigami.Dialog {
+                id: timeDialog
+                parent: settingsWindow.contentItem
+                title: qsTr("选择提醒时间")
+                preferredWidth: Kirigami.Units.gridUnit * 18
+                standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+
+                // 临时变量，确认后才写回
+                property int tempHour: layout.reminderHour
+                property int tempMinute: layout.reminderMinute
+
+                onOpened: {
+                    // 改按钮文字
+                    let okButton = standardButton(Kirigami.Dialog.Ok)
+                    if (okButton) okButton.text = qsTr("保存")
+
+                    let cancelButton = standardButton(Kirigami.Dialog.Cancel)
+                    if (cancelButton) cancelButton.text = qsTr("放弃")
+
+                    tempHour = layout.reminderHour
+                    tempMinute = layout.reminderMinute
+                    hourTumbler.currentIndex = tempHour
+                    minuteTumbler.currentIndex = tempMinute
+                }
+
+                onAccepted: {
+                    layout.reminderHour = tempHour
+                    layout.reminderMinute = tempMinute
+                    CountdownManager.setSetting("reminderHour", tempHour)
+                    CountdownManager.setSetting("reminderMinute", tempMinute)
+                }
+
+                contentItem: Item {
+                    RowLayout {
+                        spacing: Kirigami.Units.largeSpacing
+                        Layout.alignment: Qt.AlignHCenter
+                        anchors.centerIn: parent
+
+                        Tumbler {
+                            id: hourTumbler
+                            model: 24
+                            visibleItemCount: 3
+                            Layout.preferredWidth: Kirigami.Units.gridUnit * 3
+
+                            delegate: Text {
+                                text: String(modelData).padStart(2, '0')
+                                color: Kirigami.Theme.textColor
+                                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
+                            }
+                            onCurrentIndexChanged: timeDialog.tempHour = currentIndex
+                        }
+                        Label {
+                            text: ":"
+                            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+                            color: Kirigami.Theme.textColor
+                            Layout.alignment: Qt.AlignVCenter
+                        }
+                        Tumbler {
+                            id: minuteTumbler
+                            model: 60
+                            visibleItemCount: 3
+                            Layout.preferredWidth: Kirigami.Units.gridUnit * 3
+
+                            delegate: Text {
+                                text: String(modelData).padStart(2, '0')
+                                color: Kirigami.Theme.textColor
+                                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
+                            }
+                            onCurrentIndexChanged: timeDialog.tempMinute = currentIndex
+                        }
+                    }
+                }
+            }
+
+            Label {
+                text: qsTr("（在每天的几点提醒当天的倒数日）")
+                Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+
+            Button {
+                text: qsTr("测试通知")
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: CountdownReminder.pushReminder(qsTr("倒数日提醒"), qsTr("测试通知"))
+
+                visible: Qt.platform.os !== "android"
+            }
+
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
+
+                visible: Qt.platform.os !== "android"
             }
 
 //=====================================更新设置
@@ -183,6 +321,26 @@ Window {
                 Layout.alignment: Qt.AlignHCenter
             }
             CheckBox {
+                id: showLogSource
+                text: qsTr("显示日志来源")
+                visible: debugMode.checked
+                checked: CountdownManager.setting("showLogSource", false)
+                onClicked: {
+                    CountdownManager.setSetting("showLogSource", checked)
+                }
+                Layout.alignment: Qt.AlignHCenter
+            }
+            CheckBox {
+                id: showStartupDuration
+                text: qsTr("显示启动耗时")
+                visible: debugMode.checked
+                checked: CountdownManager.setting("showStartupDuration", false)
+                onClicked: {
+                    CountdownManager.setSetting("showStartupDuration", checked)
+                }
+                Layout.alignment: Qt.AlignHCenter
+            }
+            CheckBox {
                 id: disableQmlWarn
                 text: qsTr("禁用 QML 引擎警告")
                 visible: debugMode.checked
@@ -200,6 +358,18 @@ Window {
                 onClicked: {
                     CountdownManager.setSetting("outputLogFile", checked)
                 }
+                Layout.alignment: Qt.AlignHCenter
+            }
+            Button {
+                text: qsTr("查看软件日志")
+                visible: debugMode.checked && outputLogFile.checked
+                onClicked: {
+                    if (!logsLoader.active) {
+                        logsLoader.active = true
+                    }
+                    logsLoader.item.show()
+                }
+
                 Layout.alignment: Qt.AlignHCenter
             }
 
@@ -267,5 +437,11 @@ Window {
                 Layout.fillWidth: true
             }
         }
+    }
+
+    Loader {
+        id: logsLoader
+        active: false
+        sourceComponent: Component { LogsWindow { } }
     }
 }

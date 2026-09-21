@@ -1,9 +1,10 @@
 import com.countdown
+import org.kde.breeze
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import org.kde.kirigami as Kirigami
-import org.kde.kirigamiaddons.dateandtime 1.0 as KA
+import org.kde.kirigamiaddons.dateandtime 1.0 as DateAndTime
 
 Kirigami.ApplicationWindow {
     id: root
@@ -19,6 +20,52 @@ Kirigami.ApplicationWindow {
         function onNewVersion(latestVersion, version , updateLog) {
             if (latestVersion && CountdownManager.setting("autoGetNewVersion", false)) updaterWindow.show()
             if (!latestVersion && version !== "v" + Qt.application.version) cardPage.title = qsTr("倒数日 Beta")
+        }
+    }
+
+    // 安卓加载转圈圈
+    Rectangle {
+        id: splashOverlay
+        anchors.fill: parent
+        color: Kirigami.Theme.backgroundColor
+        z: 99999
+        visible: Qt.platform.os === "android"
+        Column {
+            anchors.centerIn: parent
+            spacing: Kirigami.Units.largeSpacing
+            Image {
+                source: "qrc:/qt/qml/com/countdown/src/resources/icon/com.countdown.svg"
+                width: 100
+                height: 100
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            BusyIndicator {
+                anchors.horizontalCenter: parent.horizontalCenter
+                running: true
+                width: 60
+                height: 60
+            }
+            Label {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: qsTr("加载中...")
+                color: Kirigami.Theme.textColor
+            }
+        }
+        Component.onCompleted: {
+            splashTimer.start()
+        }
+        Timer {
+            id: splashTimer
+            interval: 300
+            onTriggered: fadeOutAnim.start()
+        }
+        NumberAnimation {
+            id: fadeOutAnim
+            target: splashOverlay
+            property: "opacity"
+            to: 0
+            duration: 300
+            onFinished: splashOverlay.visible = false
         }
     }
 
@@ -43,17 +90,32 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: qsTr("设置")
                 icon.name: "settings-configure"
-                onTriggered: settingsWindow.show()
+                onTriggered: {
+                    if (!settingsLoader.active) {
+                        settingsLoader.active = true
+                    }
+                    settingsLoader.item.show()
+                }
             },
             Kirigami.Action {
                 text: qsTr("检查更新")
                 icon.name: "update-none"
-                onTriggered: updaterWindow.show()
+                onTriggered: {
+                    if (!updaterLoader.active) {
+                        updaterLoader.active = true
+                    }
+                    updaterLoader.item.show()
+                }
             },
             Kirigami.Action {
                 text: qsTr("关于")
-                icon.name: "help-about"
-                onTriggered: aboutPageWindow.show()
+                icon.name: "help-about-symbolic"
+                onTriggered: {
+                    if (!aboutPageLoader.active) {
+                        aboutPageLoader.active = true
+                    }
+                    aboutPageLoader.item.show()
+                }
             }
         ]
     }
@@ -109,6 +171,8 @@ Kirigami.ApplicationWindow {
                 checked: false
                 text: qsTr("到设定日期时提醒")
                 Layout.alignment: Qt.AlignCenter
+
+                visible: Qt.platform.os !== "android"
             }
             ComboBox {
                 id: notificationtypeField
@@ -143,7 +207,7 @@ Kirigami.ApplicationWindow {
                 text: qsTr("请选择目标日期：")
                 Layout.alignment: Qt.AlignCenter
             }
-            KA.DatePicker {
+            DateAndTime.DatePicker {
                 id: dateField
                 Layout.preferredWidth: Qt.platform.os === "android"
                                        ? Math.min(adddate.width, 350)
@@ -152,6 +216,14 @@ Kirigami.ApplicationWindow {
             }
         }
         onOpened: {
+            // 改按钮文字
+            let okButton = standardButton(Kirigami.Dialog.Ok)
+            if (okButton) okButton.text = qsTr("保存")
+
+            let cancelButton = standardButton(Kirigami.Dialog.Cancel)
+            if (cancelButton) cancelButton.text = qsTr("放弃")
+
+
             if (editingId >= 0) { // 编辑
                 nameField.text = editingData.name
                 repeatField.currentIndex = editingData.repeatIndex
@@ -361,7 +433,7 @@ Kirigami.ApplicationWindow {
                             }
                         }
 
-                        // 鼠标右键
+                        // 鼠标
                         MouseArea {
                             anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -369,8 +441,13 @@ Kirigami.ApplicationWindow {
                             onClicked: (mouse) => {
                                 if (mouse.button === Qt.LeftButton) {
                                     pulseAnim.start()
-                                    detailsWindow.modelData = modelData
-                                    detailsWindow.show()
+                                    if (!detailsLoader.active) {
+                                        detailsLoader.active = true
+                                    }
+                                    if (detailsLoader.item) {
+                                        detailsLoader.item.modelData = modelData
+                                        detailsLoader.item.show()
+                                    }
                                 }
                                 if (mouse.button === Qt.RightButton) {
                                     cardMenu.popup(mouse.x, mouse.y)
@@ -389,17 +466,26 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    SettingsWindow {
-        id: settingsWindow
+    // 懒加载子窗口
+    Loader {
+        id: settingsLoader
+        active: false
+        sourceComponent: Component { SettingsWindow { } }
     }
-    UpdaterWindow {
-        id: updaterWindow
+    Loader {
+        id: updaterLoader
+        active: false
+        sourceComponent: Component { UpdaterWindow { } }
     }
-    AboutPageWindow {
-        id: aboutPageWindow
+    Loader {
+        id: aboutPageLoader
+        active: false
+        sourceComponent: Component { AboutPageWindow { } }
     }
-    DetailsWindow {
-            id: detailsWindow
+    Loader {
+        id: detailsLoader
+        active: false
+        sourceComponent: Component { DetailsWindow { } }
     }
 
     // 提醒土司
@@ -434,6 +520,14 @@ Kirigami.ApplicationWindow {
         title: qsTr("删除")
         subtitle: qsTr("确认删除 %1 吗？").arg(name)
         standardButtons: Kirigami.Dialog.Yes | Kirigami.Dialog.No
+        onOpened: {
+            // 改按钮文字
+            let yesButton = standardButton(Kirigami.Dialog.Yes)
+            if (yesButton) yesButton.text = qsTr("确定")
+
+            let noButton = standardButton(Kirigami.Dialog.No)
+            if (noButton) noButton.text = qsTr("取消")
+        }
         onAccepted: {
             CountdownManager.removeCountdown(cardid)
             inlineMessage.text = qsTr("删除成功")

@@ -23,5 +23,10 @@ public:
 
     void installFileLogger();
     void closeFileLogger();
+
+    Q_INVOKABLE QString getLogs();
+    Q_INVOKABLE void clearLogs();
+
+    void logStartup(const QString &stage);
 };
 CountdownDebug &debug();

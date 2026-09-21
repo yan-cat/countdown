@@ -15,9 +15,12 @@
 #include <QProcess>
 #include <QDesktopServices>
 #include <QVersionNumber>
+#include <QTextDocument>
+#include <QRegularExpression>
 #include "updater.hpp"
 #include "debug.hpp"
 #include "manager.hpp"
+#include "main.hpp"
 
 #ifdef Q_OS_WIN
 #include <windows.h>
@@ -26,7 +29,6 @@
 
 QUrl downloadUrl;
 QUrl fastUrl("https://gh-proxy.org/");
-QString os;
 
 CountdownUpdater::CountdownUpdater(QObject *parent) : QObject(parent) { }
 
@@ -79,6 +81,11 @@ void CountdownUpdater::getReleaseInfo()
         QString latestVersion = jsonObj["tag_name"].toString(); // 最新版本
         QString latestVersionLog = jsonObj["body"].toString(); // 更新日志
 
+        // md转html
+        QTextDocument doc;
+        doc.setMarkdown(latestVersionLog);
+        latestVersionLog = doc.toHtml();
+
         QUrl fsUrl;
         if (manager().setting("fastDownload", 0)) fsUrl = fastUrl;
         downloadUrl = fsUrl.toString() + "https://github.com/yan-cat/countdown/releases/download/" + latestVersion;
@@ -93,6 +100,7 @@ void CountdownUpdater::getReleaseInfo()
         auto stripV = [](QString v) {
             return v.startsWith(QLatin1Char('v')) ? v.mid(1) : v;
         };
+        if (QVersionNumber::fromString(stripV(latestVersion)) <  QVersionNumber::fromString(stripV(currentVersion))) qCDebug(CountdownLog) << "当前为 Beta 版";
         bool haveNewVersion =  QVersionNumber::fromString(stripV(latestVersion)) >  QVersionNumber::fromString(stripV(currentVersion));
         if (debug().getDebugOn("forceDownloadLatest"))
         {
@@ -115,7 +123,6 @@ void CountdownUpdater::getReleaseInfo()
 // 下载更新 这个函数我看不懂，出bug找AI
 void CountdownUpdater::downloadNewVersion()
 {
-    os = QSysInfo::kernelType();
     qCDebug(CountdownLog) << "当前系统为：" << os;
     QString filename;
 
@@ -124,12 +131,15 @@ void CountdownUpdater::downloadNewVersion()
         qCDebug(CountdownLog) << "准备下载linux版本";
         filename = "Countdown-linux-x86_64.tar.gz";
     }
-    else if (os == "winnt")
+    else if (os == "win")
     {
         qCDebug(CountdownLog) << "准备下载windows版本";
         filename = "Countdown-windows-x86_64.exe";
     }
-    else qCDebug(CountdownLog) << "未知系统";
+    else {
+        qCDebug(CountdownLog) << "未知系统";
+        return;
+    }
 
     QString savePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + filename; // 下载路径
     QDir().mkpath(QFileInfo(savePath).absolutePath());
@@ -233,7 +243,7 @@ void CountdownUpdater::installNewVersion(QString path)
         else emit installSuccess();
 
     }
-    else if (os == "winnt")
+    else if (os == "win")
     {
         #ifdef Q_OS_WIN
         // 先按"双击"语义打开（自动触发 UAC）；SE_ERR_ACCESSDENIED 表示被拒，再强制 runas

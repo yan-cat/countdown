@@ -4,14 +4,29 @@
 #include <QQuickItem>
 #include "reminder.hpp"
 #include "debug.hpp"
+#include "main.hpp"
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 #include <QDBusInterface>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 #endif
 
-#ifdef Q_OS_LINUX
+CountdownReminder::CountdownReminder(QObject *parent) : QObject(parent) { }
+
+CountdownReminder &reminder()
+{
+    static CountdownReminder instance(nullptr);
+    return instance;
+}
+CountdownReminder *CountdownReminder::create(QQmlEngine *, QJSEngine *)
+{
+    CountdownReminder *m = &reminder();                          // 复用同一个实例
+    QJSEngine::setObjectOwnership(m, QJSEngine::CppOwnership);  // 别让引擎删它
+    return m;
+}
+
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 void linux_reminder(QString title, QString body) {
     QDBusInterface iface("org.freedesktop.Notifications",
                          "/org/freedesktop/Notifications",
@@ -83,25 +98,21 @@ void windows_reminder(QString body) {
     view->show();
 }
 
-void reminder(QString title, QString body) {
-    QString os = QSysInfo::kernelType();
-
-    qCDebug(CountdownLog) << "准备发送通知";
+void CountdownReminder::pushReminder(QString title, QString body) {
     qCDebug(CountdownLog) << "当前系统为：" << os;
 
     if (debug().getDebugOn("useWindowsReminderType")) {
-        os = "winnt";
+        os = "win";
         qCDebug(CountdownLog) << "强制win通知模式为开启";
     }
 
     if (os == "linux") {
         qCDebug(CountdownLog) << "通知发送模式：通知";
-
-        #ifdef Q_OS_LINUX
+        #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
         linux_reminder(title, body);
         #endif
     }
-    else if (os == "winnt") {
+    else if (os == "win") {
         qCDebug(CountdownLog) << "通知发送模式：弹窗";
         windows_reminder(body);
     }

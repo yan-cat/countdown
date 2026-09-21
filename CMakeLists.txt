@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(Countdown VERSION 1.4.0 LANGUAGES CXX)
+project(Countdown VERSION 1.5.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -29,13 +29,15 @@ find_package(Qt6 REQUIRED COMPONENTS
     LinguistTools
     Svg
 )
-
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
     CoreAddons
     Archive
     IconThemes
 )
+if(ANDROID)
+    find_package(QQC2BreezeStyle REQUIRED)
+endif()
 
 qt_policy(SET QTP0001 NEW)
 
@@ -49,25 +51,23 @@ endif()
 # 添加可执行文件
 qt_add_executable(Countdown WIN32
     ${app_icon_resource_windows}
-    src/main.cpp
-    src/manager.cpp
+    src/autostart.cpp
     src/countdowndata.cpp
     src/datediff.cpp
     src/debug.cpp
+    src/main.cpp
+    src/manager.cpp
+    src/reminder.cpp
     src/updater.cpp
-    src/autostart.cpp
 
-    src/include/manager.hpp
-    src/include/updater.hpp
+    src/include/autostart.hpp
     src/include/countdowndata.hpp
     src/include/debug.hpp
-    src/include/autostart.hpp
+    src/include/manager.hpp
+    src/include/reminder.hpp
+    src/include/updater.hpp
 
 )
-# 桌面/非安卓才编译的提醒实现（依赖 D-Bus、桌面弹窗；安卓不编译）
-if (NOT ANDROID)
-    target_sources(Countdown PRIVATE src/reminder.cpp)
-endif()
 
 # 优化大小：针对 Release 或 MinSizeRel 构建启用 LTO
 if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
@@ -78,9 +78,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel
     endif()
 endif()
 
-# Qt 部署用的 QML 搜索路径 target 属性；在 craft 的 ecm_add_android_apk 流程里并不生效，
-# 真正让 KDE QML 模块进包的是下方 POST_BUILD 复制那步。保留无害，可留可删。
 if (ANDROID)
+    # 设置安卓文件夹位置
     set_target_properties(Countdown PROPERTIES
         QT_QML_IMPORT_PATH "${CMAKE_INSTALL_PREFIX}/lib/qml;${CMAKE_INSTALL_PREFIX}/qml"
         QT_ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android"
@@ -109,11 +108,11 @@ target_link_libraries(Countdown PRIVATE
     Qt6::Widgets
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::Svg
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes
     KF6::Archive
-    Qt6::Svg
 )
 if (LINUX)
     target_link_libraries(Countdown PRIVATE Qt6::DBus)
@@ -136,14 +135,14 @@ target_compile_definitions(Countdown PRIVATE
 qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
-    NO_IMPORT_SCAN
     QML_FILES
-        src/resources/qml/Main.qml
         src/resources/qml/AboutPageWindow.qml
-        src/resources/qml/SettingsWindow.qml
-        src/resources/qml/ReminderWindow.qml
-        src/resources/qml/UpdaterWindow.qml
         src/resources/qml/DetailsWindow.qml
+        src/resources/qml/LogsWindow.qml
+        src/resources/qml/Main.qml
+        src/resources/qml/ReminderWindow.qml
+        src/resources/qml/SettingsWindow.qml
+        src/resources/qml/UpdaterWindow.qml
 
     RESOURCES
         src/resources/icon/com.countdown.svg
@@ -152,26 +151,114 @@ qt_add_qml_module(Countdown
 
 )
 
-# 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，
-# 让 androiddeployqt 的 qmlimportscanner（扫描 qml-import-paths=work/build）
-# 能扫到 org.kde.kirigami、org.kde.kirigamiaddons 并把它们打进 APK。
 if (ANDROID)
+    # 关键：修复安卓启动闪退。把 KDE 的 QML 模块复制进 build 目录，
+    # 让 androiddeployqt 的 qmlimportscanner（扫描 qml-import-paths=work/build）
+    # 能扫到 org.kde.kirigami、org.kde.kirigamiaddons 并把它们打进 APK。
+    # 别删
     add_custom_command(TARGET Countdown POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${CMAKE_INSTALL_PREFIX}/lib/qml/org/kde"
             "${CMAKE_BINARY_DIR}/org/kde"
         COMMENT "Copying KDE QML modules into build dir for deployment")
 
-    # Android 图标
-    kirigami_package_breeze_icons(ICONS
+    # 安卓图标
+    set(BREEZEICONS_DIR "/home/user/CraftRoot/tmp/breeze-icons")
+    file(REAL_PATH "${BREEZEICONS_DIR}" BREEZEICONS_DIR)
+
+    set(_theme_dir "${CMAKE_CURRENT_SOURCE_DIR}/android/assets/qml/org/kde/kirigami/breeze-internal")
+    file(REMOVE_RECURSE "${_theme_dir}")
+    file(MAKE_DIRECTORY "${_theme_dir}")
+
+    # 需要的图标
+    set(_icon_names
+        # 左上角菜单
+        application-menu
         settings-configure
         update-none
-        help-about
+        help-about-symbolic
+
+        # 确定取消
+        dialog-ok
+        dialog-cancel
+
+        # 新建 编辑 删除
         document-new
         document-edit
         edit-delete
-        download
+
+        # 横幅
+        dialog-close # 关闭
+        dialog-information # 信息
+        dialog-positive # 成功
+        dialog-warning # 警告
+        dialog-error # 失败
+
+        # 其他
+        clock # 钟
+        arrow-down # 下拉箭头
+        process-working-symbolic # 加载转圈圈
     )
+
+    set(_found_count 0)
+    foreach(_name ${_icon_names})
+        file(GLOB_RECURSE _matches
+            "${BREEZEICONS_DIR}/icons/${_name}.svg")
+        foreach(_match ${_matches})
+            get_filename_component(_match_name "${_match}" NAME)
+            get_filename_component(_real "${_match}" REALPATH)
+            if(NOT EXISTS "${_real}")
+                continue()
+            endif()
+
+            file(RELATIVE_PATH _rel_dir "${BREEZEICONS_DIR}/icons" "${_match}")
+            get_filename_component(_rel_dir "${_rel_dir}" DIRECTORY)
+            set(_dest_dir "${_theme_dir}/icons/${_rel_dir}")
+            file(MAKE_DIRECTORY "${_dest_dir}")
+
+            set(_dest_file "${_dest_dir}/${_match_name}")
+            if(NOT EXISTS "${_dest_file}")
+                file(COPY_FILE "${_real}" "${_dest_file}" ONLY_IF_DIFFERENT)
+                math(EXPR _found_count "${_found_count} + 1")
+            endif()
+        endforeach()
+    endforeach()
+
+    message(STATUS "breeze-internal: copied ${_found_count} icon files")
+
+    # 扫描实际存在的目录，生成 index.theme
+    set(_dir_list "")
+    file(GLOB _cat_dirs "${_theme_dir}/icons/*")
+    foreach(_cat ${_cat_dirs})
+        if(IS_DIRECTORY "${_cat}")
+            get_filename_component(_cat_name "${_cat}" NAME)
+            file(GLOB _size_dirs "${_cat}/*")
+            foreach(_size_dir ${_size_dirs})
+                if(IS_DIRECTORY "${_size_dir}")
+                    file(GLOB _svgs "${_size_dir}/*.svg")
+                    if(_svgs)
+                        get_filename_component(_size_name "${_size_dir}" NAME)
+                        list(APPEND _dir_list "icons/${_cat_name}/${_size_name}")
+                    endif()
+                endif()
+            endforeach()
+        endif()
+    endforeach()
+
+    list(JOIN _dir_list "," _dirs_str)
+    set(_theme_content "[Icon Theme]\nName=Breeze\nDirectories=${_dirs_str}\nFollowsColorScheme=true\n")
+    foreach(_dir ${_dir_list})
+        get_filename_component(_size "${_dir}" NAME)
+        if(_size STREQUAL "scalable")
+            string(APPEND _theme_content "\n[${_dir}]\nSize=48\nType=Scalable\nMinSize=8\nMaxSize=512\n")
+        else()
+            string(APPEND _theme_content "\n[${_dir}]\nSize=${_size}\nType=Fixed\n")
+        endif()
+    endforeach()
+    file(WRITE "${_theme_dir}/index.theme" "${_theme_content}")
+
+    list(LENGTH _dir_list _dir_count)
+    message(STATUS "breeze-internal theme: ${_dir_count} dirs, ready at ${_theme_dir}")
 endif()
 
 # 翻译

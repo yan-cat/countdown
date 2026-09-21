@@ -4,6 +4,7 @@
 #include <QSettings>
 #include "autostart.hpp"
 #include "debug.hpp"
+#include "main.hpp"
 
 // 初始化函数与统一实例
 CountdownAutoStart::CountdownAutoStart(QObject *parent) : QObject(parent) { }
@@ -21,7 +22,6 @@ CountdownAutoStart &autostart() {
 bool CountdownAutoStart::getAutoStart() {
     qCDebug(CountdownLog) << "检查开机自启状态";
     bool autostart = false;
-    QString os = "未知";
     #ifdef Q_OS_WIN
     // Windows
     QSettings settings(
@@ -40,22 +40,32 @@ bool CountdownAutoStart::getAutoStart() {
         QString current = QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
         autostart = (stored == current);
     }
-    os = "Windows";
-    #elif defined(Q_OS_LINUX)
+    #elif defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     // Linux
     QString autostartPath = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/autostart";
     QString desktopPath = autostartPath + "/" + "com.countdown.desktop";
+    QFile file(desktopPath);
 
-    autostart = QFile::exists(desktopPath);
-    os = "Linux";
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QByteArray content = file.readAll();
+        autostart = content.contains(("Exec=\"" + QCoreApplication::applicationFilePath() + "\"").toUtf8());
+        if(!autostart) qCDebug(CountdownLog) << "Desktop 启动路径不一致";
+    }
+    else qCDebug(CountdownLog) << "打开 Desktop 文件失败";
+
     #endif
-    qCDebug(CountdownLog) << os << "开机自启为：" << autostart;
+    qCDebug(CountdownLog) << "当前" << os << "开机自启为：" << autostart;
     return autostart;
 }
 
 // 设定自启
 void CountdownAutoStart::setAutoStart(bool enable) {
     qCDebug(CountdownLog) << "设定开机自启为：" << enable;
+    if (getAutoStart() == enable) {
+        qCDebug(CountdownLog) << "无需重复设置";
+        return;
+    }
     #ifdef Q_OS_WIN
     // Windows
     QSettings settings(
@@ -73,7 +83,7 @@ void CountdownAutoStart::setAutoStart(bool enable) {
         qCDebug(CountdownLog) << "已移除注册表项";
     }
     settings.sync();  // 立即落盘，避免延迟写入
-    #elif defined(Q_OS_LINUX)
+    #elif defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
     // Linux
     QFile src(":/qt/qml/com/countdown/com.countdown.desktop");
     if (!src.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -96,8 +106,12 @@ void CountdownAutoStart::setAutoStart(bool enable) {
         if (dst.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
             QTextStream out(&dst);
             out << content;
+            qCDebug(CountdownLog) << "启用开机自启";
         }
     }
-    else QFile::remove(desktopPath);   // 关自启
+    else {
+        QFile::remove(desktopPath);   // 关自启
+        qCDebug(CountdownLog) << "禁用开机自启";
+    }
     #endif
 }

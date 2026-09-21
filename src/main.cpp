@@ -18,6 +18,9 @@
 #include <QPushButton>
 #include "debug.hpp"
 #include "updater.hpp"
+#include "main.hpp"
+
+QString os;
 
 int main(int argc, char *argv[]) {
 //===================================================================信息
@@ -25,6 +28,19 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("Countdown");
     QCoreApplication::setApplicationVersion(APP_VERSION);
 
+    debug().logStartup("启动");
+
+    // 定义系统
+    #ifdef Q_OS_WIN
+    os = "win";
+    #elif defined(Q_OS_ANDROID)
+    os = "android";
+    #elif defined(Q_OS_LINUX)
+    os = "linux";
+    #else
+    os = "unknow";
+    #endif
+    debug().logStartup("定义信息");
 //===================================================================参数
 
     QCommandLineParser parser;
@@ -35,7 +51,7 @@ int main(int argc, char *argv[]) {
     QCommandLineOption minimized({"start-minimized", "minimized", "m"}, "静默启动（最小化窗口启动）");
     parser.addOption(minimized);
 
-
+    debug().logStartup("初始化参数");
 //===================================================================Debug
 
     //显示日志吗
@@ -63,30 +79,34 @@ int main(int argc, char *argv[]) {
 
     debug().installFileLogger(); // 启动文件日志
 
+    debug().logStartup("初始化日志");
 //===================================================================后续启动
+
+    QApplication app(argc, argv);
+
+    debug().logStartup("初始化 Qt 实例");
 
     // 安卓不要初始化主题，直接加入列表
     #ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
     #endif
-    #ifdef Q_OS_ANDROID
-    QIcon::setThemeSearchPaths({
-        QStringLiteral("assets:/qml/org/kde/kirigami/breeze-internal"),
-        QStringLiteral(":/qt/qml/org/kde/kirigami/breeze-internal"),
-        QStringLiteral("assets:/qml/org/kde/kirigami"),
-        QStringLiteral(":/qt/qml/org/kde/kirigami")
-    });
-    QIcon::setThemeName(QStringLiteral("breeze-internal"));
-    #endif
 
-    QApplication app(argc, argv);
-
-    #ifdef Q_OS_WIN
+    #if defined(Q_OS_WIN)
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
+    #elif defined(Q_OS_ANDROID)
+    QQuickStyle::setStyle(QStringLiteral("org.kde.breeze"));
+    // 不设 themeName！让 Kirigami 自己选 "breeze-internal"
+    QIcon::setThemeSearchPaths(QIcon::themeSearchPaths()
+                               << QStringLiteral("assets:/qml/org/kde/kirigami"));
+    // 不要写 setFallbackSearchPaths，会干扰
     #endif
 
+    debug().logStartup("初始化主题");
+
     QQmlApplicationEngine engine;
+
+    debug().logStartup("初始化 QML 引擎");
 
     // 软件logo
     app.setWindowIcon(QIcon(QStringLiteral(
@@ -115,8 +135,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    debug().logStartup("初始化翻译");
+
 //===================================================================单实例锁
 
+    #ifndef Q_OS_ANDROID
     const QString lockDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir().mkpath(lockDir);
 
@@ -134,6 +157,9 @@ int main(int argc, char *argv[]) {
         dialog.exec();
         return 0;
     }
+    #endif
+
+    debug().logStartup("初始化单实例锁");
 
 //===================================================================安卓返回关窗口
 
@@ -141,15 +167,24 @@ int main(int argc, char *argv[]) {
     class BackKeyFilter : public QObject {
     public:
         explicit BackKeyFilter(QWindow *mainWindow, QObject *parent = nullptr)
-            : QObject(parent), m_mainWindow(mainWindow) {}
+            : QObject(parent), m_mainWindow(mainWindow) {
+            // 监听窗口显示/隐藏，维护栈
+            connect(qApp, &QGuiApplication::focusWindowChanged, this, [this](QWindow *w) {
+                if (!w || w == m_mainWindow) return;
+                if (!m_windowStack.contains(w))
+                    m_windowStack.append(w);
+            });
+        }
 
     protected:
         bool eventFilter(QObject *obj, QEvent *event) override {
             if (event->type() == QEvent::KeyRelease) {
                 auto *ke = static_cast<QKeyEvent*>(event);
                 if (ke->key() == Qt::Key_Back) {
-                    for (QWindow *w : QGuiApplication::topLevelWindows()) {
-                        if (w != m_mainWindow && w->isVisible()) {
+                    // 从栈顶往下找第一个可见的窗口
+                    while (!m_windowStack.isEmpty()) {
+                        QWindow *w = m_windowStack.takeLast();
+                        if (w->isVisible()) {
                             qCDebug(CountdownLog) << "检测到返回键，隐藏子窗口：" << w;
                             w->hide();
                             return true;
@@ -162,7 +197,10 @@ int main(int argc, char *argv[]) {
 
     private:
         QWindow *m_mainWindow = nullptr;
+        QList<QWindow*> m_windowStack;
     };
+
+    debug().logStartup("初始化返回键关窗口");
 #endif
 
 //===================================================================后续启动
@@ -170,7 +208,9 @@ int main(int argc, char *argv[]) {
     parser.process(app);
 
     engine.loadFromModule("com.countdown", "Main");
-    if (engine.rootObjects().isEmpty()) return -1;
+    if (engine.rootObjects().isEmpty()) {
+        qFatal("QML 引擎加载失败");
+    }
     else {
         #ifdef Q_OS_ANDROID
         QWindow *mainWindow = qobject_cast<QWindow*>(engine.rootObjects().constFirst());
@@ -178,6 +218,8 @@ int main(int argc, char *argv[]) {
         app.installEventFilter(backFilter);
         #endif
     }
+
+    debug().logStartup("加载 QML");
 
     updater().getReleaseInfo(); // 检查更新
 
