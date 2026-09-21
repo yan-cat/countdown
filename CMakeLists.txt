@@ -34,6 +34,7 @@ find_package(KF6 REQUIRED COMPONENTS
     CoreAddons
     Archive
     IconThemes
+    ColorScheme
 )
 if(ANDROID)
     find_package(QQC2BreezeStyle REQUIRED)
@@ -113,6 +114,7 @@ target_link_libraries(Countdown PRIVATE
     KF6::Kirigami
     KF6::IconThemes
     KF6::Archive
+    KF6::ColorScheme
 )
 if (LINUX)
     target_link_libraries(Countdown PRIVATE Qt6::DBus)
@@ -161,16 +163,28 @@ if (ANDROID)
             "${CMAKE_INSTALL_PREFIX}/lib/qml/org/kde"
             "${CMAKE_BINARY_DIR}/org/kde"
         COMMENT "Copying KDE QML modules into build dir for deployment")
+endif()
 
-    # 安卓图标
-    set(BREEZEICONS_DIR "/home/user/CraftRoot/tmp/breeze-icons")
+# 图标  哪个傻逼写得win也要这玩意的，你他妈电脑4G运存128G储存不够跑一个完整breeze主题啊
+if(ANDROID OR WIN32)
+    # ---- 源目录按平台区分 ----
+    if(ANDROID)
+        set(BREEZEICONS_DIR "/home/user/CraftRoot/tmp/breeze-icons")
+    else()
+        set(BREEZEICONS_DIR "C:/breeze-icons")
+    endif()
     file(REAL_PATH "${BREEZEICONS_DIR}" BREEZEICONS_DIR)
 
-    set(_theme_dir "${CMAKE_CURRENT_SOURCE_DIR}/android/assets/qml/org/kde/kirigami/breeze-internal")
+    # ---- 目标目录按平台区分 ----
+    if(ANDROID)
+        set(_theme_dir "${CMAKE_CURRENT_SOURCE_DIR}/android/assets/qml/org/kde/kirigami/breeze-internal")
+    else()
+        set(_theme_dir "${CMAKE_BINARY_DIR}/icons/breeze-internal")
+    endif()
     file(REMOVE_RECURSE "${_theme_dir}")
     file(MAKE_DIRECTORY "${_theme_dir}")
 
-    # 需要的图标
+    # ---- 需要的图标 ----
     set(_icon_names
         # 左上角菜单
         application-menu
@@ -226,7 +240,7 @@ if (ANDROID)
 
     message(STATUS "breeze-internal: copied ${_found_count} icon files")
 
-    # 扫描实际存在的目录，生成 index.theme
+    # ---- 扫描实际存在的目录，生成 index.theme ----
     set(_dir_list "")
     file(GLOB _cat_dirs "${_theme_dir}/icons/*")
     foreach(_cat ${_cat_dirs})
@@ -270,6 +284,11 @@ qt_add_translations(Countdown
             translations/countdown_zh_CN.ts
             translations/countdown_en_US.ts
 )
+
+if(WIN32)
+    install(DIRECTORY "${_theme_dir}/"
+            DESTINATION "bin/icons/breeze-internal")
+endif()
 
 if(ANDROID)
     install(TARGETS Countdown

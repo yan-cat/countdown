@@ -16,6 +16,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <KColorSchemeManager>
 #include "debug.hpp"
 #include "updater.hpp"
 #include "main.hpp"
@@ -86,6 +87,8 @@ int main(int argc, char *argv[]) {
 
     debug().logStartup("初始化 Qt 实例");
 
+    KColorSchemeManager::instance(); // 初始化颜色管理
+
     // 安卓不要初始化主题，直接加入列表
     #ifndef Q_OS_ANDROID
     KIconTheme::initTheme();
@@ -94,6 +97,8 @@ int main(int argc, char *argv[]) {
     #if defined(Q_OS_WIN)
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
+    QIcon::setThemeSearchPaths(QIcon::themeSearchPaths()
+                               << QCoreApplication::applicationDirPath() + "/icons");
     #elif defined(Q_OS_ANDROID)
     QQuickStyle::setStyle(QStringLiteral("org.kde.breeze"));
     // 不设 themeName！让 Kirigami 自己选 "breeze-internal"
