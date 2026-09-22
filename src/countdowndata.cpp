@@ -29,27 +29,36 @@ QDate CountdownData::getNextDue(const QJsonObject &obj, const QDate &today) {
 
     int repeat = obj.value("repeat").toInteger(); // 0=不重复, 1=月重复, 2=年重复
 
+    // 把 day 调整为该年该月有效的一天：超过最大天数就取最后一天
+    auto makeValidDate = [](int year, int month, int day) {
+        int maxDay = QDate(year, month, 1).daysInMonth();
+        return QDate(year, month, qMin(day, maxDay));
+    };
+
     QDate nextDue;
     if (repeat == 2) {
         // 年重复
         int m = targetDate.month();
         int d = targetDate.day();
-        nextDue = QDate(today.year(), m, d);
+
+        nextDue = makeValidDate(today.year(), m, d);
         if (nextDue < today) {
-            nextDue = QDate(today.year() + 1, m, d);
+            nextDue = makeValidDate(today.year() + 1, m, d);
         }
     } else if (repeat == 1) {
         // 月重复
         int d = targetDate.day();
-        nextDue = QDate(today.year(), today.month(), d);
+
+        nextDue = makeValidDate(today.year(), today.month(), d);
         if (nextDue < today) {
-            nextDue = QDate(today.addMonths(1).year(),
-                            today.addMonths(1).month(), d);
+            QDate nextMonth = today.addMonths(1);
+            nextDue = makeValidDate(nextMonth.year(), nextMonth.month(), d);
         }
     } else {
         // 不重复或数据异常
         nextDue = targetDate;
     }
+
     return nextDue;
 }
 
