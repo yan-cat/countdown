@@ -165,7 +165,7 @@ if (ANDROID)
         COMMENT "Copying KDE QML modules into build dir for deployment")
 endif()
 
-# 图标  哪个傻逼写得win也要这玩意的，你他妈电脑4G运存128G储存不够跑一个完整breeze主题啊
+# 图标
 if(ANDROID OR WIN32)
     # ---- 源目录按平台区分 ----
     if(ANDROID)
