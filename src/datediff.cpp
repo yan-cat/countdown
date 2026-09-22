@@ -39,15 +39,19 @@ DateDiff exactDateDiff(const QDate &from, const QDate &to) {
     // 1. 年：能加几年就加几年
     int years = 0;
     QDate cursor = start;
-    while (cursor.addYears(1) <= end) {
-        cursor = cursor.addYears(1);
+    while (true) {
+        QDate next = cursor.addYears(1);
+        if (!next.isValid() || next > end) break;
+        cursor = next;
         years++;
     }
 
-    // 2. 月：从加完年的位置继续，能加几月就加几月
+    // 2. 月
     int months = 0;
-    while (cursor.addMonths(1) <= end) {
-        cursor = cursor.addMonths(1);
+    while (true) {
+        QDate next = cursor.addMonths(1);
+        if (!next.isValid() || next > end) break;
+        cursor = next;
         months++;
     }
 

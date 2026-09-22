@@ -25,7 +25,7 @@ Window {
 
         // 检查更新
         function onNewVersion(latestVersion, version , updateLog) {
-            if ( latestVersion ) versionShow.text = version
+            if ( latestVersion ) versionShow.text = qsTr("有新版本：") + version
             else versionShow.text = qsTr("当前已是最新版本：") + version
             versionShow.visible = true
 
