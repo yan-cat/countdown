@@ -73,6 +73,8 @@ Window {
                     Layout.preferredWidth: 100
                     inputMethodHints: Qt.ImhDigitsOnly
 
+                    maximumLength: 4
+
                     validator: RegularExpressionValidator {
                         regularExpression: /^\d+$/
                     }

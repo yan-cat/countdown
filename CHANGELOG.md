@@ -2,6 +2,26 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.5.1...dev) - YYYY-MM-DD
+
+### 新增 (Added) 
+- 限制标题最大字数
+
+### 变更 (Changed) 
+- 减少 Android 长按弹出菜单所需时间
+
+### 弃用 (Deprecated) 
+- 即将移除的功能预告（给用户缓冲期）
+
+### 移除 (Removed) 
+- 已移除的功能
+
+### 修复 (Fixed) 
+- Bug 修复描述
+
+### 安全 (Security) 
+- 修复的安全漏洞
+
 ## [1.5.1](https://github.com/yan-cat/countdown/compare/v1.5.0...v1.5.1) - 2026-09-22
 
 ### 修复 (Fixed) 

@@ -150,6 +150,7 @@ Kirigami.ApplicationWindow {
                                        ? Math.min(adddate.width, 350)
                                        : implicitWidth   // 桌面平台用默认宽度
                 Layout.alignment: Qt.AlignCenter
+                maximumLength: 20
             }
 
             // 重复
@@ -190,6 +191,8 @@ Kirigami.ApplicationWindow {
                     placeholderText: "7"
                     Layout.preferredWidth: 100
                     inputMethodHints: Qt.ImhDigitsOnly
+
+                    maximumLength: 9
 
                         validator: RegularExpressionValidator {
                             regularExpression: /^\d+$/
@@ -281,6 +284,7 @@ Kirigami.ApplicationWindow {
             anchors.fill: parent
             z: 0
             acceptedButtons: Qt.LeftButton | Qt.RightButton
+            pressAndHoldInterval: 300 // 300ms触发长按
             onClicked: (mouse) => {
                 if (mouse.button === Qt.RightButton) {
                     blankMenu.popup(mouse.x, mouse.y)
@@ -437,6 +441,7 @@ Kirigami.ApplicationWindow {
                             anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             hoverEnabled: true
+                            pressAndHoldInterval: 300 // 300ms触发长按
                             onClicked: (mouse) => {
                                 if (mouse.button === Qt.LeftButton) {
                                     pulseAnim.start()
