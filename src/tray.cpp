@@ -30,15 +30,8 @@ void CountdownTray::trayInit() {
     m_trayMenu = new QMenu();
 
     // 选项
-    m_trayMenu->addAction(QStringLiteral("显示主窗口"), qApp, []() {
-        const QWindowList windows = QGuiApplication::topLevelWindows();
-        for (QWindow *w : windows) {
-            if (w->type() != Qt::Window) continue;
-            w->show();
-            w->raise();
-            w->requestActivate();
-            break;
-        }
+    m_trayMenu->addAction(QStringLiteral("显示主窗口"), qApp, [this]() {
+        showMainWindow();
     });
     m_trayMenu->addAction(QStringLiteral("退出"), qApp, &QCoreApplication::quit);
 
@@ -46,7 +39,34 @@ void CountdownTray::trayInit() {
     updateTrayIcon();
     m_trayIcon->show();
 
+    // 托盘自动深浅
+    qApp->installEventFilter(this);
 
+    // 左键打开主窗口
+    QObject::connect(m_trayIcon, &QSystemTrayIcon::activated, this,
+                     [this](QSystemTrayIcon::ActivationReason reason) {
+                         switch (reason) {
+                         case QSystemTrayIcon::Trigger: // 左键
+                             showMainWindow();
+                             break;
+                         case QSystemTrayIcon::Context: // 右键
+                             break;
+                         case QSystemTrayIcon::DoubleClick: // 双击（Windows）
+                             showMainWindow();
+                             break;
+                         default:
+                             break;
+                         }
+                     });
+
+}
+
+// 托盘自动深浅
+bool CountdownTray::eventFilter(QObject *obj, QEvent *event) {
+    if (event->type() == QEvent::ApplicationPaletteChange) {
+        updateTrayIcon();
+    }
+    return QObject::eventFilter(obj, event);
 }
 
 // 托盘颜色
@@ -81,5 +101,16 @@ void CountdownTray::shutdown() {
     if (m_trayMenu) {
         delete m_trayMenu;
         m_trayMenu = nullptr;
+    }
+}
+
+void CountdownTray::showMainWindow() {
+    const QWindowList windows = QGuiApplication::topLevelWindows();
+    for (QWindow *w : windows) {
+        if (w->type() != Qt::Window) continue;
+        w->show();
+        w->raise();
+        w->requestActivate();
+        break;
     }
 }

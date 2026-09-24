@@ -20,9 +20,13 @@ public:
     void trayInit();
     void updateTrayIcon();
     void shutdown();
+    void showMainWindow();
 
 private:
     QSystemTrayIcon *m_trayIcon = nullptr;
     QMenu *m_trayMenu = nullptr;
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
 };
 CountdownTray &tray();

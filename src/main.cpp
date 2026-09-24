@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
     QCommandLineOption minimized({"start-minimized", "minimized", "m"}, QCoreApplication::translate("main", "以最小化窗口启动软件"));
     parser.addOption(minimized);
 
-    QCommandLineOption trayRun({"start-in-tray", "tray", "t"}, QCoreApplication::translate("main", "以隐藏窗口托盘启动"));
+    QCommandLineOption trayRun({"start-in-tray", "tray", "t"}, QCoreApplication::translate("main", "以隐藏窗口到托盘启动"));
     parser.addOption(trayRun);
 
     debug().logStartup("初始化参数");
@@ -253,13 +253,21 @@ int main(int argc, char *argv[]) {
                         });
     }
 
-//===================================================================最小化启动
+//===================================================================启动参数
 
     if (parser.isSet(minimized)) {
         qInfo() << "最小化启动";
         QObject *root = engine.rootObjects().constFirst();
         if (auto *window = qobject_cast<QQuickWindow*>(root)) {
             window->showMinimized();
+        }
+    }
+
+    if (parser.isSet(trayRun)) {
+        qInfo() << "隐藏窗口到托盘启动";
+        QObject *root = engine.rootObjects().constFirst();
+        if (auto *window = qobject_cast<QQuickWindow*>(root)) {
+            window->close();
         }
     }
 
