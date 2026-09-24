@@ -237,6 +237,12 @@ void CountdownManager::setSetting(const QString &key, int value) {
     else qCDebug(CountdownLog) << "设置值未变动，拒绝修改：" << key;
 }
 
+// 设置存在吗
+bool CountdownManager::hasSetting(const QString &key) {
+    QSettings s;
+    return s.contains(key);
+}
+
 // 按id查
 QJsonObject CountdownManager::getCountdownJson(int id, QString key) const {
     return CountdownData::getCountdownJson(m_countdowns, id, key);

@@ -24,6 +24,8 @@ public:
 
     Q_INVOKABLE int setting(const QString &key, int def = 0) const;
     Q_INVOKABLE void setSetting(const QString &key, int value);
+    Q_INVOKABLE bool hasSetting(const QString &key);
+
     void push_reminder();
     Q_INVOKABLE void editCountdown(const QString &dateString);
     Q_INVOKABLE void removeCountdown(int id);

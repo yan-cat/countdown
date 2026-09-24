@@ -60,6 +60,7 @@ qt_add_executable(Countdown WIN32
     src/manager.cpp
     src/reminder.cpp
     src/updater.cpp
+    src/tray.cpp
 
     src/include/autostart.hpp
     src/include/countdowndata.hpp
@@ -67,6 +68,7 @@ qt_add_executable(Countdown WIN32
     src/include/manager.hpp
     src/include/reminder.hpp
     src/include/updater.hpp
+    src/include/tray.hpp
 
 )
 

@@ -265,6 +265,17 @@ Window {
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
             }
 
+            //
+            CheckBox {
+                id: closeToTray
+                text: qsTr("关闭窗口后隐藏到托盘")
+                checked: CountdownManager.setting("closeToTray", false)
+                onClicked: {
+                    CountdownManager.setSetting("closeToTray", checked)
+                }
+                Layout.alignment: Qt.AlignHCenter
+            }
+
             // 开机自启
             CheckBox {
                 id: autoStart

@@ -20,6 +20,9 @@
 #include "debug.hpp"
 #include "updater.hpp"
 #include "main.hpp"
+#include "tray.hpp"
+#include "manager.hpp"
+#include "reminder.hpp"
 
 QString os;
 
@@ -42,17 +45,7 @@ int main(int argc, char *argv[]) {
     os = "unknow";
     #endif
     debug().logStartup("定义信息");
-//===================================================================参数
 
-    QCommandLineParser parser;
-    parser.setApplicationDescription("倒数日");
-    parser.addHelpOption();
-    parser.addVersionOption();
-
-    QCommandLineOption minimized({"start-minimized", "minimized", "m"}, "静默启动（最小化窗口启动）");
-    parser.addOption(minimized);
-
-    debug().logStartup("初始化参数");
 //===================================================================Debug
 
     //显示日志吗
@@ -142,6 +135,21 @@ int main(int argc, char *argv[]) {
 
     debug().logStartup("初始化翻译");
 
+//===================================================================参数
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QCoreApplication::translate("main", "倒数日"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    QCommandLineOption minimized({"start-minimized", "minimized", "m"}, QCoreApplication::translate("main", "以最小化窗口启动软件"));
+    parser.addOption(minimized);
+
+    QCommandLineOption trayRun({"start-in-tray", "tray", "t"}, QCoreApplication::translate("main", "以隐藏窗口托盘启动"));
+    parser.addOption(trayRun);
+
+    debug().logStartup("初始化参数");
+
 //===================================================================单实例锁
 
     #ifndef Q_OS_ANDROID
@@ -228,10 +236,27 @@ int main(int argc, char *argv[]) {
 
     updater().getReleaseInfo(); // 检查更新
 
+//===================================================================托盘
+
+    tray().trayInit();
+
+    QObject *root = engine.rootObjects().constFirst();
+    if (auto *window = qobject_cast<QQuickWindow*>(root)) {
+        QObject::connect(window, &QQuickWindow::closing, qApp,
+                        [](QQuickCloseEvent *) {
+                            qCDebug(CountdownLog) << "主窗口关闭";
+                            if (!manager().hasSetting("closeToTray")) {
+                                manager().setSetting("closeToTray", true);
+                                reminder().pushReminder("倒数日", "已最小化到托盘");
+                            }
+                            if (!manager().setting("closeToTray", false)) QCoreApplication::quit();
+                        });
+    }
+
 //===================================================================最小化启动
 
     if (parser.isSet(minimized)) {
-        qInfo() << "静默启动";
+        qInfo() << "最小化启动";
         QObject *root = engine.rootObjects().constFirst();
         if (auto *window = qobject_cast<QQuickWindow*>(root)) {
             window->showMinimized();
@@ -241,6 +266,7 @@ int main(int argc, char *argv[]) {
 //===================================================================APP退出
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
+        tray().shutdown();
         qInfo() << "正常退出";
     });
 
