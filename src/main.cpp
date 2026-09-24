@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
 //===================================================================后续启动
 
     QApplication app(argc, argv);
+    QApplication::setQuitOnLastWindowClosed(false); // 关窗口不关软件
 
     debug().logStartup("初始化 Qt 实例");
 
