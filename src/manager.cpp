@@ -44,7 +44,8 @@ void CountdownManager::saveCountdowns() {
     }
     QJsonObject rootobj{ // 重新存入版本信息
         {"version", APP_VERSION},
-        {"data", m_countdowns}
+        {"data", m_countdowns},
+        {"lastModified", QDateTime::currentDateTime().toString(Qt::ISODate)}
     };
     QJsonDocument root(rootobj);
     file.write(root.toJson(QJsonDocument::Indented));
@@ -172,6 +173,8 @@ void CountdownManager::editCountdown(const QString &dateString) {
     qCDebug(CountdownLog) << "收到数据：" << dateString;
 
     QJsonObject obj = QJsonDocument::fromJson(dateString.toUtf8()).object();
+    obj.insert("lastModified", QDateTime::currentDateTime().toString(Qt::ISODate));
+
     int id = obj.value("id").toInteger();
 
     if (id >= 0) { //编辑
@@ -185,7 +188,7 @@ void CountdownManager::editCountdown(const QString &dateString) {
                 return;
             }
         }
-        qWarning() << "编辑失败，找不到 id：" << id;
+        qWarning() << "编辑失败，未知 id：" << id;
     }
     else { // 新建
         int newId = 0;
