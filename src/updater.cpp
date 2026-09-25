@@ -19,7 +19,10 @@
 #ifdef Q_OS_WIN
 #include <windows.h>
 #include <shellapi.h>
+#elif defined(Q_OS_ANDROID)
+#include <QJniObject>
 #endif
+
 
 QUrl downloadUrl;
 QUrl fastUrl("https://gh-proxy.org/");
@@ -275,6 +278,18 @@ void CountdownUpdater::installNewVersion(QString path)
         #endif
         QCoreApplication::quit();
         return;
+    }
+    else if (os == "android") {
+        #ifdef Q_OS_ANDROID
+        QJniObject jniPath = QJniObject::fromString(path);
+        QJniObject::callStaticMethod<void>(
+            "com/countdown/Installer",
+            "installApk",
+            "(Ljava/lang/String;)V",
+            jniPath.object<jstring>()
+            );
+        qCDebug(CountdownLog) << "已调用系统安装器：" << path;
+        #endif
     }
     else qWarning() << "未知系统";
 }

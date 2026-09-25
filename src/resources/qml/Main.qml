@@ -17,7 +17,7 @@ Kirigami.ApplicationWindow {
 
         // beta版提示
         function onNewVersion(latestVersion, version , updateLog) {
-            if (latestVersion && CountdownManager.setting("autoGetNewVersion", true)) {
+            if (latestVersion && CountdownManager.setting("autoGetNewVersion", false)) {
                 if (!updaterLoader.active) {
                     updaterLoader.active = true
                 }

@@ -218,6 +218,7 @@ if(ANDROID OR WIN32)
         clock # 钟
         arrow-down # 下拉箭头
         process-working-symbolic # 加载转圈圈
+        download # 下载按钮
     )
 
     set(_found_count 0)

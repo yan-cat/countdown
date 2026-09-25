@@ -5,6 +5,7 @@
           android:versionCode="@ANDROID_VERSION_CODE@">
 
           <uses-permission android:name="android.permission.INTERNET" />
+          <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
           <application android:name="org.qtproject.qt.android.bindings.QtApplication"
                     android:theme="@style/AppTheme"
@@ -12,19 +13,30 @@
                     android:icon="@mipmap/ic_launcher"
                     android:enableOnBackInvokedCallback="false">>
 
-          <activity android:name="org.qtproject.qt.android.bindings.QtActivity"
-                    android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
-                    android:launchMode="singleTop"
-                    android:exported="true">
+                    <activity android:name="org.qtproject.qt.android.bindings.QtActivity"
+                              android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
+                              android:launchMode="singleTop"
+                              android:exported="true">
 
-                    <intent-filter>
-                              <action android:name="android.intent.action.MAIN"/>
-                              <category android:name="android.intent.category.LAUNCHER"/>
-                    </intent-filter>
+                              <intent-filter>
+                                        <action android:name="android.intent.action.MAIN"/>
+                                        <category android:name="android.intent.category.LAUNCHER"/>
+                              </intent-filter>
 
-                    <!-- 关键：补充主库名称元数据 -->
-                    <meta-data android:name="android.app.lib_name"
-                              android:value="Countdown" />
+                              <!-- 关键：补充主库名称元数据 -->
+                              <meta-data android:name="android.app.lib_name"
+                                        android:value="Countdown" />
                     </activity>
+
+                    <provider
+                        android:name="androidx.core.content.FileProvider"
+                        android:authorities="${applicationId}.fileprovider"
+                        android:exported="false"
+                        android:grantUriPermissions="true">
+                        <meta-data
+                            android:name="android.support.FILE_PROVIDER_PATHS"
+                            android:resource="@xml/provider_paths" />
+                    </provider>
+
           </application>
 </manifest>
