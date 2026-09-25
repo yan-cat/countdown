@@ -106,12 +106,15 @@ void CountdownTray::shutdown() {
 
 void CountdownTray::showMainWindow() {
     const QWindowList windows = QGuiApplication::topLevelWindows();
+    bool s = false; // 成功了吗
     for (QWindow *w : windows) {
         if (w->type() != Qt::Window) continue;
         w->show();
         w->raise();
         w->requestActivate();
+        s = true;
         qCDebug(CountdownLog) << "主窗口开启";
         break;
     }
+    if(!s) qCritical() << "主窗口开启失败：未找到主窗口，请重启程序";
 }

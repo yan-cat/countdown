@@ -93,8 +93,8 @@ int main(int argc, char *argv[]) {
         qInfo() << "debug日志为开";
     }
 
-    if (debug().getDebugOn("disableQmlWarn")) rules += "*.warning=false\n";
-    else rules += "*.warning=true\n";
+    if (debug().getDebugOn("disableQmlWarn")) rules += "qt.qml.*.warning=false\n";
+    else rules += "qt.qml.*.warning=true\n";
 
     QLoggingCategory::setFilterRules(rules); // 设置日志规则
 

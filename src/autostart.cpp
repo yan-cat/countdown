@@ -125,8 +125,8 @@ void CountdownAutoStart::setAutoStart(qint64 enable) {
     QString desktopPath = autostartPath + "/" + "com.countdown.desktop";
 
     if(enable == 0) {
-        QFile::remove(desktopPath);   // 关自启
         qCDebug(CountdownLog) << "禁用开机自启";
+        if(!QFile::remove(desktopPath)) qCritical() << "禁用自启失败：删除 Desktop 文件失败：" << desktopPath;; // 关自启
         return;
     }
 
@@ -153,5 +153,6 @@ void CountdownAutoStart::setAutoStart(qint64 enable) {
         out << content;
         qCDebug(CountdownLog) << "启用开机自启";
     }
+    else qCritical() << "Desktop 文件写入失败";
     #endif
 }

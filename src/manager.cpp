@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include <QJSEngine>
 #include <QQmlEngine>
+#include <QSaveFile>
 #include "manager.hpp"
 #include "countdowndata.hpp"
 #include "reminder.hpp"
@@ -37,9 +38,9 @@ CountdownManager::CountdownManager(QObject *parent) : QObject(parent) {
 
 // 保存倒数日
 void CountdownManager::saveCountdowns() {
-    QFile file(m_filePath);
-    if (!file.open(QIODevice::WriteOnly)) { // 只读报错
-        qWarning() << "无法写入：" << m_filePath;
+    QSaveFile saveFile(m_filePath);
+    if (!saveFile.open(QIODevice::WriteOnly)) { // 只读报错
+        qCritical() << "无法写入：" << m_filePath;
         return;
     }
     QJsonObject rootobj{ // 重新存入版本信息
@@ -48,7 +49,8 @@ void CountdownManager::saveCountdowns() {
         {"lastModified", QDateTime::currentDateTime().toString(Qt::ISODate)}
     };
     QJsonDocument root(rootobj);
-    file.write(root.toJson(QJsonDocument::Indented));
+    saveFile.write(root.toJson(QJsonDocument::Indented));
+    if (!saveFile.commit()) qCritical() << "提交文件失败：" << saveFile.errorString();
 }
 
 // 加载倒数日
@@ -79,7 +81,7 @@ void CountdownManager::loadCountdowns() {
         m_countdowns = root.value("data").toArray();
     }
     else {
-        qWarning() << "数据结构损坏：" << m_filePath;
+        qCritical() << "数据结构损坏：" << m_filePath;
     }
 }
 
@@ -88,8 +90,10 @@ void CountdownManager::updateOlddata() {
     qCDebug(CountdownLog) << "旧数据转移启动";
 
     QFile file(m_filePath);
+    QSaveFile saveFile(m_filePath);
+
     if (!file.open(QIODevice::ReadOnly)) {
-        qCDebug(CountdownLog) << "找不到数据文件" << m_filePath;
+        qCritical() << "找不到数据文件" << m_filePath;
         qApp->quit();
         return;
     }
@@ -110,7 +114,7 @@ void CountdownManager::updateOlddata() {
         QJsonArray data = QJsonDocument::fromJson(file.readAll()).array();
         file.close();
 
-        if (!file.open(QIODevice::WriteOnly)) {
+        if (!saveFile.open(QIODevice::WriteOnly)) {
             qCritical() << "数据文件不可写" << m_filePath;
             qApp->quit();
             return;
@@ -120,7 +124,12 @@ void CountdownManager::updateOlddata() {
             {"data", data}
         };
         QJsonDocument newroot(rootobj);
-        file.write(newroot.toJson(QJsonDocument::Indented));
+        saveFile.write(newroot.toJson(QJsonDocument::Indented));
+
+        if (!saveFile.commit()) {
+            qCritical() << "提交文件失败：" << saveFile.errorString();
+            return;
+        }
 
         qCDebug(CountdownLog) << "已转移成新结构";
     }
@@ -147,7 +156,7 @@ void CountdownManager::updateOlddata() {
         }
 
         // 放好版本存回去
-        if (!file.open(QIODevice::WriteOnly)) {
+        if (!saveFile.open(QIODevice::WriteOnly)) {
             qCritical() << "数据文件不可写" << m_filePath;
             qApp->quit();
             return;
@@ -157,7 +166,12 @@ void CountdownManager::updateOlddata() {
             {"data", data}
         };
         QJsonDocument root(rootobj);
-        file.write(root.toJson(QJsonDocument::Indented));
+        saveFile.write(root.toJson(QJsonDocument::Indented));
+
+        if (!saveFile.commit()) {
+            qCritical() << "提交文件失败：" << saveFile.errorString();
+            return;
+        }
 
         qCDebug(CountdownLog) << "已添加缺失项";
     }

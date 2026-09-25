@@ -34,7 +34,7 @@ void linux_reminder(QString title, QString body) {
 
     // 2. 检查接口是否有效
     if (!iface.isValid()) {
-        qCritical() << "D-Bus 通知接口无效";
+        qWarning() << "D-Bus 通知接口无效";
         return;
     }
 

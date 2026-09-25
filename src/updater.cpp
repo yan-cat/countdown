@@ -67,7 +67,7 @@ void CountdownUpdater::getReleaseInfo()
 
         // 网络错误
         if (reply->error() != QNetworkReply::NoError) {
-            qCritical() << "网络请求错误:" << reply->errorString();
+            qWarning() << "网络请求错误:" << reply->errorString();
             emit newVersionError(reply->errorString());
             reply->close();
             reply->deleteLater();
@@ -284,7 +284,7 @@ void CountdownUpdater::installNewVersion(QString path)
         QJniObject ctx = QNativeInterface::QAndroidApplication::context();
         if (!ctx.isValid()) {
             qCritical() << "无法获取 Android context";
-            emit downloadError(tr("无法获取 Android 上下文"));
+            emit downloadError(tr("无法获取 Android 上下文，更新功能失效"));
             return;
         }
 
