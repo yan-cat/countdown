@@ -1,5 +1,4 @@
 #include <QCoreApplication>
-#include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
@@ -10,13 +9,8 @@
 #include <QDir>
 #include <QFileInfo>
 #include <KTar>
-#include <KArchive>
-#include <KArchiveDirectory>
-#include <QProcess>
-#include <QDesktopServices>
 #include <QVersionNumber>
 #include <QTextDocument>
-#include <QRegularExpression>
 #include "updater.hpp"
 #include "debug.hpp"
 #include "manager.hpp"

@@ -274,6 +274,8 @@ Window {
                     CountdownManager.setSetting("closeToTray", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
             }
 
             // 开机自启
@@ -285,6 +287,8 @@ Window {
                     CountdownAutoStart.setAutoStart(checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
             }
 
 //=====================================调试

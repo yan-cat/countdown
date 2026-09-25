@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include <QQmlContext>
 #include <QLockFile>
 #include <QStandardPaths>
 #include <QDir>
@@ -88,7 +87,7 @@ int main(int argc, char *argv[]) {
     KIconTheme::initTheme();
     #endif
 
-    #if defined(Q_OS_WIN)
+    #ifdef Q_OS_WIN
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
     QIcon::setThemeSearchPaths(QIcon::themeSearchPaths()

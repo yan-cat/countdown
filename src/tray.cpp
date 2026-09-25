@@ -1,6 +1,5 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
-#include <QAction>
 #include <QSvgRenderer>
 #include <QPainter>
 #include <QPixmap>
@@ -8,6 +7,7 @@
 #include <QWindow>
 #include <QGuiApplication>
 #include "tray.hpp"
+#include "debug.hpp"
 
 CountdownTray::CountdownTray(QObject *parent) : QObject(parent) { }
 
@@ -111,6 +111,7 @@ void CountdownTray::showMainWindow() {
         w->show();
         w->raise();
         w->requestActivate();
+        qCDebug(CountdownLog) << "主窗口开启";
         break;
     }
 }

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(Countdown VERSION 1.6.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(BINARY_ICONS_RESOURCE ON)
@@ -28,6 +28,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     QuickControls2
     LinguistTools
     Svg
+    Qml
 )
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
@@ -41,6 +42,7 @@ if(ANDROID)
 endif()
 
 qt_policy(SET QTP0001 NEW)
+qt_policy(SET QTP0004 NEW)
 
 # win可执行图标
 if(WIN32)
@@ -112,6 +114,7 @@ target_link_libraries(Countdown PRIVATE
     Qt6::Quick
     Qt6::QuickControls2
     Qt6::Svg
+    Qt6::Qml
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes
@@ -139,6 +142,7 @@ target_compile_definitions(Countdown PRIVATE
 qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
+    NO_IMPORT_SCAN # 不扫描
     QML_FILES
         src/resources/qml/AboutPageWindow.qml
         src/resources/qml/DetailsWindow.qml
