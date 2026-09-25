@@ -23,7 +23,13 @@
 #include "manager.hpp"
 #include "reminder.hpp"
 
+#ifdef Q_OS_ANDROID
+#include <QJniObject>
+#include <QCoreApplication>
+#endif
+
 QString os;
+QString externalAppDataPath;
 
 int main(int argc, char *argv[]) {
 //===================================================================信息
@@ -43,6 +49,34 @@ int main(int argc, char *argv[]) {
     #else
     os = "unknow";
     #endif
+
+    // 定义安卓外部 data
+    #if defined(Q_OS_ANDROID)
+    QJniObject ctx = QNativeInterface::QAndroidApplication::context();
+    if (!ctx.isValid()) {
+        qWarning() << "无法获取 Android context";
+        externalAppDataPath = "";
+    } else {
+        QJniObject jniSubDir = subDir.isEmpty()
+        ? QJniObject()
+        : QJniObject::fromString(subDir);
+
+        QJniObject extDir = ctx.callObjectMethod(
+            "getExternalFilesDir",
+            "(Ljava/lang/String;)Ljava/io/File;",
+            jniSubDir.object<jstring>());
+
+        if (extDir.isValid()) {
+            externalAppDataPath = extDir.toString();
+        } else {
+            qWarning() << "getExternalFilesDir 返回无效";
+            externalAppDataPath = "";
+        }
+    }
+    #else
+    externalAppDataPath = "";
+    #endif
+
     debug().logStartup("定义信息");
 
 //===================================================================Debug
