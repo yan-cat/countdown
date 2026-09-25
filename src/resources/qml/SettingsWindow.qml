@@ -167,6 +167,8 @@ Window {
                             Layout.preferredWidth: Kirigami.Units.gridUnit * 3
 
                             delegate: Text {
+                                required property int modelData
+                                required property int index
                                 text: String(modelData).padStart(2, '0')
                                 color: Kirigami.Theme.textColor
                                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
@@ -189,6 +191,8 @@ Window {
                             Layout.preferredWidth: Kirigami.Units.gridUnit * 3
 
                             delegate: Text {
+                                required property int modelData
+                                required property int index
                                 text: String(modelData).padStart(2, '0')
                                 color: Kirigami.Theme.textColor
                                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
@@ -279,14 +283,20 @@ Window {
             }
 
             // 开机自启
-            CheckBox {
-                id: autoStart
+            Label {
                 text: qsTr("开机自启")
-                checked: CountdownAutoStart.getAutoStart()
-                onClicked: {
-                    CountdownAutoStart.setAutoStart(checked)
-                }
                 Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+            ComboBox {
+                id: autoStart
+                currentIndex: CountdownAutoStart.getAutoStart()
+                model: [qsTr("无"), qsTr("开机自启"), qsTr("开机自启后隐藏到托盘")]
+                onActivated: (index) => {
+                    CountdownAutoStart.setAutoStart(index)
+                }
+                Layout.alignment: Qt.AlignCenter
 
                 visible: Qt.platform.os !== "android"
             }
