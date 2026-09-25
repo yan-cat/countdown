@@ -17,7 +17,12 @@ Kirigami.ApplicationWindow {
 
         // beta版提示
         function onNewVersion(latestVersion, version , updateLog) {
-            if (latestVersion && CountdownManager.setting("autoGetNewVersion", false)) updaterWindow.show()
+            if (latestVersion && CountdownManager.setting("autoGetNewVersion", true)) {
+                if (!updaterLoader.active) {
+                    updaterLoader.active = true
+                }
+                updaterLoader.item.show()
+            }
             if (!latestVersion && version !== "v" + Qt.application.version) cardPage.title = qsTr("倒数日 Beta")
         }
     }
