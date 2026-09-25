@@ -130,12 +130,24 @@ void CountdownUpdater::downloadNewVersion()
         qCDebug(CountdownLog) << "准备下载windows版本";
         filename = "Countdown-windows-x86_64.exe";
     }
+    else if (os == "android")
+    {
+        qCDebug(CountdownLog) << "准备下载android版本";
+        filename = "Countdown-android-arm64-v8a.apk";
+    }
     else {
         qCDebug(CountdownLog) << "未知系统";
         return;
     }
 
-    QString savePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + filename; // 下载路径
+    // 设置下载目录
+    QString savePath;
+    #ifdef Q_OS_ANDROID
+    savePath = externalAppDataPath + "/download/" + filename;
+    #else
+    savePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + filename; // 下载路径
+    #endif
+
     QDir().mkpath(QFileInfo(savePath).absolutePath());
 
     // 无法写入文件
@@ -143,7 +155,7 @@ void CountdownUpdater::downloadNewVersion()
     if (!downloadFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qCritical() << "无法写入文件：" << savePath;
-        emit downloadError(tr("无法写入文件：").arg(savePath));
+        emit downloadError(tr("无法写入文件：%1").arg(savePath));
         return;
     }
 

@@ -53,25 +53,19 @@ int main(int argc, char *argv[]) {
     // 定义安卓外部 data
     #if defined(Q_OS_ANDROID)
     QJniObject ctx = QNativeInterface::QAndroidApplication::context();
-    if (!ctx.isValid()) {
-        qWarning() << "无法获取 Android context";
-        externalAppDataPath = "";
-    } else {
-        QJniObject jniSubDir = subDir.isEmpty()
-        ? QJniObject()
-        : QJniObject::fromString(subDir);
-
+    if (ctx.isValid()) {
+        // 传 null 拿根目录：/Android/data/<包名>/files
         QJniObject extDir = ctx.callObjectMethod(
             "getExternalFilesDir",
             "(Ljava/lang/String;)Ljava/io/File;",
-            jniSubDir.object<jstring>());
-
+            nullptr);
         if (extDir.isValid()) {
             externalAppDataPath = extDir.toString();
         } else {
             qWarning() << "getExternalFilesDir 返回无效";
-            externalAppDataPath = "";
         }
+    } else {
+        qWarning() << "无法获取 Android context";
     }
     #else
     externalAppDataPath = "";

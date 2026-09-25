@@ -95,24 +95,27 @@ void windows_reminder(QString body) {
         }
     }
 
+    QObject::connect(view, &QQuickWindow::closing, view, &QObject::deleteLater);
     view->show();
 }
 
 void CountdownReminder::pushReminder(QString title, QString body) {
     qCDebug(CountdownLog) << "当前系统为：" << os;
 
+    QString os1 = os; // 总共就这几行有用，也懒得想名字了
+
     if (debug().getDebugOn("useWindowsReminderType")) {
-        os = "win";
+        os1 = "win";
         qCDebug(CountdownLog) << "强制win通知模式为开启";
     }
 
-    if (os == "linux") {
+    if (os1 == "linux") {
         qCDebug(CountdownLog) << "通知发送模式：通知";
         #if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
         linux_reminder(title, body);
         #endif
     }
-    else if (os == "win") {
+    else if (os1 == "win") {
         qCDebug(CountdownLog) << "通知发送模式：弹窗";
         windows_reminder(body);
     }

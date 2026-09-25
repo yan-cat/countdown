@@ -6,6 +6,10 @@
 #include <QElapsedTimer>
 #include "debug.hpp"
 
+#ifdef Q_OS_ANDROID
+#include "main.hpp"
+#endif
+
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
 
 namespace {
@@ -113,7 +117,7 @@ void CountdownDebug::installFileLogger() {
     QString logDir;
 
     #ifdef Q_OS_ANDROID
-    QString logDir = externalAppDataPath;
+    logDir = externalAppDataPath;
     if (logDir.isEmpty()) {
         logDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/logs";
     }

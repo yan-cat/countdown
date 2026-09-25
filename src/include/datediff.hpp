@@ -7,5 +7,4 @@ struct DateDiff {
     int days = 0;
 };
 
-DateDiff approxDateDiff(const QDate &from, const QDate &to);
 DateDiff exactDateDiff(const QDate &from, const QDate &to);
