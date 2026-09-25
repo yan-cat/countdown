@@ -25,7 +25,7 @@
 
 
 QUrl downloadUrl;
-QUrl fastUrl("https://gh-proxy.org/");
+QUrl fastUrl("https://v4.gh-proxy.org/");
 
 CountdownUpdater::CountdownUpdater(QObject *parent) : QObject(parent) { }
 
@@ -281,11 +281,19 @@ void CountdownUpdater::installNewVersion(QString path)
     }
     else if (os == "android") {
         #ifdef Q_OS_ANDROID
+        QJniObject ctx = QNativeInterface::QAndroidApplication::context();
+        if (!ctx.isValid()) {
+            qCritical() << "无法获取 Android context";
+            emit downloadError(tr("无法获取 Android 上下文"));
+            return;
+        }
+
         QJniObject jniPath = QJniObject::fromString(path);
         QJniObject::callStaticMethod<void>(
             "com/countdown/Installer",
             "installApk",
-            "(Ljava/lang/String;)V",
+            "(Landroid/content/Context;Ljava/lang/String;)V",
+            ctx.object<jobject>(),
             jniPath.object<jstring>()
             );
         qCDebug(CountdownLog) << "已调用系统安装器：" << path;
