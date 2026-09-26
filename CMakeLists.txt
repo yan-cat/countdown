@@ -219,6 +219,9 @@ if(ANDROID OR WIN32)
         arrow-down # 下拉箭头
         process-working-symbolic # 加载转圈圈
         download # 下载按钮
+        go-jump-today-symbolic # 日历
+        go-previous # 左
+        go-next # 右
     )
 
     set(_found_count 0)
@@ -299,7 +302,7 @@ endif()
 
 if(ANDROID)
     install(TARGETS Countdown
-        # 没用的安卓安装  现在有用了😋  哦不不不你又没用了   完美了，就差ui主题了，我们要有安卓版倒数日咯～
+        # 没用的安卓安装  现在有用了😋  哦不不不你又没用了   完美了，就差ui主题了，我们要有安卓版倒数日咯～   安卓测试版上线～
         LIBRARY DESTINATION lib/${ANDROID_ABI}
         ARCHIVE DESTINATION lib/${ANDROID_ABI}
     )
