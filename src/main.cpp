@@ -209,11 +209,12 @@ int main(int argc, char *argv[]) {
     public:
         explicit BackKeyFilter(QWindow *mainWindow, QObject *parent = nullptr)
             : QObject(parent), m_mainWindow(mainWindow) {
-            // 监听窗口显示/隐藏，维护栈
+            // 焦点变化时维护栈
             connect(qApp, &QGuiApplication::focusWindowChanged, this, [this](QWindow *w) {
                 if (!w || w == m_mainWindow) return;
-                if (!m_windowStack.contains(w))
-                    m_windowStack.append(w);
+                if (w->type() != Qt::Window) return;
+                m_windowStack.removeAll(w);
+                m_windowStack.append(w);
             });
         }
 
@@ -222,11 +223,13 @@ int main(int argc, char *argv[]) {
             if (event->type() == QEvent::KeyRelease) {
                 auto *ke = static_cast<QKeyEvent*>(event);
                 if (ke->key() == Qt::Key_Back) {
-                    // 从栈顶往下找第一个可见的窗口
+                    // 把焦点信号漏掉的可见窗口补进栈
+                    syncStack();
+
                     while (!m_windowStack.isEmpty()) {
                         QWindow *w = m_windowStack.takeLast();
                         if (w->isVisible()) {
-                            qCDebug(CountdownLog) << "检测到返回键，隐藏子窗口：" << w;
+                            qCDebug(CountdownLog) << "返回键关闭：" << w;
                             w->hide();
                             return true;
                         }
@@ -237,6 +240,18 @@ int main(int argc, char *argv[]) {
         }
 
     private:
+        // 遍历所有可见子窗口，把不在栈里的按当前顺序补进去
+        void syncStack() {
+            const QWindowList windows = QGuiApplication::topLevelWindows();
+            for (QWindow *w : windows) {
+                if (w == m_mainWindow) continue;
+                if (w->type() != Qt::Window) continue;
+                if (w->isVisible() && !m_windowStack.contains(w)) {
+                    m_windowStack.append(w);
+                }
+            }
+        }
+
         QWindow *m_mainWindow = nullptr;
         QList<QWindow*> m_windowStack;
     };

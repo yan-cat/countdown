@@ -95,7 +95,7 @@ Countdown
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # 关于窗口
 │   │       ├── DetailsWindow.qml     # 详情窗口
-│   │       ├── LogsWindow.qml        # 日志窗口
+│   │       ├── LogsWindow.qml        # 日志窗口
 │   │       ├── Main.qml              # 主页
 │   │       ├── ReminderWindow.qml    # Windows 平台独立提醒弹窗
 │   │       ├── SettingsWindow.qml    # 设置窗口
@@ -136,6 +136,10 @@ Countdown
         └── Countdown.conf            # 设置项
 ```
 
+## 开发说明
+
+本项目在开发过程中使用了 AI 编程助手辅助完成以下工作：API 文档查询、编译错误原因分析、个别语法问题的解答。所有 AI 提供的参考信息均经过开发者理解、验证后，由开发者本人重新编写并整合至项目中。软件的核心架构、业务逻辑和最终代码均由开发者独立设计、编写和审查
+
 ## 更新日志
 
 各版本的详细变更见 [CHANGELOG.md](CHANGELOG.md)。
@@ -149,5 +153,3 @@ Countdown
 - [ ] WebDAV 云同步事项
 - [ ] 桌面磁贴
 - [ ] 可选软件背景
-
-开发过程由 AI 辅助。
