@@ -30,6 +30,7 @@
 
 QString os;
 QString externalAppDataPath;
+QString locale;
 
 int main(int argc, char *argv[]) {
 //===================================================================信息
@@ -141,7 +142,6 @@ int main(int argc, char *argv[]) {
 
     //翻译
     QTranslator translator;
-    QString locale;
     if (debug().getDebugOn("useEnLang")) {
         locale = "en_US"; // 强制英语
         qCDebug(CountdownLog) << "强制语言为英语";

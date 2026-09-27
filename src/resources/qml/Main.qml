@@ -12,6 +12,44 @@ Kirigami.ApplicationWindow {
     visible: true
     title: qsTr("倒数日")
 
+    // 懒加载子窗口
+    Loader {
+        id: settingsLoader
+        active: false
+        sourceComponent: Component { SettingsWindow { } }
+    }
+    Loader {
+        id: updaterLoader
+        active: false
+        sourceComponent: Component { UpdaterWindow { } }
+    }
+    Loader {
+        id: aboutPageLoader
+        active: false
+        sourceComponent: Component { AboutPageWindow { } }
+    }
+    Loader {
+        id: detailsLoader
+        active: false
+        sourceComponent: Component { DetailsWindow { } }
+    }
+    Loader {
+        id: guideLoader
+        active: false
+        sourceComponent: Component { GuideWindow { } }
+    }
+
+    Component.onCompleted: {
+        if (!CountdownManager.setting("guideOpened", 0))
+        {
+            if (!guideLoader.active) {
+                guideLoader.active = true
+            }
+            guideLoader.item.show()
+            CountdownManager.setSetting("guideOpened", 1)
+        }
+    }
+
     Connections {
         target: CountdownUpdater
 
@@ -343,7 +381,7 @@ Kirigami.ApplicationWindow {
                                 text: qsTr("编辑")
                                 icon.name: "document-edit"
                                 onTriggered: {
-                                    adddate.editingId = modelData.id
+                                    adddate.editingId = cardsLayout.modelData.id
                                     adddate.editingData = {
                                         name: modelData.name,
                                         repeatIndex: modelData.repeat,
@@ -473,28 +511,6 @@ Kirigami.ApplicationWindow {
                 }
             }
         }
-    }
-
-    // 懒加载子窗口
-    Loader {
-        id: settingsLoader
-        active: false
-        sourceComponent: Component { SettingsWindow { } }
-    }
-    Loader {
-        id: updaterLoader
-        active: false
-        sourceComponent: Component { UpdaterWindow { } }
-    }
-    Loader {
-        id: aboutPageLoader
-        active: false
-        sourceComponent: Component { AboutPageWindow { } }
-    }
-    Loader {
-        id: detailsLoader
-        active: false
-        sourceComponent: Component { DetailsWindow { } }
     }
 
     // 提醒土司

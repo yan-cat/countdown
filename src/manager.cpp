@@ -10,6 +10,7 @@
 #include "countdowndata.hpp"
 #include "reminder.hpp"
 #include "debug.hpp"
+#include "main.hpp"
 
 // 初始化函数与统一实例
 CountdownManager *CountdownManager::create(QQmlEngine *, QJSEngine *) {
@@ -321,4 +322,34 @@ void CountdownManager::push_reminder() {
         }
     }
     s.setValue("lastReminder", today.toString(Qt::ISODate));
+}
+
+QString CountdownManager::getGuideMarkdown() {
+    // 尝试打开并读取
+    auto tryRead = [](const QString &path) -> QString {
+        QFile f(path);
+        if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            return QString::fromUtf8(f.readAll());
+        }
+        return QString();
+    };
+
+    // 找语言
+    QString content = tryRead(
+        QString(":/guide/guide_%1.md").arg(locale));
+    if (!content.isEmpty()) return content;
+
+    // 短代码匹配
+    QString shortLocale = locale.left(locale.indexOf('_'));
+    content = tryRead(
+        QString(":/guide/guide_%1.md").arg(shortLocale));
+    if (!content.isEmpty()) return content;
+
+    // 兜底中文
+    qWarning() << "未找到匹配语言的指南，回退中文";
+    content = tryRead(":/guide/guide_zh_CN.md");
+    if (!content.isEmpty()) return content;
+
+    qWarning() << "指南文件损坏";
+    return QStringLiteral("指南文件损坏 The guide file is corrupted");
 }

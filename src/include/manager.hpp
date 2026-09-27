@@ -31,6 +31,8 @@ public:
     Q_INVOKABLE void removeCountdown(int id);
     void run_reminder(int id);
 
+    Q_INVOKABLE QString getGuideMarkdown();
+
 
 signals:
     void refreshCountdowns();

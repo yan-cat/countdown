@@ -151,12 +151,19 @@ qt_add_qml_module(Countdown
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/SettingsWindow.qml
         src/resources/qml/UpdaterWindow.qml
+        src/resources/qml/GuideWindow.qml
 
     RESOURCES
         src/resources/icon/com.countdown.svg
         src/resources/icon/Countdown_tray.svg
         com.countdown.desktop
-
+)
+qt_add_resources(Countdown "guides"
+    PREFIX "/guide"
+    BASE "src/resources/guide"
+    FILES
+        src/resources/guide/guide_zh_CN.md
+        src/resources/guide/guide_en_US.md
 )
 
 if (ANDROID)

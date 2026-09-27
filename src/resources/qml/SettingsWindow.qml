@@ -269,7 +269,7 @@ Window {
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
             }
 
-            //
+            // 托盘
             CheckBox {
                 id: closeToTray
                 text: qsTr("关闭窗口后隐藏到托盘")
@@ -283,22 +283,28 @@ Window {
             }
 
             // 开机自启
-            Label {
-                text: qsTr("开机自启")
-                Layout.alignment: Qt.AlignHCenter
-
-                visible: Qt.platform.os !== "android"
-            }
             ComboBox {
                 id: autoStart
                 currentIndex: CountdownAutoStart.getAutoStart()
-                model: [qsTr("无"), qsTr("开机自启"), qsTr("开机自启后隐藏到托盘")]
+                model: [qsTr("无开机自启"), qsTr("开机自启"), qsTr("开机自启后隐藏到托盘")]
                 onActivated: (index) => {
                     CountdownAutoStart.setAutoStart(index)
                 }
                 Layout.alignment: Qt.AlignCenter
 
                 visible: Qt.platform.os !== "android"
+            }
+
+            Button {
+                text: qsTr("显示指南")
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: {
+                    if (!guideLoader.active) {
+                        guideLoader.active = true
+                    }
+                    guideLoader.item.show()
+                }
             }
 
 //=====================================调试
@@ -470,5 +476,10 @@ Window {
         id: logsLoader
         active: false
         sourceComponent: Component { LogsWindow { } }
+    }
+    Loader {
+        id: guideLoader
+        active: false
+        sourceComponent: Component { GuideWindow { } }
     }
 }
