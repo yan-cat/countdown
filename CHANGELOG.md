@@ -14,18 +14,6 @@
 - 缩短 Android 长按弹出菜单所需时间
 - 数据保存改为原子写入，避免异常中断导致数据损坏或丢失
 
-### 弃用 (Deprecated) 
-- 即将移除的功能预告（给用户缓冲期）
-
-### 移除 (Removed) 
-- 已移除的功能
-
-### 修复 (Fixed) 
-- Bug 修复描述
-
-### 安全 (Security) 
-- 修复的安全漏洞
-
 ## [1.5.1](https://github.com/yan-cat/countdown/compare/v1.5.0...v1.5.1) - 2026-09-22
 
 ### 修复 (Fixed) 
