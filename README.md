@@ -91,10 +91,12 @@ Countdown
 ├── src
 │   ├── include                       # 头文件
 │   ├── resources
+│   │   ├── guide                     # 指南   
 │   │   ├── icon                      # 图标
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # 关于窗口
 │   │       ├── DetailsWindow.qml     # 详情窗口
+│   │       ├── GuideWindow.qml       # 指南窗口
 │   │       ├── LogsWindow.qml        # 日志窗口
 │   │       ├── Main.qml              # 主页
 │   │       ├── ReminderWindow.qml    # Windows 平台独立提醒弹窗
@@ -107,6 +109,7 @@ Countdown
 │   ├── main.cpp                      # 主程序
 │   ├── manager.cpp                   # 管理数据
 │   ├── reminder.cpp                  # 倒数日提醒
+│   ├── tray.cpp                      # 托盘
 │   └── updater.cpp                   # 检查并更新程序
 ├── translations                      # I18n
 ├── CHANGELOG.md                      # 更新日志

@@ -2,7 +2,7 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.5.1...dev) - YYYY-MM-DD
+## [1.6.0](https://github.com/yan-cat/countdown/compare/v1.5.1...v1.6.0) - 2026-09-27
 
 ### 新增 (Added) 
 - 限制标题最大字数

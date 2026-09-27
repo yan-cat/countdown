@@ -381,7 +381,7 @@ Kirigami.ApplicationWindow {
                                 text: qsTr("编辑")
                                 icon.name: "document-edit"
                                 onTriggered: {
-                                    adddate.editingId = cardsLayout.modelData.id
+                                    adddate.editingId = modelData.id
                                     adddate.editingData = {
                                         name: modelData.name,
                                         repeatIndex: modelData.repeat,

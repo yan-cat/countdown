@@ -33,8 +33,8 @@ Data is saved locally as JSON; settings are stored in `~/.config/yancat/Countdow
 
 ## Installation
 
-Linux binaries and a Windows installer are provided in the Releases.
-There is no prebuilt Android package yet; to try it, refer to [Build Help](#build-help) and build it yourself.
+Linux binaries, a Windows installer, and an Android APK are provided in the Releases.
+Android is currently a **beta version** and may be unstable.
 
 > This program requires the Qt6/KF6/Kirigami/QML runtime.\
 > If you already have a full KDE Plasma 6 desktop environment installed (Arch: plasma-meta; Debian/Ubuntu: kde-plasma-desktop with recommended packages not disabled), these dependencies are usually already installed along with the desktop and do not need to be installed manually.
@@ -91,10 +91,12 @@ Countdown
 ├── src
 │   ├── include                       # Header files
 │   ├── resources
+│   │   ├── guide                     # Guide   
 │   │   ├── icon                      # Icons
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # About window
 │   │       ├── DetailsWindow.qml     # Details window
+│   │       ├── GuideWindow.qml       # Guide window
 │   │       ├── LogsWindow.qml        # Logs window
 │   │       ├── Main.qml              # Main page
 │   │       ├── ReminderWindow.qml    # Standalone reminder popup for Windows
@@ -107,6 +109,7 @@ Countdown
 │   ├── main.cpp                      # Main program
 │   ├── manager.cpp                   # Manages data
 │   ├── reminder.cpp                  # Countdown reminders
+│   ├── tray.cpp                      # Tray
 │   └── updater.cpp                   # Checks and updates the program
 ├── translations                      # I18n
 ├── CHANGELOG.md                      # Changelog
@@ -136,19 +139,22 @@ Files (and folders) created by the application:
         └── Countdown.conf            # Settings
 ```
 
+## Development Notes
+
+This project used an AI programming assistant during development to help with the following: looking up API documentation, analyzing the causes of compilation errors, and answering a few syntax questions. All reference information provided by the AI was understood and verified by the developer, then rewritten and integrated into the project by the developer. The core architecture, business logic, and final code of the software were all designed, written, and reviewed independently by the developer
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for the detailed changes in each version.
 
 ## Planned
 
-- [ ] Last edit time of countdowns and of the data file
-- [ ] Card sorting
-- [ ] Update check on Android
+- [ ] More repeat rules
+- [ ] Popup alerts for Critical-level errors
+- [ ] Card sorting 
+- [ ] Bug: the QML warning-disable switch does not work properly
 - [ ] WebDAV cloud sync of items
 - [ ] Desktop tiles/widget
 - [ ] Optional app background
-
-The development process was assisted by AI.
 
 > **Note:** This English README may not be the latest version. Please refer to the [Chinese README](README.md) (or the source code) for the most up-to-date information.
