@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include <QQmlContext>
 #include <QLockFile>
 #include <QStandardPaths>
 #include <QDir>
@@ -20,8 +19,18 @@
 #include "debug.hpp"
 #include "updater.hpp"
 #include "main.hpp"
+#include "tray.hpp"
+#include "manager.hpp"
+#include "reminder.hpp"
+
+#ifdef Q_OS_ANDROID
+#include <QJniObject>
+#include <QCoreApplication>
+#endif
 
 QString os;
+QString externalAppDataPath;
+QString locale;
 
 int main(int argc, char *argv[]) {
 //===================================================================信息
@@ -41,18 +50,30 @@ int main(int argc, char *argv[]) {
     #else
     os = "unknow";
     #endif
+
+    // 定义安卓外部 data
+    #if defined(Q_OS_ANDROID)
+    QJniObject ctx = QNativeInterface::QAndroidApplication::context();
+    if (ctx.isValid()) {
+        // 传 null 拿根目录：/Android/data/<包名>/files
+        QJniObject extDir = ctx.callObjectMethod(
+            "getExternalFilesDir",
+            "(Ljava/lang/String;)Ljava/io/File;",
+            nullptr);
+        if (extDir.isValid()) {
+            externalAppDataPath = extDir.toString();
+        } else {
+            qWarning() << "getExternalFilesDir 返回无效";
+        }
+    } else {
+        qWarning() << "无法获取 Android context";
+    }
+    #else
+    externalAppDataPath = "";
+    #endif
+
     debug().logStartup("定义信息");
-//===================================================================参数
 
-    QCommandLineParser parser;
-    parser.setApplicationDescription("倒数日");
-    parser.addHelpOption();
-    parser.addVersionOption();
-
-    QCommandLineOption minimized({"start-minimized", "minimized", "m"}, "静默启动（最小化窗口启动）");
-    parser.addOption(minimized);
-
-    debug().logStartup("初始化参数");
 //===================================================================Debug
 
     //显示日志吗
@@ -73,8 +94,8 @@ int main(int argc, char *argv[]) {
         qInfo() << "debug日志为开";
     }
 
-    if (debug().getDebugOn("disableQmlWarn")) rules += "*.warning=false\n";
-    else rules += "*.warning=true\n";
+    if (debug().getDebugOn("disableQmlWarn")) rules += "qt.qml.*.warning=false\n";
+    else rules += "qt.qml.*.warning=true\n";
 
     QLoggingCategory::setFilterRules(rules); // 设置日志规则
 
@@ -84,6 +105,7 @@ int main(int argc, char *argv[]) {
 //===================================================================后续启动
 
     QApplication app(argc, argv);
+    QApplication::setQuitOnLastWindowClosed(false); // 关窗口不关软件
 
     debug().logStartup("初始化 Qt 实例");
 
@@ -94,7 +116,7 @@ int main(int argc, char *argv[]) {
     KIconTheme::initTheme();
     #endif
 
-    #if defined(Q_OS_WIN)
+    #ifdef Q_OS_WIN
     QApplication::setStyle("breeze");                        // QStyle 用 Breeze
     QQuickStyle::setStyle(QStringLiteral("org.kde.desktop")); // QQC2 样式用 org.kde.desktop
     QIcon::setThemeSearchPaths(QIcon::themeSearchPaths()
@@ -120,7 +142,6 @@ int main(int argc, char *argv[]) {
 
     //翻译
     QTranslator translator;
-    QString locale;
     if (debug().getDebugOn("useEnLang")) {
         locale = "en_US"; // 强制英语
         qCDebug(CountdownLog) << "强制语言为英语";
@@ -141,6 +162,21 @@ int main(int argc, char *argv[]) {
     }
 
     debug().logStartup("初始化翻译");
+
+//===================================================================参数
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(QCoreApplication::translate("main", "倒数日"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    QCommandLineOption minimized({"start-minimized", "minimized", "m"}, QCoreApplication::translate("main", "以最小化窗口启动软件"));
+    parser.addOption(minimized);
+
+    QCommandLineOption trayRun({"start-in-tray", "tray", "t"}, QCoreApplication::translate("main", "以隐藏窗口到托盘启动"));
+    parser.addOption(trayRun);
+
+    debug().logStartup("初始化参数");
 
 //===================================================================单实例锁
 
@@ -173,11 +209,12 @@ int main(int argc, char *argv[]) {
     public:
         explicit BackKeyFilter(QWindow *mainWindow, QObject *parent = nullptr)
             : QObject(parent), m_mainWindow(mainWindow) {
-            // 监听窗口显示/隐藏，维护栈
+            // 焦点变化时维护栈
             connect(qApp, &QGuiApplication::focusWindowChanged, this, [this](QWindow *w) {
                 if (!w || w == m_mainWindow) return;
-                if (!m_windowStack.contains(w))
-                    m_windowStack.append(w);
+                if (w->type() != Qt::Window) return;
+                m_windowStack.removeAll(w);
+                m_windowStack.append(w);
             });
         }
 
@@ -186,11 +223,13 @@ int main(int argc, char *argv[]) {
             if (event->type() == QEvent::KeyRelease) {
                 auto *ke = static_cast<QKeyEvent*>(event);
                 if (ke->key() == Qt::Key_Back) {
-                    // 从栈顶往下找第一个可见的窗口
+                    // 把焦点信号漏掉的可见窗口补进栈
+                    syncStack();
+
                     while (!m_windowStack.isEmpty()) {
                         QWindow *w = m_windowStack.takeLast();
                         if (w->isVisible()) {
-                            qCDebug(CountdownLog) << "检测到返回键，隐藏子窗口：" << w;
+                            qCDebug(CountdownLog) << "返回键关闭：" << w;
                             w->hide();
                             return true;
                         }
@@ -201,6 +240,18 @@ int main(int argc, char *argv[]) {
         }
 
     private:
+        // 遍历所有可见子窗口，把不在栈里的按当前顺序补进去
+        void syncStack() {
+            const QWindowList windows = QGuiApplication::topLevelWindows();
+            for (QWindow *w : windows) {
+                if (w == m_mainWindow) continue;
+                if (w->type() != Qt::Window) continue;
+                if (w->isVisible() && !m_windowStack.contains(w)) {
+                    m_windowStack.append(w);
+                }
+            }
+        }
+
         QWindow *m_mainWindow = nullptr;
         QList<QWindow*> m_windowStack;
     };
@@ -228,19 +279,45 @@ int main(int argc, char *argv[]) {
 
     updater().getReleaseInfo(); // 检查更新
 
-//===================================================================最小化启动
+//===================================================================托盘
+
+    tray().trayInit();
+
+    QObject *root = engine.rootObjects().constFirst();
+    if (auto *window = qobject_cast<QQuickWindow*>(root)) {
+        QObject::connect(window, &QQuickWindow::closing, qApp,
+                        [](QQuickCloseEvent *) {
+                            qCDebug(CountdownLog) << "主窗口关闭";
+                            if (!manager().hasSetting("closeToTray")) {
+                                manager().setSetting("closeToTray", true);
+                                reminder().pushReminder("倒数日", "已最小化到托盘");
+                            }
+                            if (!manager().setting("closeToTray", false)) QCoreApplication::quit();
+                        });
+    }
+
+//===================================================================启动参数
 
     if (parser.isSet(minimized)) {
-        qInfo() << "静默启动";
+        qInfo() << "最小化启动";
         QObject *root = engine.rootObjects().constFirst();
         if (auto *window = qobject_cast<QQuickWindow*>(root)) {
             window->showMinimized();
         }
     }
 
+    if (parser.isSet(trayRun)) {
+        qInfo() << "隐藏窗口到托盘启动";
+        QObject *root = engine.rootObjects().constFirst();
+        if (auto *window = qobject_cast<QQuickWindow*>(root)) {
+            window->close();
+        }
+    }
+
 //===================================================================APP退出
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
+        tray().shutdown();
         qInfo() << "正常退出";
     });
 

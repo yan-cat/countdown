@@ -1,5 +1,4 @@
 #include <QCoreApplication>
-#include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
@@ -10,13 +9,8 @@
 #include <QDir>
 #include <QFileInfo>
 #include <KTar>
-#include <KArchive>
-#include <KArchiveDirectory>
-#include <QProcess>
-#include <QDesktopServices>
 #include <QVersionNumber>
 #include <QTextDocument>
-#include <QRegularExpression>
 #include "updater.hpp"
 #include "debug.hpp"
 #include "manager.hpp"
@@ -25,10 +19,13 @@
 #ifdef Q_OS_WIN
 #include <windows.h>
 #include <shellapi.h>
+#elif defined(Q_OS_ANDROID)
+#include <QJniObject>
 #endif
 
+
 QUrl downloadUrl;
-QUrl fastUrl("https://gh-proxy.org/");
+QUrl fastUrl("https://v4.gh-proxy.org/");
 
 CountdownUpdater::CountdownUpdater(QObject *parent) : QObject(parent) { }
 
@@ -70,7 +67,7 @@ void CountdownUpdater::getReleaseInfo()
 
         // 网络错误
         if (reply->error() != QNetworkReply::NoError) {
-            qCritical() << "网络请求错误:" << reply->errorString();
+            qWarning() << "网络请求错误:" << reply->errorString();
             emit newVersionError(reply->errorString());
             reply->close();
             reply->deleteLater();
@@ -136,12 +133,24 @@ void CountdownUpdater::downloadNewVersion()
         qCDebug(CountdownLog) << "准备下载windows版本";
         filename = "Countdown-windows-x86_64.exe";
     }
+    else if (os == "android")
+    {
+        qCDebug(CountdownLog) << "准备下载android版本";
+        filename = "Countdown-android-arm64-v8a.apk";
+    }
     else {
         qCDebug(CountdownLog) << "未知系统";
         return;
     }
 
-    QString savePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + filename; // 下载路径
+    // 设置下载目录
+    QString savePath;
+    #ifdef Q_OS_ANDROID
+    savePath = externalAppDataPath + "/download/" + filename;
+    #else
+    savePath = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/" + filename; // 下载路径
+    #endif
+
     QDir().mkpath(QFileInfo(savePath).absolutePath());
 
     // 无法写入文件
@@ -149,7 +158,7 @@ void CountdownUpdater::downloadNewVersion()
     if (!downloadFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qCritical() << "无法写入文件：" << savePath;
-        emit downloadError(tr("无法写入文件：").arg(savePath));
+        emit downloadError(tr("无法写入文件：%1").arg(savePath));
         return;
     }
 
@@ -269,6 +278,26 @@ void CountdownUpdater::installNewVersion(QString path)
         #endif
         QCoreApplication::quit();
         return;
+    }
+    else if (os == "android") {
+        #ifdef Q_OS_ANDROID
+        QJniObject ctx = QNativeInterface::QAndroidApplication::context();
+        if (!ctx.isValid()) {
+            qCritical() << "无法获取 Android context";
+            emit downloadError(tr("无法获取 Android 上下文，更新功能失效"));
+            return;
+        }
+
+        QJniObject jniPath = QJniObject::fromString(path);
+        QJniObject::callStaticMethod<void>(
+            "com/countdown/Installer",
+            "installApk",
+            "(Landroid/content/Context;Ljava/lang/String;)V",
+            ctx.object<jobject>(),
+            jniPath.object<jstring>()
+            );
+        qCDebug(CountdownLog) << "已调用系统安装器：" << path;
+        #endif
     }
     else qWarning() << "未知系统";
 }

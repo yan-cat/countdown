@@ -15,7 +15,7 @@ public:
     // 让 QML 单例复用 C++ 的同一个实例
     static CountdownAutoStart *create(QQmlEngine *, QJSEngine *);
 
-    Q_INVOKABLE bool getAutoStart();
-    Q_INVOKABLE void setAutoStart(bool enable);
+    Q_INVOKABLE qint64 getAutoStart();
+    Q_INVOKABLE void setAutoStart(qint64 enable);
 };
 CountdownAutoStart &autostart();

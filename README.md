@@ -91,11 +91,13 @@ Countdown
 ├── src
 │   ├── include                       # 头文件
 │   ├── resources
+│   │   ├── guide                     # 指南   
 │   │   ├── icon                      # 图标
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # 关于窗口
 │   │       ├── DetailsWindow.qml     # 详情窗口
-│   │       ├── LogsWindow.qml        # 日志窗口
+│   │       ├── GuideWindow.qml       # 指南窗口
+│   │       ├── LogsWindow.qml        # 日志窗口
 │   │       ├── Main.qml              # 主页
 │   │       ├── ReminderWindow.qml    # Windows 平台独立提醒弹窗
 │   │       ├── SettingsWindow.qml    # 设置窗口
@@ -107,6 +109,7 @@ Countdown
 │   ├── main.cpp                      # 主程序
 │   ├── manager.cpp                   # 管理数据
 │   ├── reminder.cpp                  # 倒数日提醒
+│   ├── tray.cpp                      # 托盘
 │   └── updater.cpp                   # 检查并更新程序
 ├── translations                      # I18n
 ├── CHANGELOG.md                      # 更新日志
@@ -136,17 +139,20 @@ Countdown
         └── Countdown.conf            # 设置项
 ```
 
+## 开发说明
+
+本项目在开发过程中使用了 AI 编程助手辅助完成以下工作：API 文档查询、编译错误原因分析、个别语法问题的解答。所有 AI 提供的参考信息均经过开发者理解、验证后，由开发者本人重新编写并整合至项目中。软件的核心架构、业务逻辑和最终代码均由开发者独立设计、编写和审查
+
 ## 更新日志
 
 各版本的详细变更见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 待完成
 
-- [ ] 倒数日最后编辑时间和数据文件最后编辑时间
+- [ ] 更多重复规则
+- [ ] Critical 等级错误弹窗提醒
 - [ ] 卡片排序 
-- [ ] Android 检查更新
+- [ ] qml禁用警告开关未正常运作的bug
 - [ ] WebDAV 云同步事项
 - [ ] 桌面磁贴
 - [ ] 可选软件背景
-
-开发过程由 AI 辅助。

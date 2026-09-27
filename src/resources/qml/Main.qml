@@ -12,12 +12,55 @@ Kirigami.ApplicationWindow {
     visible: true
     title: qsTr("倒数日")
 
+    // 懒加载子窗口
+    Loader {
+        id: settingsLoader
+        active: false
+        sourceComponent: Component { SettingsWindow { } }
+    }
+    Loader {
+        id: updaterLoader
+        active: false
+        sourceComponent: Component { UpdaterWindow { } }
+    }
+    Loader {
+        id: aboutPageLoader
+        active: false
+        sourceComponent: Component { AboutPageWindow { } }
+    }
+    Loader {
+        id: detailsLoader
+        active: false
+        sourceComponent: Component { DetailsWindow { } }
+    }
+    Loader {
+        id: guideLoader
+        active: false
+        sourceComponent: Component { GuideWindow { } }
+    }
+
+    Component.onCompleted: {
+        if (!CountdownManager.setting("guideOpened", 0))
+        {
+            if (!guideLoader.active) {
+                guideLoader.active = true
+            }
+            guideLoader.item.show()
+            CountdownManager.setSetting("guideOpened", 1)
+        }
+    }
+
     Connections {
         target: CountdownUpdater
 
         // beta版提示
         function onNewVersion(latestVersion, version , updateLog) {
-            if (latestVersion && CountdownManager.setting("autoGetNewVersion", false)) updaterWindow.show()
+            if (latestVersion && CountdownManager.setting("autoGetNewVersion", false)) {
+                if (!updaterLoader.active) {
+                    updaterLoader.active = true
+                }
+                updaterLoader.item.show()
+            }
             if (!latestVersion && version !== "v" + Qt.application.version) cardPage.title = qsTr("倒数日 Beta")
         }
     }
@@ -150,6 +193,7 @@ Kirigami.ApplicationWindow {
                                        ? Math.min(adddate.width, 350)
                                        : implicitWidth   // 桌面平台用默认宽度
                 Layout.alignment: Qt.AlignCenter
+                maximumLength: 20
             }
 
             // 重复
@@ -190,6 +234,8 @@ Kirigami.ApplicationWindow {
                     placeholderText: "7"
                     Layout.preferredWidth: 100
                     inputMethodHints: Qt.ImhDigitsOnly
+
+                    maximumLength: 9
 
                         validator: RegularExpressionValidator {
                             regularExpression: /^\d+$/
@@ -281,6 +327,7 @@ Kirigami.ApplicationWindow {
             anchors.fill: parent
             z: 0
             acceptedButtons: Qt.LeftButton | Qt.RightButton
+            pressAndHoldInterval: 300 // 300ms触发长按
             onClicked: (mouse) => {
                 if (mouse.button === Qt.RightButton) {
                     blankMenu.popup(mouse.x, mouse.y)
@@ -437,6 +484,7 @@ Kirigami.ApplicationWindow {
                             anchors.fill: parent
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
                             hoverEnabled: true
+                            pressAndHoldInterval: 300 // 300ms触发长按
                             onClicked: (mouse) => {
                                 if (mouse.button === Qt.LeftButton) {
                                     pulseAnim.start()
@@ -463,28 +511,6 @@ Kirigami.ApplicationWindow {
                 }
             }
         }
-    }
-
-    // 懒加载子窗口
-    Loader {
-        id: settingsLoader
-        active: false
-        sourceComponent: Component { SettingsWindow { } }
-    }
-    Loader {
-        id: updaterLoader
-        active: false
-        sourceComponent: Component { UpdaterWindow { } }
-    }
-    Loader {
-        id: aboutPageLoader
-        active: false
-        sourceComponent: Component { AboutPageWindow { } }
-    }
-    Loader {
-        id: detailsLoader
-        active: false
-        sourceComponent: Component { DetailsWindow { } }
     }
 
     // 提醒土司

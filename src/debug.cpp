@@ -7,8 +7,7 @@
 #include "debug.hpp"
 
 #ifdef Q_OS_ANDROID
-#include <QJniObject>
-#include <QCoreApplication>
+#include "main.hpp"
 #endif
 
 Q_LOGGING_CATEGORY(CountdownLog, "Countdown.app")
@@ -118,16 +117,8 @@ void CountdownDebug::installFileLogger() {
     QString logDir;
 
     #ifdef Q_OS_ANDROID
-    QJniObject ctx = QNativeInterface::QAndroidApplication::context();
-    QJniObject extDir = ctx.callObjectMethod(
-        "getExternalFilesDir",
-        "(Ljava/lang/String;)Ljava/io/File;",
-        QJniObject::fromString("logs").object<jstring>());
-    if (extDir.isValid()) {
-        logDir = extDir.toString();
-        qInfo() << "Android external log dir:" << logDir;
-    } else {
-        qWarning() << "getExternalFilesDir invalid, fallback to AppDataLocation";
+    logDir = externalAppDataPath;
+    if (logDir.isEmpty()) {
         logDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/logs";
     }
     #else

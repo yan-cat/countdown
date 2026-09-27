@@ -73,6 +73,8 @@ Window {
                     Layout.preferredWidth: 100
                     inputMethodHints: Qt.ImhDigitsOnly
 
+                    maximumLength: 4
+
                     validator: RegularExpressionValidator {
                         regularExpression: /^\d+$/
                     }
@@ -165,6 +167,8 @@ Window {
                             Layout.preferredWidth: Kirigami.Units.gridUnit * 3
 
                             delegate: Text {
+                                required property int modelData
+                                required property int index
                                 text: String(modelData).padStart(2, '0')
                                 color: Kirigami.Theme.textColor
                                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
@@ -187,6 +191,8 @@ Window {
                             Layout.preferredWidth: Kirigami.Units.gridUnit * 3
 
                             delegate: Text {
+                                required property int modelData
+                                required property int index
                                 text: String(modelData).padStart(2, '0')
                                 color: Kirigami.Theme.textColor
                                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
@@ -263,15 +269,42 @@ Window {
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
             }
 
-            // 开机自启
+            // 托盘
             CheckBox {
-                id: autoStart
-                text: qsTr("开机自启")
-                checked: CountdownAutoStart.getAutoStart()
+                id: closeToTray
+                text: qsTr("关闭窗口后隐藏到托盘")
+                checked: CountdownManager.setting("closeToTray", false)
                 onClicked: {
-                    CountdownAutoStart.setAutoStart(checked)
+                    CountdownManager.setSetting("closeToTray", checked)
                 }
                 Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+
+            // 开机自启
+            ComboBox {
+                id: autoStart
+                currentIndex: CountdownAutoStart.getAutoStart()
+                model: [qsTr("无开机自启"), qsTr("开机自启"), qsTr("开机自启后隐藏到托盘")]
+                onActivated: (index) => {
+                    CountdownAutoStart.setAutoStart(index)
+                }
+                Layout.alignment: Qt.AlignCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+
+            Button {
+                text: qsTr("显示指南")
+                Layout.alignment: Qt.AlignHCenter
+
+                onClicked: {
+                    if (!guideLoader.active) {
+                        guideLoader.active = true
+                    }
+                    guideLoader.item.show()
+                }
             }
 
 //=====================================调试
@@ -443,5 +476,10 @@ Window {
         id: logsLoader
         active: false
         sourceComponent: Component { LogsWindow { } }
+    }
+    Loader {
+        id: guideLoader
+        active: false
+        sourceComponent: Component { GuideWindow { } }
     }
 }

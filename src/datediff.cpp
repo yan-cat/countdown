@@ -1,31 +1,5 @@
 #include "datediff.hpp"
 
-// 天换算年月日估算
-DateDiff approxDateDiff(const QDate &from, const QDate &to) {
-    DateDiff d;
-
-    int days = qAbs(from.daysTo(to));
-
-    // 天多了减天
-    int months = 0;
-    while (days >= 30) {
-        days -= 30;
-        months++;
-    }
-
-    // 月多了减月
-    int years = 0;
-    while (months >= 12) {
-        months -= 12;
-        years++;
-    }
-
-    d.years = years;
-    d.months = months;
-    d.days = days;
-    return d;
-}
-
 // 天转年月日准确
 DateDiff exactDateDiff(const QDate &from, const QDate &to) {
     DateDiff d;

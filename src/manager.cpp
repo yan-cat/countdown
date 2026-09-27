@@ -5,10 +5,12 @@
 #include <QCoreApplication>
 #include <QJSEngine>
 #include <QQmlEngine>
+#include <QSaveFile>
 #include "manager.hpp"
 #include "countdowndata.hpp"
 #include "reminder.hpp"
 #include "debug.hpp"
+#include "main.hpp"
 
 // 初始化函数与统一实例
 CountdownManager *CountdownManager::create(QQmlEngine *, QJSEngine *) {
@@ -37,17 +39,19 @@ CountdownManager::CountdownManager(QObject *parent) : QObject(parent) {
 
 // 保存倒数日
 void CountdownManager::saveCountdowns() {
-    QFile file(m_filePath);
-    if (!file.open(QIODevice::WriteOnly)) { // 只读报错
-        qWarning() << "无法写入：" << m_filePath;
+    QSaveFile saveFile(m_filePath);
+    if (!saveFile.open(QIODevice::WriteOnly)) { // 只读报错
+        qCritical() << "无法写入：" << m_filePath;
         return;
     }
     QJsonObject rootobj{ // 重新存入版本信息
         {"version", APP_VERSION},
-        {"data", m_countdowns}
+        {"data", m_countdowns},
+        {"lastModified", QDateTime::currentDateTime().toString(Qt::ISODate)}
     };
     QJsonDocument root(rootobj);
-    file.write(root.toJson(QJsonDocument::Indented));
+    saveFile.write(root.toJson(QJsonDocument::Indented));
+    if (!saveFile.commit()) qCritical() << "提交文件失败：" << saveFile.errorString();
 }
 
 // 加载倒数日
@@ -78,7 +82,7 @@ void CountdownManager::loadCountdowns() {
         m_countdowns = root.value("data").toArray();
     }
     else {
-        qWarning() << "数据结构损坏：" << m_filePath;
+        qCritical() << "数据结构损坏：" << m_filePath;
     }
 }
 
@@ -87,8 +91,10 @@ void CountdownManager::updateOlddata() {
     qCDebug(CountdownLog) << "旧数据转移启动";
 
     QFile file(m_filePath);
+    QSaveFile saveFile(m_filePath);
+
     if (!file.open(QIODevice::ReadOnly)) {
-        qCDebug(CountdownLog) << "找不到数据文件" << m_filePath;
+        qCritical() << "找不到数据文件" << m_filePath;
         qApp->quit();
         return;
     }
@@ -109,7 +115,7 @@ void CountdownManager::updateOlddata() {
         QJsonArray data = QJsonDocument::fromJson(file.readAll()).array();
         file.close();
 
-        if (!file.open(QIODevice::WriteOnly)) {
+        if (!saveFile.open(QIODevice::WriteOnly)) {
             qCritical() << "数据文件不可写" << m_filePath;
             qApp->quit();
             return;
@@ -119,7 +125,12 @@ void CountdownManager::updateOlddata() {
             {"data", data}
         };
         QJsonDocument newroot(rootobj);
-        file.write(newroot.toJson(QJsonDocument::Indented));
+        saveFile.write(newroot.toJson(QJsonDocument::Indented));
+
+        if (!saveFile.commit()) {
+            qCritical() << "提交文件失败：" << saveFile.errorString();
+            return;
+        }
 
         qCDebug(CountdownLog) << "已转移成新结构";
     }
@@ -146,7 +157,7 @@ void CountdownManager::updateOlddata() {
         }
 
         // 放好版本存回去
-        if (!file.open(QIODevice::WriteOnly)) {
+        if (!saveFile.open(QIODevice::WriteOnly)) {
             qCritical() << "数据文件不可写" << m_filePath;
             qApp->quit();
             return;
@@ -156,7 +167,12 @@ void CountdownManager::updateOlddata() {
             {"data", data}
         };
         QJsonDocument root(rootobj);
-        file.write(root.toJson(QJsonDocument::Indented));
+        saveFile.write(root.toJson(QJsonDocument::Indented));
+
+        if (!saveFile.commit()) {
+            qCritical() << "提交文件失败：" << saveFile.errorString();
+            return;
+        }
 
         qCDebug(CountdownLog) << "已添加缺失项";
     }
@@ -172,6 +188,8 @@ void CountdownManager::editCountdown(const QString &dateString) {
     qCDebug(CountdownLog) << "收到数据：" << dateString;
 
     QJsonObject obj = QJsonDocument::fromJson(dateString.toUtf8()).object();
+    obj.insert("lastModified", QDateTime::currentDateTime().toString(Qt::ISODate));
+
     int id = obj.value("id").toInteger();
 
     if (id >= 0) { //编辑
@@ -185,7 +203,7 @@ void CountdownManager::editCountdown(const QString &dateString) {
                 return;
             }
         }
-        qWarning() << "编辑失败，找不到 id：" << id;
+        qWarning() << "编辑失败，未知 id：" << id;
     }
     else { // 新建
         int newId = 0;
@@ -235,6 +253,12 @@ void CountdownManager::setSetting(const QString &key, int value) {
         emit refreshCountdowns();
     }
     else qCDebug(CountdownLog) << "设置值未变动，拒绝修改：" << key;
+}
+
+// 设置存在吗
+bool CountdownManager::hasSetting(const QString &key) {
+    QSettings s;
+    return s.contains(key);
 }
 
 // 按id查
@@ -298,4 +322,34 @@ void CountdownManager::push_reminder() {
         }
     }
     s.setValue("lastReminder", today.toString(Qt::ISODate));
+}
+
+QString CountdownManager::getGuideMarkdown() {
+    // 尝试打开并读取
+    auto tryRead = [](const QString &path) -> QString {
+        QFile f(path);
+        if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            return QString::fromUtf8(f.readAll());
+        }
+        return QString();
+    };
+
+    // 找语言
+    QString content = tryRead(
+        QString(":/guide/guide_%1.md").arg(locale));
+    if (!content.isEmpty()) return content;
+
+    // 短代码匹配
+    QString shortLocale = locale.left(locale.indexOf('_'));
+    content = tryRead(
+        QString(":/guide/guide_%1.md").arg(shortLocale));
+    if (!content.isEmpty()) return content;
+
+    // 兜底中文
+    qWarning() << "未找到匹配语言的指南，回退中文";
+    content = tryRead(":/guide/guide_zh_CN.md");
+    if (!content.isEmpty()) return content;
+
+    qWarning() << "指南文件损坏";
+    return QStringLiteral("指南文件损坏 The guide file is corrupted");
 }

@@ -2,6 +2,18 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.6.0](https://github.com/yan-cat/countdown/compare/v1.5.1...v1.6.0) - 2026-09-27
+
+### 新增 (Added) 
+- 限制标题最大字数
+- 托盘图标与最小化到托盘
+- 安卓可直接软件内更新
+- 使用指南
+
+### 变更 (Changed) 
+- 缩短 Android 长按弹出菜单所需时间
+- 数据保存改为原子写入，避免异常中断导致数据损坏或丢失
+
 ## [1.5.1](https://github.com/yan-cat/countdown/compare/v1.5.0...v1.5.1) - 2026-09-22
 
 ### 修复 (Fixed) 

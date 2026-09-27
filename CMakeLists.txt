@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
-project(Countdown VERSION 1.5.1 LANGUAGES CXX)
+project(Countdown VERSION 1.6.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(BINARY_ICONS_RESOURCE ON)
@@ -28,6 +28,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     QuickControls2
     LinguistTools
     Svg
+    Qml
 )
 find_package(KF6 REQUIRED COMPONENTS
     Kirigami
@@ -41,6 +42,7 @@ if(ANDROID)
 endif()
 
 qt_policy(SET QTP0001 NEW)
+qt_policy(SET QTP0004 NEW)
 
 # win可执行图标
 if(WIN32)
@@ -60,6 +62,7 @@ qt_add_executable(Countdown WIN32
     src/manager.cpp
     src/reminder.cpp
     src/updater.cpp
+    src/tray.cpp
 
     src/include/autostart.hpp
     src/include/countdowndata.hpp
@@ -67,6 +70,7 @@ qt_add_executable(Countdown WIN32
     src/include/manager.hpp
     src/include/reminder.hpp
     src/include/updater.hpp
+    src/include/tray.hpp
 
 )
 
@@ -110,6 +114,7 @@ target_link_libraries(Countdown PRIVATE
     Qt6::Quick
     Qt6::QuickControls2
     Qt6::Svg
+    Qt6::Qml
     KF6::CoreAddons
     KF6::Kirigami
     KF6::IconThemes
@@ -137,6 +142,7 @@ target_compile_definitions(Countdown PRIVATE
 qt_add_qml_module(Countdown
     URI com.countdown
     VERSION 1.0
+    NO_IMPORT_SCAN # 不扫描
     QML_FILES
         src/resources/qml/AboutPageWindow.qml
         src/resources/qml/DetailsWindow.qml
@@ -145,12 +151,19 @@ qt_add_qml_module(Countdown
         src/resources/qml/ReminderWindow.qml
         src/resources/qml/SettingsWindow.qml
         src/resources/qml/UpdaterWindow.qml
+        src/resources/qml/GuideWindow.qml
 
     RESOURCES
         src/resources/icon/com.countdown.svg
         src/resources/icon/Countdown_tray.svg
         com.countdown.desktop
-
+)
+qt_add_resources(Countdown "guides"
+    PREFIX "/guide"
+    BASE "src/resources/guide"
+    FILES
+        src/resources/guide/guide_zh_CN.md
+        src/resources/guide/guide_en_US.md
 )
 
 if (ANDROID)
@@ -212,6 +225,10 @@ if(ANDROID OR WIN32)
         clock # 钟
         arrow-down # 下拉箭头
         process-working-symbolic # 加载转圈圈
+        download # 下载按钮
+        go-jump-today-symbolic # 日历
+        go-previous # 左
+        go-next # 右
     )
 
     set(_found_count 0)
@@ -292,7 +309,7 @@ endif()
 
 if(ANDROID)
     install(TARGETS Countdown
-        # 没用的安卓安装  现在有用了😋  哦不不不你又没用了   完美了，就差ui主题了，我们要有安卓版倒数日咯～
+        # 没用的安卓安装  现在有用了😋  哦不不不你又没用了   完美了，就差ui主题了，我们要有安卓版倒数日咯～   安卓测试版上线～
         LIBRARY DESTINATION lib/${ANDROID_ABI}
         ARCHIVE DESTINATION lib/${ANDROID_ABI}
     )
