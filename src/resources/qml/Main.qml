@@ -562,4 +562,26 @@ Kirigami.ApplicationWindow {
         onRejected: {
         }
     }
+
+    // CRITICAL 报错
+    Connections {
+        target: CountdownDebug
+        function onCriticalOccurred(message) {
+            errorDialog.errorMessage = qsTr("日志：%1").arg(message)
+            errorDialog.open()
+        }
+    }
+    Kirigami.PromptDialog {
+        id: errorDialog
+        title: qsTr("错误！继续运行可能会导致数据丢失等问题，是否退出软件")
+        subtitle: errorMessage
+        closePolicy: Popup.NoAutoClose
+        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+
+        onAccepted: {
+            Qt.quit()
+        }
+
+        property string errorMessage: ""
+    }
 }

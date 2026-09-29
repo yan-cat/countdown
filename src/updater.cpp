@@ -117,7 +117,7 @@ void CountdownUpdater::getReleaseInfo()
     });
 }
 
-// 下载更新 这个函数我看不懂，出bug找AI
+// 下载更新
 void CountdownUpdater::downloadNewVersion()
 {
     qCDebug(CountdownLog) << "当前系统为：" << os;
@@ -157,7 +157,7 @@ void CountdownUpdater::downloadNewVersion()
     downloadFile.setFileName(savePath);
     if (!downloadFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
-        qCritical() << "无法写入文件：" << savePath;
+        qWarning() << "无法写入文件：" << savePath;
         emit downloadError(tr("无法写入文件：%1").arg(savePath));
         return;
     }
@@ -225,7 +225,7 @@ void CountdownUpdater::installNewVersion(QString path)
 
         KTar archive(path);
         if (!archive.open(QIODevice::ReadOnly)) {
-            qCritical() << "无法打开更新包:" << path;
+            qWarning() << "无法打开更新包:" << path;
             emit downloadError(tr("无法打开更新包：%1").arg(path));
             return;
         }
@@ -238,14 +238,14 @@ void CountdownUpdater::installNewVersion(QString path)
         // 3. 确认解压出了新程序
         QString newExe = extractDir + "/Countdown";
         if (!QFile::exists(newExe)) {
-            qCritical() << "更新包内容不完整";
+            qWarning() << "更新包内容不完整";
             emit downloadError(tr("更新包内容不完整"));
             return;
         }
 
         QFile::remove(exePath);
         if (!QFile::rename(newExe, exePath)) {
-            qCritical() << "替换可执行文件失败";
+            qWarning() << "替换可执行文件失败";
             emit downloadError(tr("替换可执行文件失败"));
             return;
         }
@@ -266,7 +266,7 @@ void CountdownUpdater::installNewVersion(QString path)
                                 nullptr, nullptr, SW_SHOWNORMAL);
         }
         if ((intptr_t)ret <= 32) {
-            qCritical() << "启动安装包失败，ShellExecute 返回:" << (intptr_t)ret
+            qWarning() << "启动安装包失败，ShellExecute 返回:" << (intptr_t)ret
                        << "路径:" << nativePath;
             emit downloadError(tr("启动安装包失败（错误码 %1）").arg((intptr_t)ret));
             return;

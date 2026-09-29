@@ -87,18 +87,36 @@
     <name>CountdownManager</name>
     <message>
         <location filename="../src/manager.cpp" line="286"/>
-        <source>今天是</source>
+        <source>今天是%1</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/manager.cpp" line="287"/>
-        <source>还剩 %1 天</source>
+        <source>还剩 %1 天%2</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/manager.cpp" line="289"/>
         <source>倒数日提醒</source>
         <translation></translation>
+    </message>
+</context>
+<context>
+    <name>CountdownTray</name>
+    <message>
+        <location filename="../src/tray.cpp" line="30"/>
+        <source>倒数日</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/tray.cpp" line="34"/>
+        <source>显示主窗口</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/tray.cpp" line="37"/>
+        <source>退出</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -153,22 +171,22 @@
     </message>
     <message>
         <location filename="../src/resources/qml/DetailsWindow.qml" line="50"/>
-        <source>日期：</source>
+        <source>日期：%1</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/resources/qml/DetailsWindow.qml" line="60"/>
-        <source>天数：</source>
+        <source>天数：%1</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/resources/qml/DetailsWindow.qml" line="70"/>
-        <source>重复：</source>
+        <source>重复：%1</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/resources/qml/DetailsWindow.qml" line="80"/>
-        <source>提醒时间：</source>
+        <source>提醒时间：%1</source>
         <translation></translation>
     </message>
     <message>
@@ -383,6 +401,16 @@
     <message>
         <location filename="../src/resources/qml/Main.qml" line="558"/>
         <source>删除成功</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="570"/>
+        <source>日志：%1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="576"/>
+        <source>错误！继续运行可能会导致数据丢失等问题，是否退出软件</source>
         <translation></translation>
     </message>
 </context>
@@ -614,23 +642,18 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="29"/>
-        <source>当前已是最新版本：</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../src/resources/qml/UpdaterWindow.qml" line="10"/>
         <source>更新</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/resources/qml/UpdaterWindow.qml" line="28"/>
-        <source>有新版本：</source>
+        <source>有新版本：%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/UpdaterWindow.qml" line="42"/>
-        <source>检查更新失败：</source>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="29"/>
+        <source>当前已是最新版本：%1</source>
         <translation></translation>
     </message>
     <message>
@@ -639,8 +662,13 @@
         <translation></translation>
     </message>
     <message>
+        <location filename="../src/resources/qml/UpdaterWindow.qml" line="42"/>
+        <source>检查更新失败：%1</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../src/resources/qml/UpdaterWindow.qml" line="66"/>
-        <source>下载失败：</source>
+        <source>下载失败：%1</source>
         <translation></translation>
     </message>
     <message>

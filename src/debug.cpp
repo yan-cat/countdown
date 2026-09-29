@@ -95,6 +95,8 @@ static void fileMessageHandler(QtMsgType type, const QMessageLogContext &context
     QString line = QString("[%1] [%2] %3%4\n")
                        .arg(time, typeStr, file ,msg);
 
+    if(typeStr == "CRITICAL") emit debug().criticalOccurred(msg);
+
     // 写文件
     if (logFile().isOpen()) {
         QTextStream out(&logFile());

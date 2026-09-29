@@ -234,7 +234,7 @@ void CountdownManager::removeCountdown(int id) {
             return;
         }
     }
-    qCritical() << "删除失败，id：" << id;
+    qWarning() << "删除失败，id：" << id;
 }
 
 // 读设置
@@ -268,8 +268,8 @@ QJsonObject CountdownManager::getCountdownJson(int id, QString key) const {
 
 // 确认满足发送条件发通知
 void CountdownManager::run_reminder(int id) {
-    QString data = getCountdownJson(id, "name").value("name").toString();
-    qCDebug(CountdownLog) << "查询数据返回：" << data;
+    QString name = getCountdownJson(id, "name").value("name").toString();
+    qCDebug(CountdownLog) << "查询数据返回：" << name;
 
     QDate today = QDate::currentDate();
     QDate nextDue = CountdownData::getNextDue(getCountdownJson(id, "none"), today);
@@ -282,11 +282,11 @@ void CountdownManager::run_reminder(int id) {
         return;
     }
 
-    QString out;
-    if (days == 0) out = tr("今天是");
-    else out = tr("还剩 %1 天").arg(days);
+    QString body;
+    if (days == 0) body = tr("今天是%1").arg(name);
+    else body = tr("还剩 %1 天%2").arg(days).arg(name);
 
-    reminder().pushReminder(tr("倒数日提醒"), QString(out + data));
+    reminder().pushReminder(tr("倒数日提醒"), body);
 }
 
 // 首次查需要提醒的日子

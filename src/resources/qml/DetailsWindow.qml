@@ -47,7 +47,7 @@ Window {
             spacing: 10
 
             Text {
-                text: qsTr("日期：") + (modelData.date || qsTr("无数据"))
+                text: qsTr("日期：%1").arg(modelData.date || qsTr("无数据"))
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -57,7 +57,7 @@ Window {
                 Layout.rightMargin: 10
             }
             Text {
-                text: qsTr("天数：") + (modelData.daysText || qsTr("无数据"))
+                text: qsTr("天数：%1").arg(modelData.daysText || qsTr("无数据"))
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -67,7 +67,7 @@ Window {
                 Layout.rightMargin: 10
             }
             Text {
-                text: qsTr("重复：") + (modelData.repeatText || qsTr("无数据"))
+                text: qsTr("重复：%1").arg(modelData.repeatText || qsTr("无数据"))
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
@@ -77,7 +77,7 @@ Window {
                 Layout.rightMargin: 10
             }
             Text {
-                text: qsTr("提醒时间：") + (modelData.notificationdaysText || qsTr("无数据"))
+                text: qsTr("提醒时间：%1").arg(modelData.notificationdaysText || qsTr("无数据"))
                 font.pointSize: Kirigami.Theme.defaultFont.pointSize
                 color: Kirigami.Theme.textColor
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere

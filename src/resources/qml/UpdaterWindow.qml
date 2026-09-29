@@ -25,8 +25,8 @@ Window {
 
         // 检查更新
         function onNewVersion(latestVersion, version , updateLog) {
-            if ( latestVersion ) versionShow.text = qsTr("有新版本：") + version
-            else versionShow.text = qsTr("当前已是最新版本：") + version
+            if ( latestVersion ) versionShow.text = qsTr("有新版本：%1").arg(version)
+            else versionShow.text = qsTr("当前已是最新版本：%1").arg(version)
             versionShow.visible = true
 
             versionUpdateLog.text = updateLog
@@ -39,7 +39,7 @@ Window {
 
         // 检查更新失败
         function onNewVersionError(errorString) {
-            inlineMessage.text = qsTr("检查更新失败：") + errorString
+            inlineMessage.text = qsTr("检查更新失败：%1").arg(errorString)
             inlineMessage.type = Kirigami.MessageType.Error
             inlineMessage.visible = true
 
@@ -63,7 +63,7 @@ Window {
         // 下载失败
         function onDownloadError(errorString) {
             downloadOverlay.visible = false
-            inlineMessage.text = qsTr("下载失败：") + errorString
+            inlineMessage.text = qsTr("下载失败：%1").arg(errorString)
             inlineMessage.type = Kirigami.MessageType.Error
             inlineMessage.visible = true
         }
