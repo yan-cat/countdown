@@ -91,7 +91,7 @@ Countdown
 ├── src
 │   ├── include                       # 头文件
 │   ├── resources
-│   │   ├── guide                     # 指南   
+│   │   ├── guide                     # 指南
 │   │   ├── icon                      # 图标
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # 关于窗口
@@ -149,7 +149,7 @@ Countdown
 
 ## 待完成
 
-- [ ] 卡片排序 
+- [ ] 卡片排序
 - [ ] linux 下更新时确认可执行带x
 - [ ] 更多重复规则
 - [ ] 托盘显示主窗口失败时提示
