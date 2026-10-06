@@ -4,45 +4,46 @@
 
 ## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.6.0...dev) - YYYY-MM-DD
 
-### 新增 (Added) 
+### 新增 (Added)
 - 错误时弹窗
 
-### 变更 (Changed) 
+### 变更 (Changed)
 - 优化翻译
 - 优化部分日志等级
 
-### 弃用 (Deprecated) 
+### 弃用 (Deprecated)
 - 即将移除的功能预告（给用户缓冲期）
 
-### 移除 (Removed) 
+### 移除 (Removed)
 - 已移除的功能
 
-### 修复 (Fixed) 
+### 修复 (Fixed)
 - 通知文案错误
+- 错误的发送过期通知
 
-### 安全 (Security) 
+### 安全 (Security)
 - 修复的安全漏洞
 
 ## [1.6.0](https://github.com/yan-cat/countdown/compare/v1.5.1...v1.6.0) - 2026-09-27
 
-### 新增 (Added) 
+### 新增 (Added)
 - 限制标题最大字数
 - 托盘图标与最小化到托盘
 - 安卓可直接软件内更新
 - 使用指南
 
-### 变更 (Changed) 
+### 变更 (Changed)
 - 缩短 Android 长按弹出菜单所需时间
 - 数据保存改为原子写入，避免异常中断导致数据损坏或丢失
 
 ## [1.5.1](https://github.com/yan-cat/countdown/compare/v1.5.0...v1.5.1) - 2026-09-22
 
-### 修复 (Fixed) 
+### 修复 (Fixed)
 - 闰年导致软件崩溃
 
 ## [1.5.0](https://github.com/yan-cat/countdown/compare/v1.4.0...v1.5.0) - 2026-09-22
 
-### 新增 (Added) 
+### 新增 (Added)
 - 自定义提醒时间而非默认的00:00
 - App 内查看日志
 - 清空日志按钮
@@ -50,27 +51,27 @@
 - Debug 构建下日志可开启显示来源
 - 启动耗时统计
 
-### 变更 (Changed) 
+### 变更 (Changed)
 - 修改年月日计算方式为准确而非估算
 
-### 修复 (Fixed) 
+### 修复 (Fixed)
 - 更新日志页面渲染标题大小错误
 
 ## [1.4.0](https://github.com/yan-cat/countdown/compare/v1.3.0...v1.4.0) - 2026-09-18
 
-### 新增 (Added) 
+### 新增 (Added)
 - 单实例锁弹窗
 - Windows 软件卸载图标
 - 日志写文件
 - Android 实验性支持
 
-### 变更 (Changed) 
+### 变更 (Changed)
 - Windows 安装逻辑
 - 设置ui优化
 
 ## [1.3.0](https://github.com/yan-cat/countdown/compare/v1.2.3...v1.3.0) - 2026-09-15
 
-### 新增 (Added) 
+### 新增 (Added)
 - 软件logo与desktop文件
 - 运行在beta版时的提示
 - 禁用日志内的qml引擎警告开关
@@ -78,10 +79,10 @@
 - 设置页面滚动条
 - 检查更新错误处理
 
-### 变更 (Changed) 
+### 变更 (Changed)
 - 有新版本时自动发送通知提醒变更为有新版本时打开更新窗口
 
-### 修复 (Fixed) 
+### 修复 (Fixed)
 - 不重启软件的情况下到第二天不会正确提醒日程
 - Windows 下深色模式渲染错误
 

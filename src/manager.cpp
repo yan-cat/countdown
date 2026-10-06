@@ -277,14 +277,14 @@ void CountdownManager::run_reminder(int id) {
     qCDebug(CountdownLog) << "距今：" << days << "天";
 
     qint64 setdays = getCountdownJson(id, "notificationdays").value("notificationdays").toInteger();
-    if (days > setdays) {
+    if (days < 0 || days > setdays) {
         qCDebug(CountdownLog) << "超过设定天数" << setdays << "天，驳回";
         return;
     }
 
     QString body;
     if (days == 0) body = tr("今天是%1").arg(name);
-    else body = tr("还剩 %1 天%2").arg(days).arg(name);
+    else body = tr("%1 还剩 %2 天").arg(name).arg(days);
 
     reminder().pushReminder(tr("倒数日提醒"), body);
 }
