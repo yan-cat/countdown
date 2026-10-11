@@ -249,8 +249,13 @@ void CountdownUpdater::installNewVersion(QString path)
             emit downloadError(tr("替换可执行文件失败"));
             return;
         }
-        else emit installSuccess();
-
+        else {
+            QFile f(exePath);
+            QFile::Permissions perms = f.permissions();   // 先读原权限
+            perms |= QFileDevice::ExeOwner;               // 加可执行
+            f.setPermissions(perms);                      // 写回
+            emit installSuccess();
+        }
     }
     else if (os == "win")
     {
