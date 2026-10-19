@@ -1,9 +1,9 @@
 import com.countdown
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
-import org.kde.kirigamiaddons.dateandtime 1.0 as DateAndTime
+import org.kde.kirigamiaddons.dateandtime as DateAndTime
 
 Kirigami.ApplicationWindow {
     id: root
@@ -323,6 +323,22 @@ Kirigami.ApplicationWindow {
     pageStack.initialPage: Kirigami.ScrollablePage {
         id: cardPage
         title: qsTr("倒数日")
+
+        property bool isSortingMode: false
+        actions: [
+            // 排序按钮
+            Kirigami.Action {
+                id: sortAction
+                icon.name: "view-sort-ascending"
+                text: qsTr("调整顺序")
+
+                checkable: true
+                checked: cardPage.isSortingMode
+
+                onTriggered: cardPage.isSortingMode = !cardPage.isSortingMode
+            }
+        ]
+
         MouseArea {
             anchors.fill: parent
             z: 0
@@ -351,6 +367,7 @@ Kirigami.ApplicationWindow {
         }
         ColumnLayout {
             Kirigami.CardsLayout {
+                visible: !cardPage.isSortingMode
                 maximumColumns: 8
                 Repeater {
                     id: cardsLayout
@@ -510,6 +527,61 @@ Kirigami.ApplicationWindow {
                     }
                 }
             }
+
+            // 排序
+            ListView {
+                id: swapList
+                visible: cardPage.isSortingMode
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: contentHeight
+                interactive: false
+                model: CountdownManager.countdowns
+                clip: true
+
+                // 躲开动画
+                moveDisplaced: Transition {
+                    YAnimator {
+                        duration: Kirigami.Units.longDuration
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+
+                delegate: Item {
+                    id: delegateRoot
+                    width: ListView.view.width
+                    height: dragItem.implicitHeight
+
+                    ItemDelegate {
+                        id: dragItem
+                        width: parent.width
+
+                        contentItem: RowLayout {
+                            spacing: Kirigami.Units.smallSpacing
+
+                            Kirigami.ListItemDragHandle {
+                                listItem: dragItem
+                                listView: swapList
+                                incrementalMoves: false
+                                onDropped: (oldIndex, newIndex) => {
+                                    CountdownManager.moveCountdown(oldIndex, newIndex);
+                                }
+                            }
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: modelData.name ?? ""
+                                elide: Text.ElideRight
+                            }
+
+                            Label {
+                                text: modelData.daysText ?? ""
+                                opacity: 0.6
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -561,5 +633,27 @@ Kirigami.ApplicationWindow {
         }
         onRejected: {
         }
+    }
+
+    // CRITICAL 报错
+    Connections {
+        target: CountdownDebug
+        function onCriticalOccurred(message) {
+            errorDialog.errorMessage = qsTr("日志：%1").arg(message)
+            errorDialog.open()
+        }
+    }
+    Kirigami.PromptDialog {
+        id: errorDialog
+        title: qsTr("错误！继续运行可能会导致数据丢失等问题，是否退出软件")
+        subtitle: errorMessage
+        closePolicy: Popup.NoAutoClose
+        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+
+        onAccepted: {
+            Qt.quit()
+        }
+
+        property string errorMessage: ""
     }
 }

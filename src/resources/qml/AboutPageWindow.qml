@@ -1,9 +1,9 @@
 import com.countdown
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
-import org.kde.kirigamiaddons.dateandtime 1.0 as KA
+import org.kde.kirigamiaddons.dateandtime as KA
 
 Window {
     id: aboutPageWindow

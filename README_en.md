@@ -36,6 +36,13 @@ Data is saved locally as JSON; settings are stored in `~/.config/yancat/Countdow
 Linux binaries, a Windows installer, and an Android APK are provided in the Releases.
 Android is currently a **beta version** and may be unstable.
 
+Using AUR:
+```bash
+yay -S yancat-countdown-bin
+# or
+paru -S yancat-countdown-bin
+```
+
 > This program requires the Qt6/KF6/Kirigami/QML runtime.\
 > If you already have a full KDE Plasma 6 desktop environment installed (Arch: plasma-meta; Debian/Ubuntu: kde-plasma-desktop with recommended packages not disabled), these dependencies are usually already installed along with the desktop and do not need to be installed manually.
 
@@ -53,7 +60,9 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
   breeze qml6-module-qtquick-controls qml6-module-qt-labs-platform \
   qml6-module-qtquick-layouts qt6-wayland
 ```
-> Ubuntu 24.10 is the minimum supported version; 26.04 LTS or another still-supported release is recommended. For Debian, adjust the package names to match your actual repositories.
+
+> Ubuntu 24.10 is the minimum supported version; 26.04 LTS or another still-supported release is recommended.
+> Debian 13 (trixie) or newer is recommended; please adjust the package names to match your actual repositories.
 
 ## Build Help
 
@@ -91,7 +100,7 @@ Countdown
 ├── src
 │   ├── include                       # Header files
 │   ├── resources
-│   │   ├── guide                     # Guide   
+│   │   ├── guide                     # Guide
 │   │   ├── icon                      # Icons
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # About window
@@ -141,7 +150,7 @@ Files (and folders) created by the application:
 
 ## Development Notes
 
-This project used an AI programming assistant during development to help with the following: looking up API documentation, analyzing the causes of compilation errors, and answering a few syntax questions. All reference information provided by the AI was understood and verified by the developer, then rewritten and integrated into the project by the developer. The core architecture, business logic, and final code of the software were all designed, written, and reviewed independently by the developer
+This project used an AI programming assistant during development to help with the following: looking up API documentation, analyzing the causes of compilation errors, and answering a few syntax questions. All reference information provided by the AI was understood and verified by the developer, then rewritten and integrated into the project by the developer. The core architecture, business logic, and final code of the software were all designed, written, and reviewed independently by the developer.
 
 ## Changelog
 
@@ -149,9 +158,11 @@ See [CHANGELOG.md](CHANGELOG.md) for the detailed changes in each version.
 
 ## Planned
 
+- [ ] Add AUR to the official website
+- [ ] Add AUR to the README
+- [ ] Card sorting
 - [ ] More repeat rules
-- [ ] Popup alerts for Critical-level errors
-- [ ] Card sorting 
+- [ ] Notify when showing the main window from the tray fails
 - [ ] Bug: the QML warning-disable switch does not work properly
 - [ ] WebDAV cloud sync of items
 - [ ] Desktop tiles/widget

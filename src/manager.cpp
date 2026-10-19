@@ -152,6 +152,7 @@ void CountdownManager::updateOlddata() {
 
             if (!obj.contains("notificationdays")) obj["notificationdays"] = -1;
             if (!obj.contains("repeat")) obj["repeat"] = 0;
+            if (!obj.contains("sortOrder")) obj["sortOrder"] = obj["id"];
 
             data[i] = obj;
         }
@@ -234,7 +235,34 @@ void CountdownManager::removeCountdown(int id) {
             return;
         }
     }
-    qCritical() << "删除失败，id：" << id;
+    qWarning() << "删除失败，id：" << id;
+}
+
+// 交换卡片位置
+void CountdownManager::moveCountdown(int from, int to) {
+    if (from == to || from < 0 || to < 0 || from >= m_countdowns.size() || to >= m_countdowns.size()) {
+        return;
+    }
+
+    // 把元素从原位置拿出来
+    QJsonValue item = m_countdowns.at(from);
+    m_countdowns.removeAt(from);
+
+    // 插到新位置
+    m_countdowns.insert(to, item);
+
+    // 遍历当前数组，重新分配 sortOrder
+    for (int i = 0; i < m_countdowns.size(); ++i) {
+        QJsonObject obj = m_countdowns.at(i).toObject();
+        obj.insert("sortOrder", i);
+        m_countdowns.replace(i, obj);
+    }
+
+    // 存盘并通知界面刷新
+    saveCountdowns();
+    emit refreshCountdowns();
+
+    qCDebug(CountdownLog) << "移动倒数日" << from << "到" << to;
 }
 
 // 读设置
@@ -268,8 +296,8 @@ QJsonObject CountdownManager::getCountdownJson(int id, QString key) const {
 
 // 确认满足发送条件发通知
 void CountdownManager::run_reminder(int id) {
-    QString data = getCountdownJson(id, "name").value("name").toString();
-    qCDebug(CountdownLog) << "查询数据返回：" << data;
+    QString name = getCountdownJson(id, "name").value("name").toString();
+    qCDebug(CountdownLog) << "查询数据返回：" << name;
 
     QDate today = QDate::currentDate();
     QDate nextDue = CountdownData::getNextDue(getCountdownJson(id, "none"), today);
@@ -277,16 +305,16 @@ void CountdownManager::run_reminder(int id) {
     qCDebug(CountdownLog) << "距今：" << days << "天";
 
     qint64 setdays = getCountdownJson(id, "notificationdays").value("notificationdays").toInteger();
-    if (days > setdays) {
+    if (days < 0 || days > setdays) {
         qCDebug(CountdownLog) << "超过设定天数" << setdays << "天，驳回";
         return;
     }
 
-    QString out;
-    if (days == 0) out = tr("今天是");
-    else out = tr("还剩 %1 天").arg(days);
+    QString body;
+    if (days == 0) body = tr("今天是%1").arg(name);
+    else body = tr("%1 还剩 %2 天").arg(name).arg(days);
 
-    reminder().pushReminder(tr("倒数日提醒"), QString(out + data));
+    reminder().pushReminder(tr("倒数日提醒"), body);
 }
 
 // 首次查需要提醒的日子

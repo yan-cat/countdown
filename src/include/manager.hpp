@@ -29,6 +29,7 @@ public:
     void push_reminder();
     Q_INVOKABLE void editCountdown(const QString &dateString);
     Q_INVOKABLE void removeCountdown(int id);
+    Q_INVOKABLE void moveCountdown(int from, int to);
     void run_reminder(int id);
 
     Q_INVOKABLE QString getGuideMarkdown();

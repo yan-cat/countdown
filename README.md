@@ -33,8 +33,15 @@
 
 ## 安装帮助
 
-Release 中提供 Linux 二进制、 Windows 安装包与 Android APK。
+Release 中提供 Linux 二进制、Windows 安装包与 Android APK。
 Android 当前为 **测试版本**，可能存在不稳定情况。
+
+使用 AUR：
+```bash
+yay -S yancat-countdown-bin
+# 或
+paru -S yancat-countdown-bin
+```
 
 > 本程序需要 Qt6/KF6/Kirigami/QML 运行时\
 > 如果你已安装完整的 KDE Plasma 6 桌面环境（Arch：plasma-meta；Debian/Ubuntu：kde-plasma-desktop 且未禁用推荐依赖），这些依赖通常已随桌面安装，无需手动补装。
@@ -53,7 +60,9 @@ sudo apt install libqt6core6t64 libqt6qml6 libqt6quick6 \
   breeze qml6-module-qtquick-controls qml6-module-qt-labs-platform \
   qml6-module-qtquick-layouts qt6-wayland
 ```
-> Ubuntu 最低支持 24.10；建议使用 26.04 LTS 或仍受支持的版本。Debian 请按实际仓库调整包名。
+
+> Ubuntu 最低支持 24.10；建议使用 26.04 LTS 或仍受支持的版本。
+> Debian 建议 13（trixie）或更新，并请按实际仓库调整包名。
 
 ## 构建帮助
 
@@ -91,7 +100,7 @@ Countdown
 ├── src
 │   ├── include                       # 头文件
 │   ├── resources
-│   │   ├── guide                     # 指南   
+│   │   ├── guide                     # 指南
 │   │   ├── icon                      # 图标
 │   │   └── qml
 │   │       ├── AboutPageWindow.qml   # 关于窗口
@@ -141,7 +150,7 @@ Countdown
 
 ## 开发说明
 
-本项目在开发过程中使用了 AI 编程助手辅助完成以下工作：API 文档查询、编译错误原因分析、个别语法问题的解答。所有 AI 提供的参考信息均经过开发者理解、验证后，由开发者本人重新编写并整合至项目中。软件的核心架构、业务逻辑和最终代码均由开发者独立设计、编写和审查
+本项目在开发过程中使用了 AI 编程助手辅助完成以下工作：API 文档查询、编译错误原因分析、个别语法问题的解答。所有 AI 提供的参考信息均经过开发者理解、验证后，由开发者本人重新编写并整合至项目中。软件的核心架构、业务逻辑和最终代码均由开发者独立设计、编写和审查。
 
 ## 更新日志
 
@@ -149,9 +158,10 @@ Countdown
 
 ## 待完成
 
+- [ ] 官网加aur
+- [ ] 目录在系统时提示使用包管更新软件
 - [ ] 更多重复规则
-- [ ] Critical 等级错误弹窗提醒
-- [ ] 卡片排序 
+- [ ] 托盘显示主窗口失败时提示
 - [ ] qml禁用警告开关未正常运作的bug
 - [ ] WebDAV 云同步事项
 - [ ] 桌面磁贴

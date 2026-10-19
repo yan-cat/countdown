@@ -28,5 +28,8 @@ public:
     Q_INVOKABLE void clearLogs();
 
     void logStartup(const QString &stage);
+
+signals:
+    void criticalOccurred(const QString &message);
 };
 CountdownDebug &debug();

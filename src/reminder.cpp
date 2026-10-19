@@ -55,7 +55,7 @@ void linux_reminder(QString title, QString body) {
     // (可选) 等待并处理回复
     QDBusPendingReply<uint> reply = call;
     reply.waitForFinished();
-    if (reply.isError()) qCritical() << "发送通知失败:" << reply.error().message();
+    if (reply.isError()) qWarning() << "发送通知失败:" << reply.error().message();
     else qCDebug(CountdownLog) << "已成功发送通知";
 
     qCDebug(CountdownLog) << "通知id:" << reply.value();
@@ -75,7 +75,7 @@ void windows_reminder(QString body) {
     view->setColor(Qt::transparent);
     view->setSource(QUrl("qrc:/qt/qml/com/countdown/src/resources/qml/ReminderWindow.qml"));
     if (view->status() != QQuickView::Ready) {
-        qCritical() << "加载弹窗失败:" << view->errors();
+        qWarning() << "加载弹窗失败:" << view->errors();
         delete view;
         return;
     }

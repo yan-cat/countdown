@@ -6,6 +6,7 @@
 #include <QApplication>
 #include <QWindow>
 #include <QGuiApplication>
+#include <QObject>
 #include "tray.hpp"
 #include "debug.hpp"
 
@@ -26,14 +27,14 @@ CountdownTray *CountdownTray::create(QQmlEngine *, QJSEngine *)
 // 初始化托盘
 void CountdownTray::trayInit() {
     m_trayIcon = new QSystemTrayIcon(this);
-    m_trayIcon->setToolTip(QStringLiteral("倒数日"));
+    m_trayIcon->setToolTip(tr("倒数日"));
     m_trayMenu = new QMenu();
 
     // 选项
-    m_trayMenu->addAction(QStringLiteral("显示主窗口"), qApp, [this]() {
+    m_trayMenu->addAction(tr("显示主窗口"), qApp, [this]() {
         showMainWindow();
     });
-    m_trayMenu->addAction(QStringLiteral("退出"), qApp, &QCoreApplication::quit);
+    m_trayMenu->addAction(tr("退出"), qApp, &QCoreApplication::quit);
 
     m_trayIcon->setContextMenu(m_trayMenu);
     updateTrayIcon();
@@ -116,5 +117,5 @@ void CountdownTray::showMainWindow() {
         qCDebug(CountdownLog) << "主窗口开启";
         break;
     }
-    if(!s) qCritical() << "主窗口开启失败：未找到主窗口，请重启程序";
+    if(!s) qWarning() << "主窗口开启失败：未找到主窗口，请重启程序";
 }
