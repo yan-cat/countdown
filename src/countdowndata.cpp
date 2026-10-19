@@ -136,5 +136,10 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
         // qCDebug(CountdownLog) << "卡片数据：" << obj;
         list.append(obj.toVariantMap());
     }
+
+    std::sort(list.begin(), list.end(), [](const QVariant &a, const QVariant &b) {
+        return a.toMap().value("sortOrder").toInt() < b.toMap().value("sortOrder").toInt();
+    });
+
     return list;
 }

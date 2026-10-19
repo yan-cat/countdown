@@ -323,6 +323,22 @@ Kirigami.ApplicationWindow {
     pageStack.initialPage: Kirigami.ScrollablePage {
         id: cardPage
         title: qsTr("倒数日")
+
+        property bool isSortingMode: false
+        actions: [
+            // 排序按钮
+            Kirigami.Action {
+                id: sortAction
+                icon.name: "view-sort-ascending"
+                text: qsTr("调整顺序")
+
+                checkable: true
+                checked: cardPage.isSortingMode
+
+                onTriggered: cardPage.isSortingMode = !cardPage.isSortingMode
+            }
+        ]
+
         MouseArea {
             anchors.fill: parent
             z: 0
@@ -351,6 +367,7 @@ Kirigami.ApplicationWindow {
         }
         ColumnLayout {
             Kirigami.CardsLayout {
+                visible: !cardPage.isSortingMode
                 maximumColumns: 8
                 Repeater {
                     id: cardsLayout
@@ -506,6 +523,61 @@ Kirigami.ApplicationWindow {
 
                             onEntered: { depressedId = modelData.id }
                             onExited:  { depressedId = -1 }
+                        }
+                    }
+                }
+            }
+
+            // 排序
+            ListView {
+                id: swapList
+                visible: cardPage.isSortingMode
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: contentHeight
+                interactive: false
+                model: CountdownManager.countdowns
+                clip: true
+
+                // 躲开动画
+                moveDisplaced: Transition {
+                    YAnimator {
+                        duration: Kirigami.Units.longDuration
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+
+                delegate: Item {
+                    id: delegateRoot
+                    width: ListView.view.width
+                    height: dragItem.implicitHeight
+
+                    ItemDelegate {
+                        id: dragItem
+                        width: parent.width
+
+                        contentItem: RowLayout {
+                            spacing: Kirigami.Units.smallSpacing
+
+                            Kirigami.ListItemDragHandle {
+                                listItem: dragItem
+                                listView: swapList
+                                incrementalMoves: false
+                                onDropped: (oldIndex, newIndex) => {
+                                    CountdownManager.moveCountdown(oldIndex, newIndex);
+                                }
+                            }
+
+                            Label {
+                                Layout.fillWidth: true
+                                text: modelData.name ?? ""
+                                elide: Text.ElideRight
+                            }
+
+                            Label {
+                                text: modelData.daysText ?? ""
+                                opacity: 0.6
+                            }
                         }
                     }
                 }

@@ -152,6 +152,7 @@ void CountdownManager::updateOlddata() {
 
             if (!obj.contains("notificationdays")) obj["notificationdays"] = -1;
             if (!obj.contains("repeat")) obj["repeat"] = 0;
+            if (!obj.contains("sortOrder")) obj["sortOrder"] = obj["id"];
 
             data[i] = obj;
         }
@@ -235,6 +236,33 @@ void CountdownManager::removeCountdown(int id) {
         }
     }
     qWarning() << "删除失败，id：" << id;
+}
+
+// 交换卡片位置
+void CountdownManager::moveCountdown(int from, int to) {
+    if (from == to || from < 0 || to < 0 || from >= m_countdowns.size() || to >= m_countdowns.size()) {
+        return;
+    }
+
+    // 把元素从原位置拿出来
+    QJsonValue item = m_countdowns.at(from);
+    m_countdowns.removeAt(from);
+
+    // 插到新位置
+    m_countdowns.insert(to, item);
+
+    // 遍历当前数组，重新分配 sortOrder
+    for (int i = 0; i < m_countdowns.size(); ++i) {
+        QJsonObject obj = m_countdowns.at(i).toObject();
+        obj.insert("sortOrder", i);
+        m_countdowns.replace(i, obj);
+    }
+
+    // 存盘并通知界面刷新
+    saveCountdowns();
+    emit refreshCountdowns();
+
+    qCDebug(CountdownLog) << "移动倒数日" << from << "到" << to;
 }
 
 // 读设置
