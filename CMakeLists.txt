@@ -229,6 +229,8 @@ if(ANDROID OR WIN32)
         go-jump-today-symbolic # 日历
         go-previous # 左
         go-next # 右
+        view-sort-ascending # 排序按钮
+        handle-sort # 排序把手
     )
 
     set(_found_count 0)
