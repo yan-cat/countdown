@@ -2,7 +2,7 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.6.0...dev) - YYYY-MM-DD
+## [1.7.0](https://github.com/yan-cat/countdown/compare/v1.6.0...V1.7.0) - 2026-09-19
 
 ### 新增 (Added)
 - 错误时弹窗
@@ -12,18 +12,9 @@
 - 优化翻译
 - 优化部分日志等级
 
-### 弃用 (Deprecated)
-- 即将移除的功能预告（给用户缓冲期）
-
-### 移除 (Removed)
-- 已移除的功能
-
 ### 修复 (Fixed)
 - 通知文案错误
 - 错误的发送过期通知
-
-### 安全 (Security)
-- 修复的安全漏洞
 
 ## [1.6.0](https://github.com/yan-cat/countdown/compare/v1.5.1...v1.6.0) - 2026-09-27
 
