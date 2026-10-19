@@ -86,17 +86,17 @@
 <context>
     <name>CountdownManager</name>
     <message>
-        <location filename="../src/manager.cpp" line="286"/>
+        <location filename="../src/manager.cpp" line="314"/>
         <source>今天是%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/manager.cpp" line="287"/>
-        <source>还剩 %1 天%2</source>
+        <location filename="../src/manager.cpp" line="315"/>
+        <source>%1 还剩 %2 天</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/manager.cpp" line="289"/>
+        <location filename="../src/manager.cpp" line="317"/>
         <source>倒数日提醒</source>
         <translation></translation>
     </message>
@@ -106,17 +106,17 @@
     <message>
         <location filename="../src/tray.cpp" line="30"/>
         <source>倒数日</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/tray.cpp" line="34"/>
         <source>显示主窗口</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/tray.cpp" line="37"/>
         <source>退出</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -142,12 +142,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="271"/>
+        <location filename="../src/updater.cpp" line="276"/>
         <source>启动安装包失败（错误码 %1）</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/updater.cpp" line="287"/>
+        <location filename="../src/updater.cpp" line="292"/>
         <source>无法获取 Android 上下文，更新功能失效</source>
         <translation></translation>
     </message>
@@ -283,7 +283,7 @@
     </message>
     <message>
         <location filename="../src/resources/qml/Main.qml" line="168"/>
-        <location filename="../src/resources/qml/Main.qml" line="344"/>
+        <location filename="../src/resources/qml/Main.qml" line="360"/>
         <source>新建倒数日</source>
         <translation></translation>
     </message>
@@ -373,43 +373,48 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="381"/>
+        <location filename="../src/resources/qml/Main.qml" line="333"/>
+        <source>调整顺序</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/resources/qml/Main.qml" line="398"/>
         <source>编辑</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="413"/>
-        <location filename="../src/resources/qml/Main.qml" line="545"/>
+        <location filename="../src/resources/qml/Main.qml" line="430"/>
+        <location filename="../src/resources/qml/Main.qml" line="617"/>
         <source>删除</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="546"/>
+        <location filename="../src/resources/qml/Main.qml" line="618"/>
         <source>确认删除 %1 吗？</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="551"/>
+        <location filename="../src/resources/qml/Main.qml" line="623"/>
         <source>确定</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="554"/>
+        <location filename="../src/resources/qml/Main.qml" line="626"/>
         <source>取消</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="558"/>
+        <location filename="../src/resources/qml/Main.qml" line="630"/>
         <source>删除成功</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="570"/>
+        <location filename="../src/resources/qml/Main.qml" line="642"/>
         <source>日志：%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/resources/qml/Main.qml" line="576"/>
+        <location filename="../src/resources/qml/Main.qml" line="648"/>
         <source>错误！继续运行可能会导致数据丢失等问题，是否退出软件</source>
         <translation></translation>
     </message>
