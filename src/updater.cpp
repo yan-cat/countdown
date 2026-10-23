@@ -104,12 +104,15 @@ void CountdownUpdater::getReleaseInfo()
             haveNewVersion = true;
             qCDebug(CountdownLog) << "强制下载最新版本";
         }
+
+        bool systemPackage = false;
+        if (os == "linux" && !QStandardPaths::findExecutable("Countdown").isEmpty()) systemPackage = true;
         if (haveNewVersion) {
             qCDebug(CountdownLog) << "发现新版本" << latestVersion;
-            emit newVersion(true, latestVersion, latestVersionLog);
+            emit newVersion(true, latestVersion, latestVersionLog, systemPackage);
         } else {
             qCDebug(CountdownLog) << "已是最新版本" << latestVersion;
-            emit newVersion(false, latestVersion, latestVersionLog);
+            emit newVersion(false, latestVersion, latestVersionLog, systemPackage);
         }
 
         reply->close();

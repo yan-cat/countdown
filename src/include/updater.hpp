@@ -28,7 +28,7 @@ private:
     QNetworkReply *reply = nullptr;
 
 signals:
-    void newVersion(bool latestVersion,QString version ,QString updateLog);
+    void newVersion(bool latestVersion,QString version ,QString updateLog, bool systemPackage);
     void newVersionError(QString errorString);
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     void downloadFinished();
