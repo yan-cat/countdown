@@ -39,6 +39,7 @@ signals:
     void refreshCountdowns();
 
 private:
+    void taskTimer();
     void saveCountdowns();
     void loadCountdowns();
     void updateOlddata();
@@ -46,6 +47,6 @@ private:
 
     QJsonArray m_countdowns;
     QString m_filePath;
-    QTimer m_reminderTimer;
+    QTimer m_taskTimer;
 };
 CountdownManager &manager();

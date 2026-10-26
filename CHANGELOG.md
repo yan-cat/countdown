@@ -2,6 +2,30 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.7.0...dev) - YYYY-MM-DD
+
+### 新增 (Added)
+- 新功能描述
+
+### 变更 (Changed)
+- 对现有功能的改动描述
+
+### 弃用 (Deprecated)
+- 即将移除的功能预告（给用户缓冲期）
+
+### 移除 (Removed)
+- 已移除的功能
+
+### 修复 (Fixed)
+- 使用包管理器安装 Countdown 后会正确提醒前往包管更新
+- 大数据量时的部分性能问题
+- 详情窗口崩溃的问题
+- 跨天时能正确刷新剩余/已过天数
+- 新建倒数日导致排序崩溃
+
+### 安全 (Security)
+- 修复的安全漏洞
+
 ## [1.7.0](https://github.com/yan-cat/countdown/compare/v1.6.0...V1.7.0) - 2026-09-19
 
 ### 新增 (Added)
