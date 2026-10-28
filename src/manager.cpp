@@ -30,11 +30,31 @@ CountdownManager::CountdownManager(QObject *parent) : QObject(parent) {
 
     push_reminder(); // 检查提醒
 
-    // 启动定时提醒
-    m_reminderTimer.setInterval(60 * 1000); // 1 分钟
-    connect(&m_reminderTimer, &QTimer::timeout, this, &CountdownManager::push_reminder);
-    m_reminderTimer.start();
-    qCDebug(CountdownLog) << "启动提醒检查";
+    // 启动定时任务
+    m_taskTimer.setInterval(60 * 1000); // 1 分钟
+    connect(&m_taskTimer, &QTimer::timeout, this, &CountdownManager::taskTimer);
+    m_taskTimer.start();
+    qCDebug(CountdownLog) << "启动定时事项检查";
+}
+
+// 每分钟事务
+void CountdownManager::taskTimer() {
+    static QDate lastDay = QDate::currentDate();
+
+    qCDebug(CountdownLog) << "事务检查运行中";
+
+    // 通知
+    CountdownManager::push_reminder();
+
+    // 过天刷新
+    if (lastDay != QDate::currentDate()) {
+        lastDay = QDate::currentDate();
+        emit refreshCountdowns();
+        qCDebug(CountdownLog) << "跨天刷新数据";
+    }
+    else qCDebug(CountdownLog) << "未跨天";
+
+    qCDebug(CountdownLog) << "本轮事务检查结束";
 }
 
 // 保存倒数日
@@ -217,6 +237,7 @@ void CountdownManager::editCountdown(const QString &dateString) {
             newId++;
         }
         obj.insert("id", newId);
+        obj.insert("sortOrder", newId);
         m_countdowns.append(obj);
         saveCountdowns();
         emit refreshCountdowns();
@@ -294,30 +315,7 @@ QJsonObject CountdownManager::getCountdownJson(int id, QString key) const {
     return CountdownData::getCountdownJson(m_countdowns, id, key);
 }
 
-// 确认满足发送条件发通知
-void CountdownManager::run_reminder(int id) {
-    QString name = getCountdownJson(id, "name").value("name").toString();
-    qCDebug(CountdownLog) << "查询数据返回：" << name;
-
-    QDate today = QDate::currentDate();
-    QDate nextDue = CountdownData::getNextDue(getCountdownJson(id, "none"), today);
-    qint64 days = today.daysTo(nextDue);
-    qCDebug(CountdownLog) << "距今：" << days << "天";
-
-    qint64 setdays = getCountdownJson(id, "notificationdays").value("notificationdays").toInteger();
-    if (days < 0 || days > setdays) {
-        qCDebug(CountdownLog) << "超过设定天数" << setdays << "天，驳回";
-        return;
-    }
-
-    QString body;
-    if (days == 0) body = tr("今天是%1").arg(name);
-    else body = tr("%1 还剩 %2 天").arg(name).arg(days);
-
-    reminder().pushReminder(tr("倒数日提醒"), body);
-}
-
-// 首次查需要提醒的日子
+// 查需要提醒的日子
 void CountdownManager::push_reminder() {
     QDate today = QDate::currentDate();
     QTime now = QTime::currentTime();
@@ -345,8 +343,20 @@ void CountdownManager::push_reminder() {
     qCDebug(CountdownLog) << "查询需提醒倒数日";
     for (const QJsonValue &v : std::as_const(m_countdowns)) {
         QJsonObject obj = v.toObject();
-        if (getCountdownJson(obj.value("id").toInteger(), "notificationdays").value("notificationdays").toInteger() >= 0) {
-            run_reminder(obj.value("id").toInteger());
+        if (CountdownData::getnotificationdays(obj) >= 0) {
+            // 开始计算日期
+            QDate nextDue = CountdownData::getNextDue(obj, today); // 下一次的日期
+            qint64 days = today.daysTo(nextDue); // 还有多少天到下次
+            qint64 setdays = obj.value("notificationdays").toInteger(); // 设定的提早多少天提醒
+            QString name = obj.value("name").toString(); // 名字
+            qCDebug(CountdownLog) << name << "距今" << days << "天";
+            if (days >= 0 && days <= setdays) {
+                QString body;
+                if (days == 0) body = tr("今天是%1").arg(name);
+                else body = tr("%1 还剩 %2 天").arg(name).arg(days);
+
+                reminder().pushReminder(tr("倒数日提醒"), body);
+            }
         }
     }
     s.setValue("lastReminder", today.toString(Qt::ISODate));

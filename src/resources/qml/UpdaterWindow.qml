@@ -24,7 +24,7 @@ Window {
         target: CountdownUpdater
 
         // 检查更新
-        function onNewVersion(latestVersion, version , updateLog) {
+        function onNewVersion(latestVersion, version, updateLog, systemPackage) {
             if ( latestVersion ) versionShow.text = qsTr("有新版本：%1").arg(version)
             else versionShow.text = qsTr("当前已是最新版本：%1").arg(version)
             versionShow.visible = true
@@ -33,6 +33,10 @@ Window {
             versionUpdateLogScroll.visible = true
 
             downloadUpdate.visible = latestVersion
+            if ( systemPackage ) {
+                downloadUpdate.text = qsTr("请使用包管理器安装更新")
+                downloadUpdate.enabled = false
+            }
 
             loadingOverlay.visible = false // 转圈圈
         }

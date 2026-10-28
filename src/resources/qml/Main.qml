@@ -31,7 +31,15 @@ Kirigami.ApplicationWindow {
     Loader {
         id: detailsLoader
         active: false
-        sourceComponent: Component { DetailsWindow { } }
+        sourceComponent: Component {
+            DetailsWindow {
+                onVisibleChanged: { // 关掉就销毁，不然几下就eglSwapBuffers failed with 0x300d，偷个懒嘿嘿
+                    if (!visible) {
+                        detailsLoader.active = false
+                    }
+                }
+            }
+        }
     }
     Loader {
         id: guideLoader
