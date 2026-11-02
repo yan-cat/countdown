@@ -114,6 +114,7 @@ void CountdownTray::showMainWindow() {
         w->raise();
         w->requestActivate();
         s = true;
+        emit mainWindowVisibilityChanged(true); // 发送信号已启动主窗口
         qCDebug(CountdownLog) << "主窗口开启";
         break;
     }

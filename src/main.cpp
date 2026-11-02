@@ -286,13 +286,27 @@ int main(int argc, char *argv[]) {
     QObject *root = engine.rootObjects().constFirst();
     if (auto *window = qobject_cast<QQuickWindow*>(root)) {
         QObject::connect(window, &QQuickWindow::closing, qApp,
-                        [](QQuickCloseEvent *) {
+                        [window](QQuickCloseEvent *) {
+                            // 主窗口被关
                             qCDebug(CountdownLog) << "主窗口关闭";
+                            // 没隐藏就直接退
+                            if (!manager().setting("closeToTray", false)) {
+                                QCoreApplication::quit();
+                                return;
+                            }
+                            // 第一次关
                             if (!manager().hasSetting("closeToTray")) {
                                 manager().setSetting("closeToTray", true);
                                 reminder().pushReminder("倒数日", "已最小化到托盘");
                             }
-                            if (!manager().setting("closeToTray", false)) QCoreApplication::quit();
+
+                            // 销毁
+                            emit tray().mainWindowVisibilityChanged(false); // 发送信号已关闭主窗口
+                            // 释放 OpenGL 纹理和渲染缓冲区
+                            window->releaseResources();
+                            // 允许 Qt 在后台销毁场景图，需要时再重建
+                            window->setPersistentGraphics(false);
+                            window->setPersistentSceneGraph(false);
                         });
     }
 

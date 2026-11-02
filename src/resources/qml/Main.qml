@@ -46,6 +46,20 @@ Kirigami.ApplicationWindow {
         active: false
         sourceComponent: Component { GuideWindow { } }
     }
+    Connections {
+        target: CountdownTray
+        function onMainWindowVisibilityChanged(visible) {
+            if (visible) {
+            }
+            else {
+                settingsLoader.active = false
+                updaterLoader.active = false
+                aboutPageLoader.active = false
+                detailsLoader.active = false
+                guideLoader.active = false
+            }
+        }
+    }
 
     Component.onCompleted: {
         if (!CountdownManager.setting("guideOpened", 0))
