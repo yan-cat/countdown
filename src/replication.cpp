@@ -60,9 +60,18 @@ void CountdownReplication::importCountdownData() {
         return;
     }
 
-    if (!QFileInfo::exists(filePath)) {
-        qWarning() << "选择的文件不存在";
-        emit debug().showErrorDialog(tr("选择的文件不存在"));
+    if (QFile f(filePath); f.open(QIODevice::ReadOnly)) {
+        QJsonObject obj = QJsonDocument::fromJson(f.readAll()).object();
+
+        if (obj.value("app") != "yan-cat/countdown") {
+            qWarning() << "文件格式不正确";
+            emit debug().showErrorDialog(tr("文件格式不正确，请检查文件来源"));
+            return;
+        }
+    }
+    else {
+        qWarning() << "文件打开失败";
+        emit debug().showErrorDialog(tr("文件打开失败"));
         return;
     }
 
@@ -83,11 +92,10 @@ void CountdownReplication::importCountdownData() {
             return;
         }
     }
-    else qWarning() << "无旧数据，无需备份";
+    else qCDebug(CountdownLog) << "无旧数据，无需备份";
 
     if (QFile::copy(filePath, manager().getCountdownsPath())) {
         qCDebug(CountdownLog) << "导入成功";
-        emit debug().showErrorDialog(tr("导入成功，旧数据已备份至 %1").arg(backupPath));
     } else {
         qWarning() << "复制数据失败";
         if (QFile::rename(backupPath, manager().getCountdownsPath())) {
@@ -98,9 +106,24 @@ void CountdownReplication::importCountdownData() {
             emit debug().showErrorDialog(tr("复制数据失败") + " " + tr("回滚失败"));
             qWarning() << "回滚失败";
         }
+        return;
     }
 
     // 重载
-    manager().loadCountdowns();
-    emit manager().refreshCountdowns();
+    if (manager().reloadCountdownData()) {
+        qCDebug(CountdownLog) << "重载成功";
+        emit debug().showErrorDialog(tr("导入成功，旧数据已备份至 %1").arg(backupPath));
+    }
+    else {
+        qWarning() << "重载失败";
+        QFile::remove(manager().getCountdownsPath());
+        if (QFile::copy(backupPath, manager().getCountdownsPath())) {
+            qCDebug(CountdownLog) << "恢复旧文件成功";
+            emit debug().showErrorDialog(tr("导入失败，已恢复旧数据，请检查文件来源"));
+        }
+        else {
+            qWarning() << "恢复旧文件失败";
+            emit debug().showErrorDialog(tr("导入失败，恢复旧数据失败，请检查您的硬盘与权限"));
+        }
+    }
 }

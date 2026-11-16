@@ -65,6 +65,7 @@ void CountdownManager::saveCountdowns() {
         return;
     }
     QJsonObject rootobj{ // 重新存入版本信息
+        {"app", "yan-cat/countdown"},
         {"version", APP_VERSION},
         {"data", m_countdowns},
         {"lastModified", QDateTime::currentDateTime().toString(Qt::ISODate)}
@@ -75,16 +76,22 @@ void CountdownManager::saveCountdowns() {
 }
 
 // 加载倒数日
-void CountdownManager::loadCountdowns() {
+bool CountdownManager::loadCountdowns() {
     qCDebug(CountdownLog) << "开始加载数据文件";
     QFile file(m_filePath);
 
     if (!file.open(QIODevice::ReadOnly)) { // 找不到数据文件
         qWarning() << "打开失败，首次可忽略：" << m_filePath;
-        return;
+        return false;
     }
 
-    QJsonObject root = QJsonDocument::fromJson(file.readAll()).object(); // 读取全文成json
+    QJsonParseError error;
+    QJsonObject root = QJsonDocument::fromJson(file.readAll(), &error).object(); // 读取全文成json
+
+    if (error.error != QJsonParseError::NoError) {
+        qWarning() << "导入失败，JSON 格式错误:" << error.errorString();
+        return false;
+    }
 
     QString fileVersion = root.value("version").toString();
     qCDebug(CountdownLog) << "文件版本" << fileVersion;
@@ -92,17 +99,18 @@ void CountdownManager::loadCountdowns() {
     if (fileVersion != APP_VERSION) { // 版本不对更新版本
         file.close();
         updateOlddata();
-        loadCountdowns();
-        return;
+        return loadCountdowns();
     }
     else qCDebug(CountdownLog) << "无需升级数据";
 
     // 是json写入m_countdowns
     if (root.contains("data") && root.value("data").isArray()) {
         m_countdowns = root.value("data").toArray();
+        return true;
     }
     else {
         qCritical() << "数据结构损坏：" << m_filePath;
+        return false;
     }
 }
 
@@ -184,6 +192,7 @@ void CountdownManager::updateOlddata() {
             return;
         }
         QJsonObject rootobj{
+            {"app", "yan-cat/countdown"},
             {"version", APP_VERSION},
             {"data", data}
         };
@@ -197,6 +206,16 @@ void CountdownManager::updateOlddata() {
 
         qCDebug(CountdownLog) << "已添加缺失项";
     }
+}
+
+// 重载倒数日数据
+bool CountdownManager::reloadCountdownData() {
+    if (!loadCountdowns()) {
+        qWarning() << "重载失败";
+        return false;
+    }
+    emit refreshCountdowns();
+    return true;
 }
 
 // 数据丢qml
