@@ -2,6 +2,26 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.7.1...dev) - YYYY-MM-DD
+
+### 新增 (Added)
+- 导出导入数据
+
+### 变更 (Changed)
+- 对现有功能的改动描述
+
+### 弃用 (Deprecated)
+- 即将移除的功能预告（给用户缓冲期）
+
+### 移除 (Removed)
+- 已移除的功能
+
+### 修复 (Fixed)
+- 托盘在 Windows 下软件与系统颜色不一致时能正确显示
+
+### 安全 (Security)
+- 修复的安全漏洞
+
 ## [1.7.1](https://github.com/yan-cat/countdown/compare/v1.7.0...v1.7.1) - 2026-10-28
 
 ### 修复 (Fixed)

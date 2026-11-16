@@ -10,6 +10,10 @@
 #include "tray.hpp"
 #include "debug.hpp"
 
+#ifdef Q_OS_WIN
+#include <QSettings>
+#endif
+
 CountdownTray::CountdownTray(QObject *parent) : QObject(parent) { }
 
 CountdownTray &tray()
@@ -83,7 +87,16 @@ void CountdownTray::updateTrayIcon() {
     painter.end();
 
     // 用应用前景色给图标染色
-    QColor iconColor = qApp->palette().color(QPalette::WindowText);
+    QColor iconColor;
+    #ifdef Q_OS_WIN
+    QSettings registry(
+        "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+        QSettings::NativeFormat
+        );
+    iconColor = registry.value("SystemUsesLightTheme", 1).toInt() == 0 ? Qt::white : Qt::black;
+    #else
+    iconColor = qApp->palette().color(QPalette::WindowText);
+    #endif
     QPainter tintPainter(&pixmap);
     tintPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
     tintPainter.fillRect(pixmap.rect(), iconColor);
