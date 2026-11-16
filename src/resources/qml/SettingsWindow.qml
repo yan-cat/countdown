@@ -229,6 +229,42 @@ Window {
                 visible: Qt.platform.os !== "android"
             }
 
+//=====================================同步备份
+
+            Label {
+                text: qsTr("数据同步与备份")
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+            }
+
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter
+                spacing: Kirigami.Units.largeSpacing // 按钮之间的间距
+
+                Button {
+                    text: qsTr("导出数据")
+                    Layout.alignment: Qt.AlignHCenter
+
+                    onClicked: {
+                        CountdownReplication.exportCountdownData();
+                    }
+                }
+
+                Button {
+                    text: qsTr("导入数据")
+                    Layout.alignment: Qt.AlignHCenter
+
+                    onClicked: {
+                        CountdownReplication.importCountdownData();
+                    }
+                }
+            }
+
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
+            }
+
 //=====================================更新设置
 
             Label {

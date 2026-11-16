@@ -34,6 +34,9 @@ public:
 
     Q_INVOKABLE QString getGuideMarkdown();
 
+    QString getCountdownsPath() const { return m_filePath; } // 获取数据路径
+
+    void loadCountdowns(); // 公开，重载的时候能用上
 
 signals:
     void refreshCountdowns();
@@ -41,7 +44,6 @@ signals:
 private:
     void taskTimer();
     void saveCountdowns();
-    void loadCountdowns();
     void updateOlddata();
     QJsonObject getCountdownJson(int id, QString key) const;
 

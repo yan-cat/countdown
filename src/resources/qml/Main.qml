@@ -2,6 +2,7 @@ import com.countdown
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.dateandtime as DateAndTime
 
@@ -657,25 +658,37 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    // CRITICAL 报错
+    // 报错
     Connections {
         target: CountdownDebug
         function onCriticalOccurred(message) {
+            errorDialog.errorTitle = qsTr("错误！继续运行可能会导致数据丢失等问题，是否退出软件")
             errorDialog.errorMessage = qsTr("日志：%1").arg(message)
+            errorDialog.exitApp = true
+            errorDialog.open()
+        }
+
+        function onShowErrorDialog(message) {
+            errorDialog.errorTitle = ""
+            errorDialog.errorMessage = message
+            errorDialog.exitApp = false
             errorDialog.open()
         }
     }
-    Kirigami.PromptDialog {
+
+    MessageDialog {
         id: errorDialog
-        title: qsTr("错误！继续运行可能会导致数据丢失等问题，是否退出软件")
-        subtitle: errorMessage
-        closePolicy: Popup.NoAutoClose
-        standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+        title: errorTitle
+        buttons: exitApp ? (MessageDialog.Ok | MessageDialog.Cancel) : MessageDialog.Ok
+
+        text: errorMessage
 
         onAccepted: {
-            Qt.quit()
+            if (exitApp) Qt.quit()
         }
 
+        property string errorTitle: ""
         property string errorMessage: ""
+        property bool exitApp: false
     }
 }
