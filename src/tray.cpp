@@ -7,6 +7,8 @@
 #include <QWindow>
 #include <QGuiApplication>
 #include <QObject>
+#include <QGuiApplication>
+#include <QStyleHints>
 #include "tray.hpp"
 #include "debug.hpp"
 
@@ -88,15 +90,16 @@ void CountdownTray::updateTrayIcon() {
 
     // 用应用前景色给图标染色
     QColor iconColor;
-    #ifdef Q_OS_WIN
-    QSettings registry(
-        "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
-        QSettings::NativeFormat
-        );
-    iconColor = registry.value("SystemUsesLightTheme", 1).toInt() == 0 ? Qt::white : Qt::black;
-    #else
-    iconColor = qApp->palette().color(QPalette::WindowText);
-    #endif
+    Qt::ColorScheme scheme = QGuiApplication::styleHints()->colorScheme();
+
+    if (scheme == Qt::ColorScheme::Dark) {
+        iconColor = Qt::white;
+    } else if (scheme == Qt::ColorScheme::Light) {
+        iconColor = Qt::black;
+    } else {
+        QColor bg = qApp->palette().color(QPalette::Window);
+        iconColor = (bg.lightness() < 128) ? Qt::white : Qt::black;
+    }
     QPainter tintPainter(&pixmap);
     tintPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
     tintPainter.fillRect(pixmap.rect(), iconColor);
