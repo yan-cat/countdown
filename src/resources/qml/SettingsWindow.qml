@@ -3,6 +3,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Window
+import QtQuick.Dialogs
 import org.kde.kirigami as Kirigami
 
 Window {
@@ -255,6 +256,17 @@ Window {
                     Layout.alignment: Qt.AlignHCenter
 
                     onClicked: {
+                        importDialog.open()
+                    }
+                }
+                // 确定覆盖
+                MessageDialog {
+                    id: importDialog
+                    buttons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+
+                    text: qsTr("导入后会覆盖全部倒数日，确定继续吗？/n原始数据会备份到数据目录")
+
+                    onAccepted: {
                         CountdownReplication.importCountdownData();
                     }
                 }
