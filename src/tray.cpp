@@ -7,14 +7,8 @@
 #include <QWindow>
 #include <QGuiApplication>
 #include <QObject>
-#include <QGuiApplication>
-#include <QStyleHints>
 #include "tray.hpp"
 #include "debug.hpp"
-
-#ifdef Q_OS_WIN
-#include <QSettings>
-#endif
 
 CountdownTray::CountdownTray(QObject *parent) : QObject(parent) { }
 
@@ -80,30 +74,27 @@ bool CountdownTray::eventFilter(QObject *obj, QEvent *event) {
 void CountdownTray::updateTrayIcon() {
     if (!m_trayIcon) return;
 
+    #ifdef Q_OS_WIN // win用彩色logo
+    QSvgRenderer renderer(QStringLiteral(
+        ":/qt/qml/com/countdown/src/resources/icon/com.countdown.svg"));
+    #else
     QSvgRenderer renderer(QStringLiteral(
         ":/qt/qml/com/countdown/src/resources/icon/Countdown_tray.svg"));
-    QPixmap pixmap(32, 32);
+    #endif
+    QPixmap pixmap(64, 64);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
     renderer.render(&painter);
     painter.end();
 
+    #ifndef Q_OS_WIN // 不是win才染色
     // 用应用前景色给图标染色
-    QColor iconColor;
-    Qt::ColorScheme scheme = QGuiApplication::styleHints()->colorScheme();
-
-    if (scheme == Qt::ColorScheme::Dark) {
-        iconColor = Qt::white;
-    } else if (scheme == Qt::ColorScheme::Light) {
-        iconColor = Qt::black;
-    } else {
-        QColor bg = qApp->palette().color(QPalette::Window);
-        iconColor = (bg.lightness() < 128) ? Qt::white : Qt::black;
-    }
+    QColor iconColor = qApp->palette().color(QPalette::WindowText);
     QPainter tintPainter(&pixmap);
     tintPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
     tintPainter.fillRect(pixmap.rect(), iconColor);
     tintPainter.end();
+    #endif
 
     m_trayIcon->setIcon(QIcon(pixmap));
 }
