@@ -166,7 +166,7 @@ Window {
         id: loadingOverlay
         anchors.fill: parent
         visible: false
-        z: 100
+        z: 999
         Rectangle {
             anchors.fill: parent
             color: "black"
@@ -197,7 +197,7 @@ Window {
         id: downloadOverlay
         anchors.fill: parent
         visible: false
-        z: 100
+        z: 999
         Rectangle {
             anchors.fill: parent
             color: "black"

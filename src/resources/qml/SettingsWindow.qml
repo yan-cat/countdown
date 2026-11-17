@@ -2,7 +2,6 @@ import com.countdown
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Window
 import QtQuick.Dialogs
 import org.kde.kirigami as Kirigami
 
