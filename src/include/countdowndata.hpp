@@ -9,4 +9,5 @@ public:
     static QDate getNextDue(const QJsonObject &obj, const QDate &today);
     static qint64 getnotificationdays(const QJsonObject &obj);
     static QVariantList buildCountdownViewData(const QJsonArray &rawCountdowns);
+    static QVariantList sortCountdowns(QVariantList list);
 };

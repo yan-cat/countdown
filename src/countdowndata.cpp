@@ -64,6 +64,22 @@ QDate CountdownData::getNextDue(const QJsonObject &obj, const QDate &today) {
 
 qint64 CountdownData::getnotificationdays(const QJsonObject &obj){return obj.value("notificationdays").toInteger();}
 
+// 排序
+QVariantList CountdownData::sortCountdowns(QVariantList list) {
+    std::stable_sort(list.begin(), list.end(),
+                     [](const QVariant &a, const QVariant &b) {
+                         const qint64 da = a.toMap().value("days").toLongLong();
+                         const qint64 db = b.toMap().value("days").toLongLong();
+
+                         const bool aNeg = da < 0;
+                         const bool bNeg = db < 0;
+
+                         if (aNeg != bNeg) return !aNeg;          // 非负的一组排前面
+                         return aNeg ? (da > db) : (da < db);     // 负数组 -1,-2,-3；非负组 0,1,2,3
+                     });
+    return list;
+}
+
 // 构建显示的数据
 QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdowns) {
     qCDebug(CountdownLog) << "查询数据";
@@ -137,9 +153,16 @@ QVariantList CountdownData::buildCountdownViewData(const QJsonArray &rawCountdow
         list.append(obj.toVariantMap());
     }
 
-    std::sort(list.begin(), list.end(), [](const QVariant &a, const QVariant &b) {
-        return a.toMap().value("sortOrder").toInt() < b.toMap().value("sortOrder").toInt();
-    });
+    if (manager().setting("sortModes", 0) == 0) {
+        // 自定义排序
+        std::sort(list.begin(), list.end(), [](const QVariant &a, const QVariant &b) {
+            return a.toMap().value("sortOrder").toInt() < b.toMap().value("sortOrder").toInt();
+        });
+    }
+    else {
+        // 临近日靠前
+        list = CountdownData::sortCountdowns(list);
+    }
 
     return list;
 }

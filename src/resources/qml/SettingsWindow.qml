@@ -31,16 +31,20 @@ Window {
             }
 
             // 日期显示格式
-            Label {
-                text: qsTr("日期显示格式：")
-                Layout.alignment: Qt.AlignHCenter
-            }
-            ComboBox {
-                id: dayShow
-                currentIndex: CountdownManager.setting("dayShow", 0)
-                onActivated: CountdownManager.setSetting("dayShow", currentIndex)
-                model: [qsTr("按天显示"), qsTr("按年月日显示")]
-                Layout.alignment: Qt.AlignHCenter
+            RowLayout {
+                spacing: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                Label {
+                    text: qsTr("日期显示格式：")
+                    Layout.alignment: Qt.AlignHCenter
+                }
+                ComboBox {
+                    id: dayShow
+                    currentIndex: CountdownManager.setting("dayShow", 0)
+                    onActivated: CountdownManager.setSetting("dayShow", currentIndex)
+                    model: [qsTr("按天显示"), qsTr("按年月日显示")]
+                    Layout.alignment: Qt.AlignHCenter
+                }
             }
             Label {
                 text: dayShow.currentIndex === 0
@@ -84,6 +88,24 @@ Window {
                     }
                 }
                 Label { text: qsTr("天标红") }
+            }
+
+            // 排序方式
+            RowLayout {
+                spacing: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                Label { text: qsTr("排序方式：") }
+                ComboBox {
+                    id: sortModes
+                    currentIndex: CountdownManager.setting("sortModes", 0)
+                    model: [qsTr("自定义排序"), qsTr("临近日靠前")]
+                    onActivated: (index) => {
+                        CountdownManager.setSetting("sortModes", index)
+                    }
+                    Layout.alignment: Qt.AlignCenter
+
+                    visible: Qt.platform.os !== "android"
+                }
             }
 
             Item {

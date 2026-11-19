@@ -242,6 +242,7 @@ Kirigami.ScrollablePage {
             id: sortAction
             icon.name: "view-sort-ascending"
             text: qsTr("调整顺序")
+            visible: CountdownManager.sortModes === 0
 
             checkable: true
             checked: countdownsPage.isSortingMode
