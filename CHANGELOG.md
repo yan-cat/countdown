@@ -2,7 +2,7 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-## [Unreleased](https://github.com/yan-cat/countdown/compare/v1.7.1...dev) - YYYY-MM-DD
+## [1.8.0](https://github.com/yan-cat/countdown/compare/v1.7.1...v1.8.0) - 2026-11-19
 
 ### 新增 (Added)
 - 导出导入数据
