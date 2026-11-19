@@ -62,6 +62,7 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    // 开指南
     Component.onCompleted: {
         if (!CountdownManager.setting("guideOpened", 0))
         {
@@ -171,7 +172,7 @@ Kirigami.ApplicationWindow {
         ]
     }
 
-    // 倒数日页
+    // 首页
     pageStack.initialPage: CountdownsPage { }
 
     // 报错

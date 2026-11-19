@@ -222,6 +222,13 @@ Window {
                 visible: Qt.platform.os !== "android"
             }
 
+            Label {
+                text: qsTr("请确认通知可用后再使用通知")
+                Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+
             Item {
                 Layout.preferredHeight: 20
                 Layout.fillWidth: true

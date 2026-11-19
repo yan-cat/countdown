@@ -21,6 +21,7 @@ Kirigami.ScrollablePage {
                         : implicitWidth   // 桌面平台用默认宽度
 
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+        closePolicy: Popup.NoAutoClose
 
         property int editingId: -1
         property var editingData: ({})
