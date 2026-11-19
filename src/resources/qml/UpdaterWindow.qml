@@ -189,7 +189,7 @@ Window {
             anchors.topMargin: 10
             text: qsTr("正在检查更新...")
             color: "white"
-            font.pointSize: 12
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.0
         }
     }
 
@@ -220,7 +220,7 @@ Window {
             anchors.topMargin: 10
             text: qsTr("正在下载更新...")
             color: "white"
-            font.pointSize: 12
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.0
         }
     }
 

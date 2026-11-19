@@ -24,7 +24,7 @@ Item {
         Text {
             text: message
             color: Kirigami.Theme.textColor
-            font.pointSize: 14
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.2
             font.bold: true
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
@@ -33,7 +33,7 @@ Item {
         Text {
             text: "点击关闭"
             color: Kirigami.Theme.textColor
-            font.pointSize: 8
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 0.7
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
         }
