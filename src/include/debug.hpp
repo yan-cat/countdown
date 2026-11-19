@@ -31,5 +31,6 @@ public:
 
 signals:
     void criticalOccurred(const QString &message);
+    void showErrorDialog(const QString &message);
 };
 CountdownDebug &debug();

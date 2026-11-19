@@ -166,7 +166,7 @@ Window {
         id: loadingOverlay
         anchors.fill: parent
         visible: false
-        z: 100
+        z: 999
         Rectangle {
             anchors.fill: parent
             color: "black"
@@ -189,7 +189,7 @@ Window {
             anchors.topMargin: 10
             text: qsTr("正在检查更新...")
             color: "white"
-            font.pointSize: 12
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.0
         }
     }
 
@@ -197,7 +197,7 @@ Window {
         id: downloadOverlay
         anchors.fill: parent
         visible: false
-        z: 100
+        z: 999
         Rectangle {
             anchors.fill: parent
             color: "black"
@@ -220,7 +220,7 @@ Window {
             anchors.topMargin: 10
             text: qsTr("正在下载更新...")
             color: "white"
-            font.pointSize: 12
+            font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.0
         }
     }
 

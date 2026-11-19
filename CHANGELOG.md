@@ -2,6 +2,19 @@
 
 本文件格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.8.0](https://github.com/yan-cat/countdown/compare/v1.7.1...v1.8.0) - 2026-11-19
+
+### 新增 (Added)
+- 导出导入数据
+- 临近日优先的排序顺序
+
+### 变更 (Changed)
+- 创建/编辑倒数日页面不再能被除取消确定按钮以外操作关闭
+- 字体大小全部跟随系统
+
+### 修复 (Fixed)
+- 托盘在 Windows 下软件与系统颜色不一致时能正确显示
+
 ## [1.7.1](https://github.com/yan-cat/countdown/compare/v1.7.0...v1.7.1) - 2026-10-28
 
 ### 修复 (Fixed)

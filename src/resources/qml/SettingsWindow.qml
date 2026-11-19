@@ -2,7 +2,7 @@ import com.countdown
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Window
+import QtQuick.Dialogs
 import org.kde.kirigami as Kirigami
 
 Window {
@@ -31,16 +31,20 @@ Window {
             }
 
             // 日期显示格式
-            Label {
-                text: qsTr("日期显示格式：")
-                Layout.alignment: Qt.AlignHCenter
-            }
-            ComboBox {
-                id: dayShow
-                currentIndex: CountdownManager.setting("dayShow", 0)
-                onActivated: CountdownManager.setSetting("dayShow", currentIndex)
-                model: [qsTr("按天显示"), qsTr("按年月日显示")]
-                Layout.alignment: Qt.AlignHCenter
+            RowLayout {
+                spacing: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                Label {
+                    text: qsTr("日期显示格式：")
+                    Layout.alignment: Qt.AlignHCenter
+                }
+                ComboBox {
+                    id: dayShow
+                    currentIndex: CountdownManager.setting("dayShow", 0)
+                    onActivated: CountdownManager.setSetting("dayShow", currentIndex)
+                    model: [qsTr("按天显示"), qsTr("按年月日显示")]
+                    Layout.alignment: Qt.AlignHCenter
+                }
             }
             Label {
                 text: dayShow.currentIndex === 0
@@ -84,6 +88,24 @@ Window {
                     }
                 }
                 Label { text: qsTr("天标红") }
+            }
+
+            // 排序方式
+            RowLayout {
+                spacing: 10
+                anchors.horizontalCenter: parent.horizontalCenter
+                Label { text: qsTr("排序方式：") }
+                ComboBox {
+                    id: sortModes
+                    currentIndex: CountdownManager.setting("sortModes", 0)
+                    model: [qsTr("自定义排序"), qsTr("临近日靠前")]
+                    onActivated: (index) => {
+                        CountdownManager.setSetting("sortModes", index)
+                    }
+                    Layout.alignment: Qt.AlignCenter
+
+                    visible: Qt.platform.os !== "android"
+                }
             }
 
             Item {
@@ -222,11 +244,65 @@ Window {
                 visible: Qt.platform.os !== "android"
             }
 
+            Label {
+                text: qsTr("请确认通知可用后再使用通知")
+                Layout.alignment: Qt.AlignHCenter
+
+                visible: Qt.platform.os !== "android"
+            }
+
             Item {
                 Layout.preferredHeight: 20
                 Layout.fillWidth: true
 
                 visible: Qt.platform.os !== "android"
+            }
+
+//=====================================同步备份
+
+            Label {
+                text: qsTr("数据同步与备份")
+                Layout.alignment: Qt.AlignHCenter
+                font.pointSize: Kirigami.Theme.defaultFont.pointSize * 1.5
+            }
+
+            RowLayout {
+                Layout.alignment: Qt.AlignHCenter
+                spacing: Kirigami.Units.largeSpacing // 按钮之间的间距
+
+                Button {
+                    text: qsTr("导出数据")
+                    Layout.alignment: Qt.AlignHCenter
+
+                    onClicked: {
+                        CountdownReplication.exportCountdownData();
+                    }
+                }
+
+                Button {
+                    text: qsTr("导入数据")
+                    Layout.alignment: Qt.AlignHCenter
+
+                    onClicked: {
+                        importDialog.open()
+                    }
+                }
+                // 确定覆盖
+                MessageDialog {
+                    id: importDialog
+                    buttons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
+
+                    text: qsTr("导入后会覆盖全部倒数日，确定继续吗？/n原始数据会备份到数据目录")
+
+                    onAccepted: {
+                        CountdownReplication.importCountdownData();
+                    }
+                }
+            }
+
+            Item {
+                Layout.preferredHeight: 20
+                Layout.fillWidth: true
             }
 
 //=====================================更新设置

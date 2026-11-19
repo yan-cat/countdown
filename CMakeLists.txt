@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(Countdown VERSION 1.7.1 LANGUAGES CXX)
+project(Countdown VERSION 1.8.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -63,6 +63,7 @@ qt_add_executable(Countdown WIN32
     src/reminder.cpp
     src/updater.cpp
     src/tray.cpp
+    src/replication.cpp
 
     src/include/autostart.hpp
     src/include/countdowndata.hpp
@@ -71,6 +72,7 @@ qt_add_executable(Countdown WIN32
     src/include/reminder.hpp
     src/include/updater.hpp
     src/include/tray.hpp
+    src/include/replication.hpp
 
 )
 
@@ -153,6 +155,8 @@ qt_add_qml_module(Countdown
         src/resources/qml/UpdaterWindow.qml
         src/resources/qml/GuideWindow.qml
 
+        src/resources/qml/Page/CountdownsPage.qml
+
     RESOURCES
         src/resources/icon/com.countdown.svg
         src/resources/icon/Countdown_tray.svg
@@ -176,6 +180,46 @@ if (ANDROID)
             "${CMAKE_INSTALL_PREFIX}/lib/qml/org/kde"
             "${CMAKE_BINARY_DIR}/org/kde"
         COMMENT "Copying KDE QML modules into build dir for deployment")
+
+    # 关键：修复安卓启动闪退。Qt6Core / Qt6Network / KF6Archive 的 NEEDED 是 libzstd.so，
+    # 但 Craft 安卓环境里的 zstd 库叫 libzstd_<abi>.so（如 libzstd_arm64-v8a.so），
+    # androiddeployqt 按 NEEDED 名在 CraftRoot/lib 里找不到它，就把这个依赖漏掉了，
+    # 启动时 QtLoader 报 "dlopen failed: library libzstd.so not found" 后直接退出。
+    # 这里复制一份 libzstd.so，并通过 QT_ANDROID_EXTRA_LIBS 打进 APK。
+    # 别删
+    set(_zstd_search_dirs "${CMAKE_INSTALL_PREFIX}/lib")
+    foreach(_prefix IN LISTS CMAKE_PREFIX_PATH)
+        list(APPEND _zstd_search_dirs "${_prefix}/lib")
+    endforeach()
+    list(REMOVE_DUPLICATES _zstd_search_dirs)
+
+    set(_zstd_source "")
+    foreach(_dir IN LISTS _zstd_search_dirs)
+        if (NOT _zstd_source)
+            if (EXISTS "${_dir}/libzstd.so")
+                set(_zstd_source "${_dir}/libzstd.so")
+            elseif (EXISTS "${_dir}/libzstd_${CMAKE_ANDROID_ARCH_ABI}.so")
+                set(_zstd_source "${_dir}/libzstd_${CMAKE_ANDROID_ARCH_ABI}.so")
+            endif()
+        endif()
+    endforeach()
+
+    if (_zstd_source)
+        set(_zstd_extra_lib "${CMAKE_CURRENT_BINARY_DIR}/android-extra-libs/libzstd.so")
+        file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/android-extra-libs")
+        file(COPY_FILE "${_zstd_source}" "${_zstd_extra_lib}" ONLY_IF_DIFFERENT)
+        set_property(TARGET Countdown APPEND PROPERTY QT_ANDROID_EXTRA_LIBS "${_zstd_extra_lib}")
+
+        # 同时放一份到 build/lib：`craft --package`（ECM 的 create-apk）会把
+        # ${CMAKE_BINARY_DIR}/lib 作为额外库搜索路径，这条路径也能带上。
+        file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+        file(COPY_FILE "${_zstd_extra_lib}"
+            "${CMAKE_BINARY_DIR}/lib/libzstd.so" ONLY_IF_DIFFERENT)
+
+        message(STATUS "libzstd: using ${_zstd_source}")
+    else()
+        message(WARNING "libzstd.so 未找到，APK 在设备上可能因缺少该库而无法启动")
+    endif()
 endif()
 
 # 图标

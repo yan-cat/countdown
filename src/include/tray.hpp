@@ -28,5 +28,8 @@ private:
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
+
+signals:
+    void mainWindowVisibilityChanged(bool visible);
 };
 CountdownTray &tray();
