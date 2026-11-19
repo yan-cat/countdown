@@ -95,38 +95,41 @@ Project structure:
 
 ```plaintext
 Countdown
-├── android                           # Experimental Android support
+├── android                             # Experimental Android support
 ├── readme_img
 ├── src
-│   ├── include                       # Header files
+│   ├── include                         # Header files
 │   ├── resources
-│   │   ├── guide                     # Guide
-│   │   ├── icon                      # Icons
+│   │   ├── guide                       # Guide
+│   │   ├── icon                        # Icons
 │   │   └── qml
-│   │       ├── AboutPageWindow.qml   # About window
-│   │       ├── DetailsWindow.qml     # Details window
-│   │       ├── GuideWindow.qml       # Guide window
-│   │       ├── LogsWindow.qml        # Logs window
-│   │       ├── Main.qml              # Main page
-│   │       ├── ReminderWindow.qml    # Standalone reminder popup for Windows
-│   │       ├── SettingsWindow.qml    # Settings window
-│   │       └── UpdaterWindow.qml     # Update window
-│   ├── autostart.cpp                 # Autostart handling
-│   ├── countdowndata.cpp             # Handles the data to be displayed
-│   ├── datediff.cpp                  # Computes years/months/days from days
-│   ├── debug.cpp                     # Debug related
-│   ├── main.cpp                      # Main program
-│   ├── manager.cpp                   # Manages data
-│   ├── reminder.cpp                  # Countdown reminders
-│   ├── tray.cpp                      # Tray
-│   └── updater.cpp                   # Checks and updates the program
-├── translations                      # I18n
-├── CHANGELOG.md                      # Changelog
+│   │       ├── Page
+│   │       │   └── CountdownsPage.qml  # Home card layout
+│   │       ├── AboutPageWindow.qml     # About window
+│   │       ├── DetailsWindow.qml       # Details window
+│   │       ├── GuideWindow.qml         # Guide window
+│   │       ├── LogsWindow.qml          # Logs window
+│   │       ├── Main.qml                # Main page
+│   │       ├── ReminderWindow.qml      # Standalone reminder popup for Windows
+│   │       ├── SettingsWindow.qml      # Settings window
+│   │       └── UpdaterWindow.qml       # Update window
+│   ├── autostart.cpp                   # Autostart handling
+│   ├── countdowndata.cpp               # Handles the data to be displayed
+│   ├── datediff.cpp                    # Computes years/months/days from days
+│   ├── debug.cpp                       # Debug related
+│   ├── main.cpp                        # Main program
+│   ├── manager.cpp                     # Manages data
+│   ├── reminder.cpp                    # Countdown reminders
+│   ├── replication.cpp                 # Backup sync
+│   ├── tray.cpp                        # Tray
+│   └── updater.cpp                     # Checks and updates the program
+├── translations                        # I18n
+├── CHANGELOG.md                        # Changelog
 ├── CMakeLists.txt
-├── com.countdown.desktop             # Linux Desktop file
-├── Countdown.nsi                     # Installer script
-├── Countdown.py                      # KDE Craft blueprint
-├── exclude_list.txt                  # Packaging blacklist
+├── com.countdown.desktop               # Linux Desktop file
+├── Countdown.nsi                       # Installer script
+├── Countdown.py                        # KDE Craft blueprint
+├── exclude_list.txt                    # Packaging blacklist
 ├── LICENSE
 ├── README_en.md
 └── README.md
@@ -158,14 +161,18 @@ See [CHANGELOG.md](CHANGELOG.md) for the detailed changes in each version.
 
 ## Planned
 
-- [ ] Add AUR to the official website
-- [ ] Add AUR to the README
-- [ ] Card sorting
+> Tasks are ordered by descending priority, with the top being the highest priority and decreasing downwards; this order only indicates priority and does not guarantee the actual completion order.
+
+- [ ] Require a successful test notification before enabling notifications
+- [ ] Page showing a timeline and visual calendar
+- [ ] Lunar calendar
+- [ ] WebDAV cloud sync of items
+- [ ] Make the README clear that on the main desktop, Android push is not guaranteed and dependencies are not recommended; Android notifications appear to be unimplemented
+- [ ] Copy share code or QR code for schedules
 - [ ] More repeat rules
 - [ ] Notify when showing the main window from the tray fails
 - [ ] Bug: the QML warning-disable switch does not work properly
-- [ ] WebDAV cloud sync of items
-- [ ] Desktop tiles/widget
+- [ ] Desktop widgets
 - [ ] Optional app background
 
 > **Note:** This English README may not be the latest version. Please refer to the [Chinese README](README.md) (or the source code) for the most up-to-date information.

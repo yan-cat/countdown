@@ -95,38 +95,41 @@ craft --package Countdown # Android 无需此步骤
 
 ```plaintext
 Countdown
-├── android                           # Android 实验性支持
+├── android                             # Android 实验性支持
 ├── readme_img
 ├── src
-│   ├── include                       # 头文件
+│   ├── include                         # 头文件
 │   ├── resources
-│   │   ├── guide                     # 指南
-│   │   ├── icon                      # 图标
+│   │   ├── guide                       # 指南
+│   │   ├── icon                        # 图标
 │   │   └── qml
-│   │       ├── AboutPageWindow.qml   # 关于窗口
-│   │       ├── DetailsWindow.qml     # 详情窗口
-│   │       ├── GuideWindow.qml       # 指南窗口
-│   │       ├── LogsWindow.qml        # 日志窗口
-│   │       ├── Main.qml              # 主页
-│   │       ├── ReminderWindow.qml    # Windows 平台独立提醒弹窗
-│   │       ├── SettingsWindow.qml    # 设置窗口
-│   │       └── UpdaterWindow.qml     # 更新窗口
-│   ├── autostart.cpp                 # 开机自启处理
-│   ├── countdowndata.cpp             # 处理需要显示的数据
-│   ├── datediff.cpp                  # 从天计算年月日
-│   ├── debug.cpp                     # Debug 相关
-│   ├── main.cpp                      # 主程序
-│   ├── manager.cpp                   # 管理数据
-│   ├── reminder.cpp                  # 倒数日提醒
-│   ├── tray.cpp                      # 托盘
-│   └── updater.cpp                   # 检查并更新程序
-├── translations                      # I18n
-├── CHANGELOG.md                      # 更新日志
+│   │       ├── Page
+│   │       │   └── CountdownsPage.qml  # 首页卡片布局
+│   │       ├── AboutPageWindow.qml     # 关于窗口
+│   │       ├── DetailsWindow.qml       # 详情窗口
+│   │       ├── GuideWindow.qml         # 指南窗口
+│   │       ├── LogsWindow.qml          # 日志窗口
+│   │       ├── Main.qml                # 主页
+│   │       ├── ReminderWindow.qml      # Windows 平台独立提醒弹窗
+│   │       ├── SettingsWindow.qml      # 设置窗口
+│   │       └── UpdaterWindow.qml       # 更新窗口
+│   ├── autostart.cpp                   # 开机自启处理
+│   ├── countdowndata.cpp               # 处理需要显示的数据
+│   ├── datediff.cpp                    # 从天计算年月日
+│   ├── debug.cpp                       # Debug 相关
+│   ├── main.cpp                        # 主程序
+│   ├── manager.cpp                     # 管理数据
+│   ├── reminder.cpp                    # 倒数日提醒
+│   ├── replication.cpp                 # 备份同步
+│   ├── tray.cpp                        # 托盘
+│   └── updater.cpp                     # 检查并更新程序
+├── translations                        # I18n
+├── CHANGELOG.md                        # 更新日志
 ├── CMakeLists.txt
-├── com.countdown.desktop             # Linux Desktop 文件
-├── Countdown.nsi                     # 安装器脚本
-├── Countdown.py                      # KDE Craft 蓝图
-├── exclude_list.txt                  # 打包文件黑名单
+├── com.countdown.desktop               # Linux Desktop 文件
+├── Countdown.nsi                       # 安装器脚本
+├── Countdown.py                        # KDE Craft 蓝图
+├── exclude_list.txt                    # 打包文件黑名单
 ├── LICENSE
 ├── README_en.md
 └── README.md
